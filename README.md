@@ -33,22 +33,45 @@ support for administrators seeking to prioritize vulnerabilities and mitigate ri
 [comment]: # (You can add as many additional bullet points as necessary by adding an additional hyphon symbol '-' at the end of each list) 
 
 Essential:
-- [Essential requirement 1]
-- [Essential requirement 2]
-- [Essential requirement 3]
-- [Essential requirement *n*]
+- **Typed Attributed Multigraph (Business Graph):**
+  - The system must represent the IT infrastructure as a typed attributed multigraph, capturing users, assets, services, and their relations.
+- **Machine-Readable Risk Rules:**
+  - Risk rules (vulnerability patterns, rates, outcomes) must be stored in a structured format (e.g., YAML, JSON, DSL).
+- **Pattern Matching Engine:**
+  - The system must support matching rule patterns (LHS) against the business graph to detect vulnerabilities.
+- **Probabilistic Risk Analytics:**
+  - For each pattern match, the system must estimate risk using attack rates, outcome probabilities, and costs.
+- **MITRE ATT&CK Alignment:**
+  - Risk rules must be grounded in real-world attack techniques (e.g., MITRE ATT&CK).
+- **Model Consistency Checking:**
+  - The system must validate that the graph and rules are consistent and compatible for matching.
 
 Desirable:
-- [Desirable requirement 1]
-- [Desirable requirement 2]
-- [Desirable requirement 3]
-- [Desirable requirement *n*]
+- **Graph Visualization:**
+  - Visual representation of the business graph and attack surface (e.g., using Neo4j, GraphML, or matplotlib).
+- **Modular Rule Organization:**
+  - Rules organized by tactics/techniques or attack phases for easier management and extensibility.
+- **Scenario/What-if Analysis:**
+  - Ability to modify the business graph or rules and re-run risk analytics for comparative studies.
+- **Export to Model Checker:**
+  - Ability to export the system model to tools like PRISM or STORM for formal CTMDP analysis.
+- **Automated Consistency Checking:**
+  - Automated checks for rule/graph schema mismatches and missing elements.
 
 Optional:
-- [Optional requirement 1]
-- [Optional requirement 2]
-- [Optional requirement 3]
-- [Optional requirement *n*]
+- **Interactive User Interface:**
+  - Web or desktop UI for rule editing, graph manipulation, and results exploration.
+- **Integration with Live Data:**
+  - Ability to ingest real network/system data for graph construction.
+- **Semi-automatic Rule Extraction:**
+  - Use of LLMs or NLP to extract risk rules from policy or threat intelligence documents.
+- **Defense/Mitigation Modeling:**
+  - Incorporate defense rules (e.g., MFA, patching) and simulate their effect on risk.
+- **OCL-like Constraints:**
+  - Support for expressing and enforcing advanced constraints on pattern matching.
+- **Simulation Timeline Visualization:**
+  - Animated or time-based visualization of risk propagation and mitigations.
+
 
 
 ## Information about this repository
