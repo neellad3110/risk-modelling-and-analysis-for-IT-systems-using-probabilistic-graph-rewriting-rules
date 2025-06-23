@@ -1,0 +1,430 @@
+{
+    "business_graph": {
+        "nodes": [
+            {
+                "id": "EMP001",
+                "type": "User",
+                "attributes": {
+                    "name": "Alice",
+                    "role": "internal",
+                    "department": "Sales",
+                    "isCompromised": false,
+                    "mfaEnrolled": true
+                }
+            },
+            {
+                "id": "EMP002",
+                "type": "User",
+                "attributes": {
+                    "name": "Bob",
+                    "role": "employee",
+                    "department": "Engineering",
+                    "isCompromised": false,
+                    "mfaEnrolled": false
+                }
+            },
+            {
+                "id": "EMP003",
+                "type": "User",
+                "attributes": {
+                    "name": "Charlie",
+                    "role": "admin",
+                    "department": "IT",
+                    "isCompromised": false,
+                    "mfaEnrolled": true
+                }
+            },
+            {
+                "id": "EMP004",
+                "type": "User",
+                "attributes": {
+                    "name": "Diana",
+                    "role": "HR",
+                    "department": "HR",
+                    "isCompromised": false,
+                    "mfaEnrolled": false
+                }
+            },
+            {
+                "id": "device_EMP001",
+                "type": "Device",
+                "attributes": {
+                    "deviceType": "laptop",
+                    "os": "Windows 10",
+                    "isCompromised": false,
+                    "accepts_ntlm": true,
+                    "accepts_remote_exec": true
+                }
+            },
+            {
+                "id": "device_EMP002",
+                "type": "Device",
+                "attributes": {
+                    "deviceType": "laptop",
+                    "os": "Ubuntu",
+                    "isCompromised": false,
+                    "accepts_ntlm": false,
+                    "accepts_remote_exec": false
+                }
+            },
+            {
+                "id": "server1",
+                "type": "Server",
+                "attributes": {
+                    "name": "RDP-Server",
+                    "os": "Windows Server 2019",
+                    "networkZone": "internal",
+                    "isCompromised": false,
+                    "exposed": true,
+                    "criticality": "high",
+                    "accepts_ntlm": true,
+                    "accepts_remote_exec": true
+                }
+            },
+            {
+                "id": "server2",
+                "type": "Server",
+                "attributes": {
+                    "name": "DB-Server",
+                    "os": "Ubuntu 20.04",
+                    "networkZone": "internal",
+                    "isCompromised": false,
+                    "exposed": false,
+                    "criticality": "high",
+                    "accepts_ntlm": false,
+                    "accepts_remote_exec": false
+                }
+            },
+            {
+                "id": "host1",
+                "type": "Host",
+                "attributes": {
+                    "os": "Windows",
+                    "compromised": false,
+                    "accepts_ntlm": true,
+                    "accepts_remote_exec": true
+                }
+            },
+            {
+                "id": "host2",
+                "type": "Host",
+                "attributes": {
+                    "os": "Ubuntu",
+                    "compromised": false,
+                    "accepts_ntlm": false,
+                    "accepts_remote_exec": false
+                }
+            },
+            {
+                "id": "email_EMP001",
+                "type": "EmailAccount",
+                "attributes": {
+                    "domain": "example.com",
+                    "status": "active",
+                    "isMFAEnabled": true,
+                    "passwordStrength": "strong",
+                    "isCompromised": false
+                }
+            },
+            {
+                "id": "email_EMP002",
+                "type": "EmailAccount",
+                "attributes": {
+                    "domain": "example.com",
+                    "status": "active",
+                    "isMFAEnabled": false,
+                    "passwordStrength": "weak",
+                    "isCompromised": false
+                }
+            },
+            {
+                "id": "saas_EMP001",
+                "type": "SaaSAccount",
+                "attributes": {
+                    "provider": "Office365",
+                    "protected": false,
+                    "isCompromised": false
+                }
+            },
+            {
+                "id": "cred_EMP001",
+                "type": "Credentials",
+                "attributes": {
+                    "owner": "EMP001",
+                    "reused": false,
+                    "compromised": false,
+                    "role": "admin"
+                }
+            },
+            {
+                "id": "cred_EMP002",
+                "type": "Credentials",
+                "attributes": {
+                    "owner": "EMP002",
+                    "reused": true,
+                    "compromised": false,
+                    "role": "employee"
+                }
+            },
+            {
+                "id": "hash_EMP003",
+                "type": "CredentialHash",
+                "attributes": {
+                    "owner": "EMP003",
+                    "stolen": false
+                }
+            },
+            {
+                "id": "av1",
+                "type": "SecurityTool",
+                "attributes": {
+                    "toolType": "antivirus",
+                    "active": true
+                }
+            },
+            {
+                "id": "edr1",
+                "type": "SecurityTool",
+                "attributes": {
+                    "toolType": "EDR",
+                    "active": true
+                }
+            },
+            {
+                "id": "file1",
+                "type": "File",
+                "attributes": {
+                    "name": "config.sh",
+                    "canRead": true,
+                    "canWrite": true,
+                    "isSensitive": false,
+                    "permission": "write"
+                }
+            },
+            {
+                "id": "file2",
+                "type": "File",
+                "attributes": {
+                    "name": "secrets.txt",
+                    "canRead": true,
+                    "canWrite": false,
+                    "isSensitive": true,
+                    "sensitivity": "high",
+                    "encryption": "aes256"
+                }
+            },
+            {
+                "id": "web_app1",
+                "type": "Application",
+                "attributes": {
+                    "exposed": true,
+                    "vulnerable": true,
+                    "compromised": false
+                }
+            },
+            {
+                "id": "rdp_service1",
+                "type": "Service",
+                "attributes": {
+                    "type": "RDP",
+                    "exposed": true
+                }
+            },
+            {
+                "id": "script1",
+                "type": "Script",
+                "attributes": {
+                    "deployed": true,
+                    "malicious": true
+                }
+            },
+            {
+                "id": "usb1",
+                "type": "USBDevice",
+                "attributes": {
+                    "malicious": true
+                }
+            },
+            {
+                "id": "dns1",
+                "type": "DNSChannel",
+                "attributes": {
+                    "active": true
+                }
+            },
+            {
+                "id": "schedtask1",
+                "type": "ScheduledTask",
+                "attributes": {
+                    "persistent": true
+                }
+            },
+            {
+                "id": "regkey1",
+                "type": "RegistryEntry",
+                "attributes": {
+                    "type": "run_key",
+                    "malicious": true
+                }
+            },
+            {
+                "id": "dmz",
+                "type": "NetworkZone",
+                "attributes": {
+                    "name": "DMZ"
+                }
+            },
+            {
+                "id": "internal",
+                "type": "NetworkZone",
+                "attributes": {
+                    "name": "Internal"
+                }
+            },
+            {
+                "id": "attacker1",
+                "type": "Attacker",
+                "attributes": {
+                    "name": "external_actor"
+                }
+            }
+        ],
+        "relations": [
+            {
+                "source": "EMP001",
+                "type": "owns",
+                "target": "email_EMP001"
+            },
+            {
+                "source": "EMP002",
+                "type": "owns",
+                "target": "email_EMP002"
+            },
+            {
+                "source": "EMP001",
+                "type": "owns",
+                "target": "saas_EMP001"
+            },
+            {
+                "source": "EMP001",
+                "type": "has_credentials",
+                "target": "cred_EMP001"
+            },
+            {
+                "source": "EMP002",
+                "type": "has_credentials",
+                "target": "cred_EMP002"
+            },
+            {
+                "source": "EMP003",
+                "type": "has_hash",
+                "target": "hash_EMP003"
+            },
+            {
+                "source": "EMP001",
+                "type": "owns_device",
+                "target": "device_EMP001"
+            },
+            {
+                "source": "EMP002",
+                "type": "owns_device",
+                "target": "device_EMP002"
+            },
+            {
+                "source": "device_EMP001",
+                "type": "installed_on",
+                "target": "av1"
+            },
+            {
+                "source": "server1",
+                "type": "installed_on",
+                "target": "edr1"
+            },
+            {
+                "source": "EMP002",
+                "type": "can_write",
+                "target": "file1"
+            },
+            {
+                "source": "EMP003",
+                "type": "can_read",
+                "target": "file2"
+            },
+            {
+                "source": "EMP003",
+                "type": "has_permission",
+                "target": "server2"
+            },
+            {
+                "source": "EMP001",
+                "type": "connected_to",
+                "target": "server1"
+            },
+            {
+                "source": "server1",
+                "type": "resides_in",
+                "target": "dmz"
+            },
+            {
+                "source": "server2",
+                "type": "resides_in",
+                "target": "internal"
+            },
+            {
+                "source": "EMP001",
+                "type": "trusts",
+                "target": "EMP003"
+            },
+            {
+                "source": "EMP003",
+                "type": "manager_of",
+                "target": "EMP002"
+            },
+            {
+                "source": "server1",
+                "type": "runs",
+                "target": "rdp_service1"
+            },
+            {
+                "source": "host1",
+                "type": "runs",
+                "target": "rdp_service1"
+            },
+            {
+                "source": "web_app1",
+                "type": "exposed_on",
+                "target": "server1"
+            },
+            {
+                "source": "server1",
+                "type": "runs",
+                "target": "script1"
+            },
+            {
+                "source": "usb1",
+                "type": "inserted_into",
+                "target": "host1"
+            },
+            {
+                "source": "host1",
+                "type": "uses",
+                "target": "dns1"
+            },
+            {
+                "source": "schedtask1",
+                "type": "runs_on",
+                "target": "host1"
+            },
+            {
+                "source": "regkey1",
+                "type": "on_host",
+                "target": "host1"
+            },
+            {
+                "source": "attacker1",
+                "type": "has_access_to",
+                "target": "file2"
+            }
+        ]
+    }
+}

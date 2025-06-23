@@ -1,0 +1,1477 @@
+{
+    "risk_specification": {
+        "name": "Business Risk Specification",
+        "description": "Rules to assess business risks based on various attributes.",
+        "version": 2.1,
+        "rules": [
+            {
+                "id": "RISK001",
+                "title": "Phishing Attack on Active Email Account",
+                "description": "A phishing email is sent to an active user email account. The attack attempts to trick the user into entering credentials. Various outcomes are possible depending on the user's response.\n",
+                "mitre_attack_id": "T1566.001",
+                "tags": [
+                    "initial-access",
+                    "phishing"
+                ],
+                "preconditions": [
+                    "User has active email account",
+                    "External emails not fully filtered"
+                ],
+                "postconditions": [
+                    "Attacker may gain access to user credentials or trigger alerts"
+                ],
+                "risk_pattern": {
+                    "lhs": [
+                        {
+                            "node": "EmailAccount",
+                            "attributes": {
+                                "status": "active"
+                            },
+                            "bind": "victimEmail"
+                        },
+                        {
+                            "node": "User",
+                            "relation": "owns",
+                            "target": "victimEmail",
+                            "bind": "user"
+                        }
+                    ]
+                },
+                "attack_rate": {
+                    "rate_per_year": 5,
+                    "scope": "per active email account"
+                },
+                "outcomes": [
+                    {
+                        "response": "User clicked link and entered credentials",
+                        "probability": 0.1,
+                        "effect": [
+                            {
+                                "update": {
+                                    "node": "victimEmail",
+                                    "attributes": {
+                                        "compromised": true
+                                    }
+                                }
+                            },
+                            {
+                                "create": {
+                                    "node": "Attacker",
+                                    "relation": "controls",
+                                    "target": "victimEmail"
+                                }
+                            }
+                        ],
+                        "cost": 30000,
+                        "followup_attacks": [
+                            "RISK002",
+                            "RISK003",
+                            "RISK006"
+                        ]
+                    },
+                    {
+                        "response": "User clicked link but did not enter credentials",
+                        "probability": 0.2,
+                        "effect": [
+                            {
+                                "create": {
+                                    "node": "SuspiciousActivity",
+                                    "relation": "observed_on",
+                                    "target": "victimEmail"
+                                }
+                            }
+                        ],
+                        "cost": 5000
+                    },
+                    {
+                        "response": "User ignored the email",
+                        "probability": 0.6,
+                        "effect": [
+                            {
+                                "delete": {
+                                    "node_type": "PhishingMessage",
+                                    "condition": {
+                                        "target": "victimEmail"
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 0
+                    },
+                    {
+                        "response": "User reported the phishing attempt to sysadmin",
+                        "probability": 0.1,
+                        "effect": [
+                            {
+                                "create": {
+                                    "node": "SecurityAlert",
+                                    "attributes": {
+                                        "type": "phishing_report"
+                                    }
+                                }
+                            },
+                            {
+                                "create": {
+                                    "relation": "alerts",
+                                    "source": "SecurityAlert",
+                                    "target": "SysAdmin"
+                                }
+                            }
+                        ],
+                        "cost": 1000
+                    }
+                ]
+            },
+            {
+                "id": "RISK002",
+                "title": "Privilege Escalation via Writable File",
+                "description": "An attacker exploits misconfigured file permissions to gain elevated privileges.\n",
+                "mitre_attack_id": "T1548",
+                "tags": [
+                    "privilege-escalation"
+                ],
+                "preconditions": [
+                    "Non-admin user has write access to sensitive file"
+                ],
+                "postconditions": [
+                    "Elevated privileges or alert triggered"
+                ],
+                "risk_pattern": {
+                    "lhs": [
+                        {
+                            "node": "File",
+                            "attributes": {
+                                "permission": "write"
+                            },
+                            "bind": "vulnFile"
+                        },
+                        {
+                            "node": "User",
+                            "relation": "can_write",
+                            "target": "vulnFile",
+                            "bind": "nonAdmin"
+                        }
+                    ]
+                },
+                "attack_rate": {
+                    "rate_per_year": 2,
+                    "scope": "per vulnerable file"
+                },
+                "outcomes": [
+                    {
+                        "response": "Attacker gained admin privileges via file manipulation",
+                        "probability": 0.15,
+                        "effect": [
+                            {
+                                "update": {
+                                    "node": "nonAdmin",
+                                    "attributes": {
+                                        "role": "admin"
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 25000,
+                        "followup_attacks": [
+                            "RISK005",
+                            "RISK006"
+                        ]
+                    },
+                    {
+                        "response": "Privilege escalation attempt was detected and blocked",
+                        "probability": 0.35,
+                        "effect": [
+                            {
+                                "create": {
+                                    "node": "SecurityAlert",
+                                    "attributes": {
+                                        "type": "privilege_escalation_attempt"
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 5000
+                    },
+                    {
+                        "response": "Privilege escalation failed silently",
+                        "probability": 0.4,
+                        "effect": [],
+                        "cost": 0
+                    },
+                    {
+                        "response": "Attempt triggered an audit event",
+                        "probability": 0.1,
+                        "effect": [
+                            {
+                                "create": {
+                                    "node": "AuditEvent",
+                                    "attributes": {
+                                        "type": "escalation_attempt"
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 1000
+                    }
+                ]
+            },
+            {
+                "id": "RISK003",
+                "title": "Credential Dumping from Compromised Host",
+                "description": "An attacker uses tools to extract cached credentials from memory or files on a compromised machine.\n",
+                "mitre_attack_id": "T1003",
+                "tags": [
+                    "credential-access"
+                ],
+                "preconditions": [
+                    "Host must be compromised",
+                    "Admin credentials cached or stored locally"
+                ],
+                "postconditions": [
+                    "Attacker gains valid credentials"
+                ],
+                "risk_pattern": {
+                    "lhs": [
+                        {
+                            "node": "Host",
+                            "attributes": {
+                                "compromised": true
+                            },
+                            "bind": "targetHost"
+                        },
+                        {
+                            "node": "Credentials",
+                            "attributes": {
+                                "owner_role": "admin"
+                            },
+                            "relation": "stored_on",
+                            "target": "targetHost",
+                            "bind": "adminCreds"
+                        }
+                    ]
+                },
+                "attack_rate": {
+                    "rate_per_year": 4,
+                    "scope": "per compromised host with stored admin credentials"
+                },
+                "outcomes": [
+                    {
+                        "response": "Attacker successfully dumped admin credentials",
+                        "probability": 0.25,
+                        "effect": [
+                            {
+                                "update": {
+                                    "node": "adminCreds",
+                                    "attributes": {
+                                        "exposed": true
+                                    }
+                                }
+                            },
+                            {
+                                "create": {
+                                    "node": "Attacker",
+                                    "relation": "has_access_to",
+                                    "target": "adminCreds"
+                                }
+                            }
+                        ],
+                        "cost": 40000,
+                        "followup_attacks": [
+                            "RISK004",
+                            "RISK005",
+                            "RISK006"
+                        ]
+                    },
+                    {
+                        "response": "Partial credentials were obtained",
+                        "probability": 0.15,
+                        "effect": [
+                            {
+                                "create": {
+                                    "node": "SuspiciousActivity",
+                                    "attributes": {
+                                        "type": "partial_cred_dump"
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 15000
+                    },
+                    {
+                        "response": "Credential dumping attempt failed silently",
+                        "probability": 0.5,
+                        "effect": [],
+                        "cost": 0
+                    },
+                    {
+                        "response": "Endpoint security detected the attempt",
+                        "probability": 0.1,
+                        "effect": [
+                            {
+                                "create": {
+                                    "node": "SecurityAlert",
+                                    "attributes": {
+                                        "type": "credential_dump_detected"
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 5000
+                    }
+                ]
+            },
+            {
+                "id": "RISK004",
+                "title": "Remote Service Exploitation (RDP)",
+                "description": "Attacker uses exposed RDP service to gain unauthorized access to internal systems using weak credentials.\n",
+                "mitre_attack_id": "T1021.001",
+                "tags": [
+                    "lateral-movement"
+                ],
+                "preconditions": [
+                    "RDP port open to external network",
+                    "Weak credentials in use"
+                ],
+                "postconditions": [
+                    "Attacker gains control of internal host or triggers alerts"
+                ],
+                "risk_pattern": {
+                    "lhs": [
+                        {
+                            "node": "Service",
+                            "attributes": {
+                                "type": "RDP",
+                                "exposed": true
+                            },
+                            "bind": "rdpService"
+                        },
+                        {
+                            "node": "Host",
+                            "relation": "runs",
+                            "target": "rdpService",
+                            "bind": "internalHost"
+                        }
+                    ]
+                },
+                "attack_rate": {
+                    "rate_per_year": 3,
+                    "scope": "per exposed RDP service"
+                },
+                "outcomes": [
+                    {
+                        "response": "Attacker logged in via RDP and gained control",
+                        "probability": 0.2,
+                        "effect": [
+                            {
+                                "update": {
+                                    "node": "internalHost",
+                                    "attributes": {
+                                        "compromised": true
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 35000,
+                        "followup_attacks": [
+                            "RISK003",
+                            "RISK005",
+                            "RISK006"
+                        ]
+                    },
+                    {
+                        "response": "Multiple failed RDP login attempts, security alert triggered",
+                        "probability": 0.2,
+                        "effect": [
+                            {
+                                "create": {
+                                    "node": "SecurityAlert",
+                                    "attributes": {
+                                        "type": "rdp_attack_detected"
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 5000,
+                        "followup_attacks": []
+                    },
+                    {
+                        "response": "RDP login attempt failed without detection",
+                        "probability": 0.6,
+                        "effect": [],
+                        "cost": 0,
+                        "followup_attacks": []
+                    }
+                ]
+            },
+            {
+                "id": "RISK005",
+                "title": "Lateral Movement via Pass-the-Hash",
+                "description": "Attacker reuses stolen NTLM hashes to authenticate and move laterally across hosts in the organization.\n",
+                "mitre_attack_id": "T1550.002",
+                "tags": [
+                    "lateral-movement"
+                ],
+                "preconditions": [
+                    "Hashes harvested from compromised host",
+                    "Target host accepts NTLM authentication"
+                ],
+                "postconditions": [
+                    "Attacker gains unauthorized access to other systems or generates alerts"
+                ],
+                "risk_pattern": {
+                    "lhs": [
+                        {
+                            "node": "CredentialHash",
+                            "attributes": {
+                                "stolen": true
+                            },
+                            "bind": "hash"
+                        },
+                        {
+                            "node": "Host",
+                            "attributes": {
+                                "accepts_ntlm": true
+                            },
+                            "bind": "targetHost"
+                        }
+                    ]
+                },
+                "attack_rate": {
+                    "rate_per_year": 4,
+                    "scope": "per valid NTLM hash"
+                },
+                "outcomes": [
+                    {
+                        "response": "Attacker successfully authenticated using NTLM hash and compromised host",
+                        "probability": 0.3,
+                        "effect": [
+                            {
+                                "update": {
+                                    "node": "targetHost",
+                                    "attributes": {
+                                        "compromised": true
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 45000,
+                        "followup_attacks": [
+                            "RISK003",
+                            "RISK006"
+                        ]
+                    },
+                    {
+                        "response": "Suspicious login attempt detected and flagged",
+                        "probability": 0.2,
+                        "effect": [
+                            {
+                                "create": {
+                                    "node": "SecurityAlert",
+                                    "attributes": {
+                                        "type": "pass_the_hash_detected"
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 7000,
+                        "followup_attacks": []
+                    },
+                    {
+                        "response": "Authentication attempt failed and remained undetected",
+                        "probability": 0.5,
+                        "effect": [],
+                        "cost": 0,
+                        "followup_attacks": []
+                    }
+                ]
+            },
+            {
+                "id": "RISK006",
+                "title": "Data Exfiltration via Cloud Storage",
+                "description": "Attacker uses compromised credentials to exfiltrate sensitive data to unauthorized cloud services.\n",
+                "mitre_attack_id": "T1537",
+                "tags": [
+                    "exfiltration"
+                ],
+                "preconditions": [
+                    "Attacker has access to sensitive files",
+                    "Cloud storage is reachable from internal network"
+                ],
+                "postconditions": [
+                    "Data confidentiality compromised or detected and blocked"
+                ],
+                "risk_pattern": {
+                    "lhs": [
+                        {
+                            "node": "File",
+                            "attributes": {
+                                "sensitivity": "high"
+                            },
+                            "bind": "sensitiveFile"
+                        },
+                        {
+                            "node": "Attacker",
+                            "relation": "has_access_to",
+                            "target": "sensitiveFile",
+                            "bind": "attacker"
+                        }
+                    ]
+                },
+                "attack_rate": {
+                    "rate_per_year": 2,
+                    "scope": "per attacker with file access"
+                },
+                "outcomes": [
+                    {
+                        "response": "Full exfiltration of sensitive data via cloud completed",
+                        "probability": 0.2,
+                        "effect": [
+                            {
+                                "update": {
+                                    "node": "sensitiveFile",
+                                    "attributes": {
+                                        "exfiltrated": true
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 60000,
+                        "followup_attacks": []
+                    },
+                    {
+                        "response": "Partial data exfiltration occurred and suspicious activity was logged",
+                        "probability": 0.3,
+                        "effect": [
+                            {
+                                "create": {
+                                    "node": "SuspiciousActivity",
+                                    "attributes": {
+                                        "type": "partial_exfiltration"
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 20000,
+                        "followup_attacks": []
+                    },
+                    {
+                        "response": "Data loss prevention system blocked exfiltration attempt",
+                        "probability": 0.3,
+                        "effect": [
+                            {
+                                "create": {
+                                    "node": "SecurityAlert",
+                                    "attributes": {
+                                        "type": "dlp_blocked"
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 8000,
+                        "followup_attacks": []
+                    },
+                    {
+                        "response": "Exfiltration attempt succeeded without detection",
+                        "probability": 0.2,
+                        "effect": [],
+                        "cost": 0,
+                        "followup_attacks": []
+                    }
+                ]
+            },
+            {
+                "id": "RISK007",
+                "title": "Abuse of Trusted Relationships for Lateral Access",
+                "description": "Attacker exploits inter-host trust relationships (e.g., shared keys, unmanaged trust paths) to move laterally.\n",
+                "mitre_attack_id": "T1210",
+                "tags": [
+                    "lateral-movement"
+                ],
+                "preconditions": [
+                    "Trusted connection exists between two hosts",
+                    "One of the hosts is compromised"
+                ],
+                "postconditions": [
+                    "Attacker gains access to a second host or triggers detection"
+                ],
+                "risk_pattern": {
+                    "lhs": [
+                        {
+                            "node": "Host",
+                            "attributes": {
+                                "compromised": true
+                            },
+                            "bind": "sourceHost"
+                        },
+                        {
+                            "node": "Host",
+                            "relation": "trusts",
+                            "source": "sourceHost",
+                            "target": "targetHost",
+                            "bind": "targetHost"
+                        }
+                    ]
+                },
+                "attack_rate": {
+                    "rate_per_year": 2,
+                    "scope": "per trusted path from a compromised host"
+                },
+                "outcomes": [
+                    {
+                        "response": "Attacker moved laterally through trusted connection and compromised target host",
+                        "probability": 0.25,
+                        "effect": [
+                            {
+                                "update": {
+                                    "node": "targetHost",
+                                    "attributes": {
+                                        "compromised": true
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 40000,
+                        "followup_attacks": [
+                            "RISK003",
+                            "RISK006"
+                        ]
+                    },
+                    {
+                        "response": "Suspicious activity detected during lateral movement attempt",
+                        "probability": 0.3,
+                        "effect": [
+                            {
+                                "create": {
+                                    "node": "SecurityAlert",
+                                    "attributes": {
+                                        "type": "trusted_path_exploit"
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 7000,
+                        "followup_attacks": []
+                    },
+                    {
+                        "response": "Movement failed due to invalid configuration or timeout",
+                        "probability": 0.45,
+                        "effect": [],
+                        "cost": 0,
+                        "followup_attacks": []
+                    }
+                ]
+            },
+            {
+                "id": "RISK008",
+                "title": "Malicious Use of Remote Admin Tools",
+                "description": "An attacker uses legitimate admin tools (e.g., PsExec, WMI) to execute commands or move laterally.\n",
+                "mitre_attack_id": "T1569.002",
+                "tags": [
+                    "execution",
+                    "lateral-movement"
+                ],
+                "preconditions": [
+                    "Attacker has admin credentials or remote access",
+                    "Target host allows admin tool execution"
+                ],
+                "postconditions": [
+                    "Attacker executes remote commands or causes alert"
+                ],
+                "risk_pattern": {
+                    "lhs": [
+                        {
+                            "node": "Host",
+                            "attributes": {
+                                "accepts_remote_exec": true
+                            },
+                            "bind": "targetHost"
+                        },
+                        {
+                            "node": "Credentials",
+                            "attributes": {
+                                "role": "admin",
+                                "compromised": true
+                            },
+                            "bind": "attackerCreds"
+                        }
+                    ]
+                },
+                "attack_rate": {
+                    "rate_per_year": 3,
+                    "scope": "per valid admin credential and remote execution access"
+                },
+                "outcomes": [
+                    {
+                        "response": "Attacker executed command remotely and compromised the host",
+                        "probability": 0.3,
+                        "effect": [
+                            {
+                                "update": {
+                                    "node": "targetHost",
+                                    "attributes": {
+                                        "compromised": true
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 42000,
+                        "followup_attacks": [
+                            "RISK003",
+                            "RISK006"
+                        ]
+                    },
+                    {
+                        "response": "Command execution blocked or logged by EDR",
+                        "probability": 0.3,
+                        "effect": [
+                            {
+                                "create": {
+                                    "node": "SecurityAlert",
+                                    "attributes": {
+                                        "type": "remote_admin_execution_detected"
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 6000,
+                        "followup_attacks": []
+                    },
+                    {
+                        "response": "Attempt failed with no observable impact",
+                        "probability": 0.4,
+                        "effect": [],
+                        "cost": 0,
+                        "followup_attacks": []
+                    }
+                ]
+            },
+            {
+                "id": "RISK009",
+                "title": "Exploitation of Public-Facing Application",
+                "description": "Attacker exploits a vulnerability in a public-facing application (e.g., web server or API) to gain remote access.\n",
+                "mitre_attack_id": "T1190",
+                "tags": [
+                    "initial-access"
+                ],
+                "preconditions": [
+                    "Public-facing application with known vulnerability"
+                ],
+                "postconditions": [
+                    "Application or underlying system becomes compromised"
+                ],
+                "risk_pattern": {
+                    "lhs": [
+                        {
+                            "node": "Application",
+                            "attributes": {
+                                "exposed": true,
+                                "vulnerable": true
+                            },
+                            "bind": "publicApp"
+                        }
+                    ]
+                },
+                "attack_rate": {
+                    "rate_per_year": 4,
+                    "scope": "per vulnerable public-facing app"
+                },
+                "outcomes": [
+                    {
+                        "response": "Attacker successfully exploited vulnerability and accessed the system",
+                        "probability": 0.3,
+                        "effect": [
+                            {
+                                "update": {
+                                    "node": "publicApp",
+                                    "attributes": {
+                                        "compromised": true
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 50000,
+                        "followup_attacks": [
+                            "RISK003",
+                            "RISK005",
+                            "RISK006"
+                        ]
+                    },
+                    {
+                        "response": "Attack attempt detected and blocked by WAF",
+                        "probability": 0.25,
+                        "effect": [
+                            {
+                                "create": {
+                                    "node": "SecurityAlert",
+                                    "attributes": {
+                                        "type": "waf_blocked_exploit"
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 10000,
+                        "followup_attacks": []
+                    },
+                    {
+                        "response": "Exploitation failed without detection",
+                        "probability": 0.45,
+                        "effect": [],
+                        "cost": 0,
+                        "followup_attacks": []
+                    }
+                ]
+            },
+            {
+                "id": "RISK010",
+                "title": "Unauthorized Script Execution on Server",
+                "description": "A malicious script (e.g., shell or PowerShell) is deployed and executed on a server due to misconfigured permissions.\n",
+                "mitre_attack_id": "T1059",
+                "tags": [
+                    "execution"
+                ],
+                "preconditions": [
+                    "Server allows script execution",
+                    "Attacker has write access or deploy permissions"
+                ],
+                "postconditions": [
+                    "Attacker gains foothold or elevates privileges"
+                ],
+                "risk_pattern": {
+                    "lhs": [
+                        {
+                            "node": "Script",
+                            "attributes": {
+                                "deployed": true,
+                                "malicious": true
+                            },
+                            "bind": "script"
+                        },
+                        {
+                            "node": "Server",
+                            "relation": "runs",
+                            "target": "script",
+                            "bind": "targetServer"
+                        }
+                    ]
+                },
+                "attack_rate": {
+                    "rate_per_year": 5,
+                    "scope": "per exposed server with deployable script"
+                },
+                "outcomes": [
+                    {
+                        "response": "Script executed and attacker gained remote shell",
+                        "probability": 0.25,
+                        "effect": [
+                            {
+                                "update": {
+                                    "node": "targetServer",
+                                    "attributes": {
+                                        "compromised": true
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 40000,
+                        "followup_attacks": [
+                            "RISK005",
+                            "RISK006",
+                            "RISK008"
+                        ]
+                    },
+                    {
+                        "response": "Script flagged and removed by antivirus/EDR",
+                        "probability": 0.3,
+                        "effect": [
+                            {
+                                "create": {
+                                    "node": "SecurityAlert",
+                                    "attributes": {
+                                        "type": "script_blocked"
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 7000,
+                        "followup_attacks": []
+                    },
+                    {
+                        "response": "Execution failed due to permissions or syntax error",
+                        "probability": 0.45,
+                        "effect": [],
+                        "cost": 0,
+                        "followup_attacks": []
+                    }
+                ]
+            },
+            {
+                "id": "RISK011",
+                "title": "Exploitation via Malicious USB Device",
+                "description": "A malicious USB device is inserted into an internal host, executing payloads automatically (USB drop attack).\n",
+                "mitre_attack_id": "T1200",
+                "tags": [
+                    "initial-access",
+                    "execution"
+                ],
+                "preconditions": [
+                    "Physical access to device",
+                    "OS auto-executes USB payloads or user enables it"
+                ],
+                "postconditions": [
+                    "Host becomes compromised or malware is neutralized"
+                ],
+                "risk_pattern": {
+                    "lhs": [
+                        {
+                            "node": "USBDevice",
+                            "attributes": {
+                                "malicious": true
+                            },
+                            "bind": "usb"
+                        },
+                        {
+                            "node": "Host",
+                            "relation": "inserted_into",
+                            "target": "usb",
+                            "bind": "host"
+                        }
+                    ]
+                },
+                "attack_rate": {
+                    "rate_per_year": 2,
+                    "scope": "per inserted USB"
+                },
+                "outcomes": [
+                    {
+                        "response": "Payload executed and host was compromised",
+                        "probability": 0.3,
+                        "effect": [
+                            {
+                                "update": {
+                                    "node": "host",
+                                    "attributes": {
+                                        "compromised": true
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 45000,
+                        "followup_attacks": [
+                            "RISK005",
+                            "RISK006"
+                        ]
+                    },
+                    {
+                        "response": "Antivirus detected and blocked payload execution",
+                        "probability": 0.3,
+                        "effect": [
+                            {
+                                "create": {
+                                    "node": "SecurityAlert",
+                                    "attributes": {
+                                        "type": "usb_payload_blocked"
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 8000,
+                        "followup_attacks": []
+                    },
+                    {
+                        "response": "Device was removed before execution",
+                        "probability": 0.4,
+                        "effect": [],
+                        "cost": 0,
+                        "followup_attacks": []
+                    }
+                ]
+            },
+            {
+                "id": "RISK012",
+                "title": "DNS Tunneling for Covert Communication",
+                "description": "An attacker uses DNS requests to tunnel data or establish C2 channels without being detected by firewalls.\n",
+                "mitre_attack_id": "T1071.004",
+                "tags": [
+                    "command-and-control",
+                    "exfiltration"
+                ],
+                "preconditions": [
+                    "Attacker controls domain name and DNS server",
+                    "Target allows outbound DNS traffic"
+                ],
+                "postconditions": [
+                    "Attacker maintains persistence or exfiltrates data"
+                ],
+                "risk_pattern": {
+                    "lhs": [
+                        {
+                            "node": "Host",
+                            "attributes": {
+                                "compromised": true
+                            },
+                            "bind": "compromisedHost"
+                        },
+                        {
+                            "node": "DNSChannel",
+                            "attributes": {
+                                "active": true
+                            },
+                            "bind": "dnsTunnel"
+                        }
+                    ]
+                },
+                "attack_rate": {
+                    "rate_per_year": 2,
+                    "scope": "per compromised host with DNS access"
+                },
+                "outcomes": [
+                    {
+                        "response": "Data exfiltrated or command channel established via DNS tunnel",
+                        "probability": 0.3,
+                        "effect": [
+                            {
+                                "update": {
+                                    "node": "dnsTunnel",
+                                    "attributes": {
+                                        "exploited": true
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 55000,
+                        "followup_attacks": []
+                    },
+                    {
+                        "response": "DNS tunneling flagged by IDS",
+                        "probability": 0.3,
+                        "effect": [
+                            {
+                                "create": {
+                                    "node": "SecurityAlert",
+                                    "attributes": {
+                                        "type": "dns_tunnel_detected"
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 9000,
+                        "followup_attacks": []
+                    },
+                    {
+                        "response": "DNS tunneling failed silently",
+                        "probability": 0.4,
+                        "effect": [],
+                        "cost": 0,
+                        "followup_attacks": []
+                    }
+                ]
+            },
+            {
+                "id": "RISK013",
+                "title": "Compromise via SaaS Credential Stuffing",
+                "description": "Credential stuffing attack targets cloud-based services using leaked employee credentials.\n",
+                "mitre_attack_id": "T1110.004",
+                "tags": [
+                    "initial-access",
+                    "cloud"
+                ],
+                "preconditions": [
+                    "Reused credentials leaked or stolen",
+                    "SaaS services lack MFA or rate limiting"
+                ],
+                "postconditions": [
+                    "SaaS session hijacked or login alerts triggered"
+                ],
+                "risk_pattern": {
+                    "lhs": [
+                        {
+                            "node": "SaaSAccount",
+                            "attributes": {
+                                "protected": false
+                            },
+                            "bind": "targetAccount"
+                        },
+                        {
+                            "node": "Credentials",
+                            "attributes": {
+                                "reused": true
+                            },
+                            "bind": "leakedCreds"
+                        }
+                    ]
+                },
+                "attack_rate": {
+                    "rate_per_year": 6,
+                    "scope": "per leaked credential set"
+                },
+                "outcomes": [
+                    {
+                        "response": "Attacker gained access to SaaS account and exfiltrated data",
+                        "probability": 0.25,
+                        "effect": [
+                            {
+                                "update": {
+                                    "node": "targetAccount",
+                                    "attributes": {
+                                        "compromised": true
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 48000,
+                        "followup_attacks": [
+                            "RISK006",
+                            "RISK012"
+                        ]
+                    },
+                    {
+                        "response": "Suspicious login detected by SaaS provider and flagged",
+                        "probability": 0.35,
+                        "effect": [
+                            {
+                                "create": {
+                                    "node": "SecurityAlert",
+                                    "attributes": {
+                                        "type": "credential_stuffing_detected"
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 6000,
+                        "followup_attacks": []
+                    },
+                    {
+                        "response": "All login attempts failed with no detection",
+                        "probability": 0.4,
+                        "effect": [],
+                        "cost": 0,
+                        "followup_attacks": []
+                    }
+                ]
+            },
+            {
+                "id": "RISK014",
+                "title": "Insider Copying Confidential Files",
+                "description": "A malicious or careless insider copies high-sensitivity documents to removable storage or external cloud.\n",
+                "mitre_attack_id": "T1537",
+                "tags": [
+                    "exfiltration",
+                    "insider-threat"
+                ],
+                "preconditions": [
+                    "Insider has access to sensitive files",
+                    "External copy method is allowed or not monitored"
+                ],
+                "postconditions": [
+                    "Files are exfiltrated, detected, or blocked"
+                ],
+                "risk_pattern": {
+                    "lhs": [
+                        {
+                            "node": "User",
+                            "attributes": {
+                                "role": "internal"
+                            },
+                            "bind": "insider"
+                        },
+                        {
+                            "node": "File",
+                            "attributes": {
+                                "sensitivity": "high"
+                            },
+                            "bind": "confidentialFile"
+                        }
+                    ]
+                },
+                "attack_rate": {
+                    "rate_per_year": 3,
+                    "scope": "per user with file access"
+                },
+                "outcomes": [
+                    {
+                        "response": "Files successfully copied and exfiltrated",
+                        "probability": 0.3,
+                        "effect": [
+                            {
+                                "update": {
+                                    "node": "confidentialFile",
+                                    "attributes": {
+                                        "exfiltrated": true
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 65000,
+                        "followup_attacks": []
+                    },
+                    {
+                        "response": "File movement logged and alert generated",
+                        "probability": 0.4,
+                        "effect": [
+                            {
+                                "create": {
+                                    "node": "SecurityAlert",
+                                    "attributes": {
+                                        "type": "insider_file_monitoring"
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 10000,
+                        "followup_attacks": []
+                    },
+                    {
+                        "response": "Copy attempt blocked by security controls",
+                        "probability": 0.3,
+                        "effect": [],
+                        "cost": 0,
+                        "followup_attacks": []
+                    }
+                ]
+            },
+            {
+                "id": "RISK015",
+                "title": "Persistence via Scheduled Task Creation",
+                "description": "Attacker creates a scheduled task or cron job on a compromised host to maintain persistence.\n",
+                "mitre_attack_id": "T1053",
+                "tags": [
+                    "persistence"
+                ],
+                "preconditions": [
+                    "Host is compromised",
+                    "Attacker has sufficient privileges to create scheduled tasks"
+                ],
+                "postconditions": [
+                    "Persistent access established or detected"
+                ],
+                "risk_pattern": {
+                    "lhs": [
+                        {
+                            "node": "Host",
+                            "attributes": {
+                                "compromised": true
+                            },
+                            "bind": "targetHost"
+                        },
+                        {
+                            "node": "Attacker",
+                            "relation": "has_access_to",
+                            "target": "targetHost",
+                            "bind": "attacker"
+                        }
+                    ]
+                },
+                "attack_rate": {
+                    "rate_per_year": 3,
+                    "scope": "per compromised host"
+                },
+                "outcomes": [
+                    {
+                        "response": "Scheduled task created, persistence achieved",
+                        "probability": 0.4,
+                        "effect": [
+                            {
+                                "create": {
+                                    "node": "ScheduledTask",
+                                    "relation": "runs_on",
+                                    "target": "targetHost"
+                                }
+                            }
+                        ],
+                        "cost": 12000,
+                        "followup_attacks": [
+                            "RISK008",
+                            "RISK006"
+                        ]
+                    },
+                    {
+                        "response": "Task creation detected by security monitoring",
+                        "probability": 0.3,
+                        "effect": [
+                            {
+                                "create": {
+                                    "node": "SecurityAlert",
+                                    "attributes": {
+                                        "type": "persistence_detected"
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 4000,
+                        "followup_attacks": []
+                    },
+                    {
+                        "response": "Task creation failed",
+                        "probability": 0.3,
+                        "effect": [],
+                        "cost": 0,
+                        "followup_attacks": []
+                    }
+                ]
+            },
+            {
+                "id": "RISK016",
+                "title": "Defense Evasion by Disabling Security Tools",
+                "description": "Attacker disables antivirus or endpoint detection tools on a compromised host to avoid detection.\n",
+                "mitre_attack_id": "T1562.001",
+                "tags": [
+                    "defense-evasion"
+                ],
+                "preconditions": [
+                    "Host is compromised",
+                    "Security tools are installed and running"
+                ],
+                "postconditions": [
+                    "Security controls are disabled or attempt is detected"
+                ],
+                "risk_pattern": {
+                    "lhs": [
+                        {
+                            "node": "Host",
+                            "attributes": {
+                                "compromised": true
+                            },
+                            "bind": "targetHost"
+                        },
+                        {
+                            "node": "SecurityTool",
+                            "attributes": {
+                                "active": true
+                            },
+                            "relation": "installed_on",
+                            "target": "targetHost",
+                            "bind": "secTool"
+                        }
+                    ]
+                },
+                "attack_rate": {
+                    "rate_per_year": 2,
+                    "scope": "per compromised host with security tools"
+                },
+                "outcomes": [
+                    {
+                        "response": "Security tool disabled, host unprotected",
+                        "probability": 0.35,
+                        "effect": [
+                            {
+                                "update": {
+                                    "node": "secTool",
+                                    "attributes": {
+                                        "active": false
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 15000,
+                        "followup_attacks": [
+                            "RISK003",
+                            "RISK010"
+                        ]
+                    },
+                    {
+                        "response": "Disabling attempt detected and blocked",
+                        "probability": 0.4,
+                        "effect": [
+                            {
+                                "create": {
+                                    "node": "SecurityAlert",
+                                    "attributes": {
+                                        "type": "defense_evasion_detected"
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 5000,
+                        "followup_attacks": []
+                    },
+                    {
+                        "response": "Attempt failed with no impact",
+                        "probability": 0.25,
+                        "effect": [],
+                        "cost": 0,
+                        "followup_attacks": []
+                    }
+                ]
+            },
+            {
+                "id": "RISK017",
+                "title": "Persistence via Registry Run Keys",
+                "description": "Attacker adds a malicious entry to Windows Registry Run keys for persistence.\n",
+                "mitre_attack_id": "T1547.001",
+                "tags": [
+                    "persistence",
+                    "windows"
+                ],
+                "preconditions": [
+                    "Host is Windows",
+                    "Attacker has write access to registry"
+                ],
+                "postconditions": [
+                    "Persistence established or detected"
+                ],
+                "risk_pattern": {
+                    "lhs": [
+                        {
+                            "node": "Host",
+                            "attributes": {
+                                "os": "Windows",
+                                "compromised": true
+                            },
+                            "bind": "winHost"
+                        }
+                    ]
+                },
+                "attack_rate": {
+                    "rate_per_year": 2,
+                    "scope": "per compromised Windows host"
+                },
+                "outcomes": [
+                    {
+                        "response": "Malicious Run key added, persistence achieved",
+                        "probability": 0.45,
+                        "effect": [
+                            {
+                                "create": {
+                                    "node": "RegistryEntry",
+                                    "attributes": {
+                                        "type": "run_key",
+                                        "malicious": true
+                                    },
+                                    "relation": "on_host",
+                                    "target": "winHost"
+                                }
+                            }
+                        ],
+                        "cost": 10000,
+                        "followup_attacks": [
+                            "RISK008"
+                        ]
+                    },
+                    {
+                        "response": "Registry modification detected by EDR",
+                        "probability": 0.35,
+                        "effect": [
+                            {
+                                "create": {
+                                    "node": "SecurityAlert",
+                                    "attributes": {
+                                        "type": "registry_persistence_detected"
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 4000,
+                        "followup_attacks": []
+                    },
+                    {
+                        "response": "Modification failed",
+                        "probability": 0.2,
+                        "effect": [],
+                        "cost": 0,
+                        "followup_attacks": []
+                    }
+                ]
+            }
+        ]
+    }
+}

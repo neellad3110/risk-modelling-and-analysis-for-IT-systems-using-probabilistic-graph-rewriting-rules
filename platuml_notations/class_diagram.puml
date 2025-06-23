@@ -1,0 +1,147 @@
+@startuml
+
+
+class User {
+  +name: String
+  +role: String
+  +department: String
+  +isCompromised: Boolean
+  +mfaEnrolled: Boolean
+}
+
+class Device {
+  +deviceType: String
+  +os: String
+  +isCompromised: Boolean
+  +accepts_ntlm: Boolean
+  +accepts_remote_exec: Boolean
+}
+
+class Server {
+  +name: String
+  +os: String
+  +networkZone: String
+  +isCompromised: Boolean
+  +exposed: Boolean
+  +criticality: String
+  +accepts_ntlm: Boolean
+  +accepts_remote_exec: Boolean
+}
+
+class Host {
+  +os: String
+  +compromised: Boolean
+  +accepts_ntlm: Boolean
+  +accepts_remote_exec: Boolean
+}
+
+class EmailAccount {
+  +domain: String
+  +status: String
+  +isMFAEnabled: Boolean
+  +passwordStrength: String
+  +isCompromised: Boolean
+}
+
+class SaaSAccount {
+  +provider: String
+  +protected: Boolean
+  +isCompromised: Boolean
+}
+
+class Credentials {
+  +owner: String
+  +reused: Boolean
+  +compromised: Boolean
+  +role: String
+}
+
+class CredentialHash {
+  +owner: String
+  +stolen: Boolean
+}
+
+class SecurityTool {
+  +toolType: String
+  +active: Boolean
+}
+
+class File {
+  +name: String
+  +canRead: Boolean
+  +canWrite: Boolean
+  +isSensitive: Boolean
+  +sensitivity: String
+  +encryption: String
+  +permission: String
+}
+
+class Application {
+  +exposed: Boolean
+  +vulnerable: Boolean
+  +compromised: Boolean
+}
+
+class Service {
+  +type: String
+  +exposed: Boolean
+}
+
+class Script {
+  +deployed: Boolean
+  +malicious: Boolean
+}
+
+class USBDevice {
+  +malicious: Boolean
+}
+
+class DNSChannel {
+  +active: Boolean
+}
+
+class ScheduledTask {
+  +persistent: Boolean
+}
+
+class RegistryEntry {
+  +type: String
+  +malicious: Boolean
+}
+
+class NetworkZone {
+  +name: String
+}
+
+class Attacker {
+  +name: String
+}
+
+
+User "1" -- "0..*" EmailAccount : owns
+User "1" -- "0..*" Device : owns_device
+User "1" -- "0..*" Credentials : has_credentials
+User "1" -- "0..*" CredentialHash : has_hash
+Device "1" -- "0..*" SecurityTool : installed_on
+Server "1" -- "0..*" SecurityTool : installed_on
+User "1" -- "0..*" File : can_write
+User "1" -- "0..*" File : can_read
+User "1" -- "0..*" Server : has_permission
+User "1" -- "0..*" Server : connected_to
+Server "1" -- "0..*" Server : connected_to
+Server "1" -- "0..*" NetworkZone : resides_in
+Device "1" -- "0..*" NetworkZone : resides_in
+User "1" -- "0..*" User : trusts
+User "1" -- "0..*" User : manager_of
+Server "1" -- "0..*" Service : runs
+Host "1" -- "0..*" Service : runs
+Application "1" -- "0..*" Server : exposed_on
+Server "1" -- "0..*" Script : runs
+USBDevice "1" -- "0..*" Host : inserted_into
+Host "1" -- "0..*" DNSChannel : uses
+ScheduledTask "1" -- "0..*" Host : runs_on
+RegistryEntry "1" -- "0..*" Host : on_host
+Attacker "1" -- "0..*" File : has_access_to
+Credentials "1" -- "0..*" Host : stored_on
+
+@enduml
