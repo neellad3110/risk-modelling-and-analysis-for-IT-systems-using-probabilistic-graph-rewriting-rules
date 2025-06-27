@@ -1,0 +1,84 @@
+@startuml phisingAttack
+title "Phishing Attack Risk Rule"
+
+
+rectangle "LHS : User has active email account" as LHS_BOX #line:gray {
+
+  object "user" as user_lhs <<User>> 
+  object "victimEmail" as victimEmail_lhs  <<EmailAccount>> {
+    status = active
+  }
+
+  user_lhs -up-> victimEmail_lhs : owns
+  
+}
+
+rectangle "Outcome 1 : User clicked link and entered credentials" as OUTCOME_BOX_1 #line:gray {
+
+  object "user" as user1 <<User>> #dddddd
+  object "victimEmail" as victimEmail1 <<EmailAccount>> #dddddd {
+    compromised = true 
+    status = active 
+  }
+ 
+  user1 -up-> victimEmail1 : owns
+  note right of victimEmail1
+    probability = 0.1
+    cost = 30000 USD
+  end note
+
+}
+
+rectangle "Outcome 2 : User clicked link but did not enter credentials" as OUTCOME_BOX_2 #line:gray {
+  
+  object "user" as user2 <<User>> #dddddd
+  object "victimEmail" as victimEmail2 <<EmailAccount>> #dddddd {
+    compromised = false
+    status = active 
+  }
+ 
+  object "suspiciousActivity" as suspiciousActivity2 <<SuspiciousActivity>> #ccffcc 
+
+  user2 -up-> victimEmail2 : owns
+  suspiciousActivity2 -.[#Green]left.-> victimEmail2 : observed_on 
+  note left of victimEmail2
+    probability = 0.2
+    cost = 5000 USD
+  end note
+
+}
+
+rectangle "Outcome 3 : User ignored the email" as OUTCOME_BOX_3 #line:gray {
+
+  object "user" as user3 <<User>> #dddddd
+  object "victimEmail" as victimEmail3 <<EmailAccount>> #dddddd {
+    compromised = false
+    status = active
+  }
+  object "phishingMessage" as phishingMessage4 <<PhishingMessage>> #7a9df4
+  user3 -up-> victimEmail4 : owns
+  phishingMessage4 -.[#7a9df4]left.-> victimEmail4 : targets
+  note left of victimEmail4
+    probability = 0.6
+    cost = 0 USD
+  end note
+
+}
+
+rectangle "Outcome 4 : User reported the phishing attempt to sysadmin" as OUTCOME_BOX_4 #line:gray {
+
+  object "user" as user4 <<User>> #dddddd
+  object "victimEmail" as victimEmail4 <<EmailAccount>> #dddddd {
+    compromised = false
+    status = active
+  }
+ object "securityAlert" as securityAlert4 <<SecurityAlert>> #ccffcc 
+  user3 -up-> victimEmail3 : owns
+  phishingMessage3 -.[#7a9df4]left.-> victimEmail3 : targets
+  note left of victimEmail3
+    probability = 0.6
+    cost = 0 USD
+  end note
+
+}
+@enduml

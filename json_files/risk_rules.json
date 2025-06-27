@@ -53,14 +53,8 @@
                                         "compromised": true
                                     }
                                 }
-                            },
-                            {
-                                "create": {
-                                    "node": "Attacker",
-                                    "relation": "controls",
-                                    "target": "victimEmail"
-                                }
                             }
+                            
                         ],
                         "cost": 30000,
                         "followup_attacks": [
@@ -91,7 +85,8 @@
                                 "delete": {
                                     "node_type": "PhishingMessage",
                                     "condition": {
-                                        "target": "victimEmail"
+                                        "target": "victimEmail",
+                                        "relation":"targets"
                                     }
                                 }
                             }
@@ -115,6 +110,13 @@
                                     "relation": "alerts",
                                     "source": "SecurityAlert",
                                     "target": "SysAdmin"
+                                }
+                            },
+                            {
+                                "create": {
+                                    "node": "Attacker",
+                                    "relation": "attacks",
+                                    "target": "victimEmail"
                                 }
                             }
                         ],
@@ -141,7 +143,8 @@
                         {
                             "node": "File",
                             "attributes": {
-                                "permission": "write"
+                                "permission": "write",
+                                "isSensitive": true
                             },
                             "bind": "vulnFile"
                         },
@@ -242,7 +245,7 @@
                         {
                             "node": "Credentials",
                             "attributes": {
-                                "owner_role": "admin"
+                                "role": "admin"
                             },
                             "relation": "stored_on",
                             "target": "targetHost",
