@@ -1,0 +1,673 @@
+{
+    "risk_specification": {
+        "name": "Business Risk Specification",
+        "description": "Rules to assess business risks based on various attributes.",
+        "version": 2.1,
+        "rules": [
+            {
+                "id": "RISK001",
+                "title": "Phishing Attack on Active Email Account",
+                "description": "A phishing email is sent to an active user email account. The attack attempts to trick the user into entering credentials. Various outcomes are possible depending on the user's response.",
+                "mitre_attack_id": "T1566.001",
+                "tags": [
+                    "initial-access",
+                    "phishing"
+                ],
+                "preconditions": [
+                    "User has active email account",
+                    "External emails not fully filtered"
+                ],
+                "postconditions": [
+                    "Attacker may gain access to user credentials or trigger alerts"
+                ],
+                "risk_pattern": {
+                    "lhs": [
+                        {
+                            "node_type": "User",
+                            "bind": "user"
+                        },
+                        {
+                            "node_type": "EmailAccount",
+                            "attributes": {
+                                "status": "active"
+                            },
+                            "bind": "victimEmail"
+                        },
+                        {
+                            "relation_type": "owns",
+                            "source": "user",
+                            "target": "victimEmail"
+                        }
+                    ]
+                },
+                "attack_rate": {
+                    "rate_per_year": 5,
+                    "scope": "per active email account"
+                },
+                "outcomes": [
+                    {
+                        "response": "User clicked link and entered credentials",
+                        "probability": 0.1,
+                        "effect": [
+                            {
+                                "update": {
+                                    "node_type": "EmailAccount",
+                                    "bind": "victimEmail",
+                                    "attributes": {
+                                        "compromised": true
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 30000,
+                        "followup_attacks": [
+                            "RISK002",
+                            "RISK003",
+                            "RISK006"
+                        ]
+                    },
+                    {
+                        "response": "User clicked link but did not enter credentials",
+                        "probability": 0.2,
+                        "effect": [
+                            {
+                                "create": {
+                                    "node_type": "SecurityAlert",
+                                    "attributes": {
+                                        "type": "phishing_attempt"
+                                    },
+                                    "bind": "alert"
+                                }
+                            },
+                            {
+                                "create": {
+                                    "relation_type": "alerts",
+                                    "source": "alert",
+                                    "target": "victimEmail"
+                                }
+                            }
+                        ],
+                        "cost": 5000
+                    },
+                    {
+                        "response": "User ignored the email",
+                        "probability": 0.6,
+                        "effect": [
+                            {
+                                "delete": {
+                                    "node_type": "Attacker",
+                                    "bind": "attacker"
+                                }
+                            },
+                            {
+                                "delete": {
+                                    "relation_type": "targets",
+                                    "source": "attacker",
+                                    "target": "victimEmail"
+                                }
+                            }
+
+                        ],
+                        "cost": 0
+                    },
+                    {
+                        "response": "User reported the phishing attempt",
+                        "probability": 0.1,
+                        "effect": [
+                            {
+                                "delete": {
+                                    "node_type": "PhishingMessage",
+                                    "bind": "phishingMessage"
+                                }
+                            },
+                            {
+                                "delete":{
+                                    "relation_type": "targets",
+                                    "source": "phishingMessage",
+                                    "target": "victimEmail"
+                                }
+                            },
+                            {
+                                "create": {
+                                    "node_type": "SecurityAlert",
+                                    "attributes": {
+                                        "type": "phishing_report"
+                                    },
+                                    "bind": "alert"
+                                }
+                            },
+                            {
+                                "create": {
+                                    "relation_type": "reports",
+                                    "source": "user",
+                                    "target": "alert"
+                                }
+                            }
+                        ],
+                        "cost": 1000
+                    }
+                ]
+            },
+            {
+                "id": "RISK002",
+                "title": "Privilege Escalation via Writable Sensitive File",
+                "description": "A compromised user account has write access to a sensitive file (e.g., sudoers file, shell profile, or cron script). The attacker can exploit this by modifying the file to escalate privileges.",
+                "mitre_attack_id": "T1548.001",
+                "tags": [
+                    "privilege-escalation",
+                    "post-compromise"
+                ],
+                "preconditions": [
+                    "User account is compromised",
+                    "Sensitive file is writable by the user"
+                ],
+                "postconditions": [
+                    "Attacker may gain elevated privileges or trigger alerts"
+                ],
+                "risk_pattern": {
+                    "lhs": [
+                        {
+                            "node_type": "User",
+                            "bind": "user"
+                        },
+                        {
+                            "node_type": "EmailAccount",
+                            "attributes": {
+                                "compromised": true,
+                                "role": "user"
+                            },
+                            "bind": "victimEmail"
+                        },
+                        {
+                            "node_type": "File",
+                            "attributes": {
+                                "isSensitive": true,
+                                "tampered": false
+                            },
+                            "bind": "sensitiveFile"
+                        },
+                        {
+                            "relation_type": "owns",
+                            "source": "user",
+                            "target": "victimEmail"
+                        },
+                        {
+                            "relation_type": "can_write",
+                            "source": "victimEmail",
+                            "target": "sensitiveFile"
+                        }
+                        
+                    ]
+                },
+                "attack_rate": {
+                    "rate_per_year": 1,
+                    "scope": "per user account with writable sensitive file"
+                },
+                "outcomes": [
+                    {
+                        "response": "Attacker successfully modifies file to escalate privileges",
+                        "probability": 0.6,
+                        "effect": [
+                            {
+                                "update": {
+                                    "node_type": "EmailAccount",
+                                    "bind": "victimEmail",
+                                    "attributes": {
+                                        "role": "admin"
+                                    }
+                                }
+                            },
+                            {
+                                "update": {
+                                    "node_type": "SensitiveFile",
+                                    "bind": "sensitiveFile",
+                                    "attributes": {
+                                        "tampered": true
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 85000,
+                        "followup_attacks": [
+                            "RISK005",
+                            "RISK009"
+                        ]
+                    },
+                    {
+                        "response": "Attack attempt triggers security alert (e.g., file integrity monitoring)",
+                        "probability": 0.3,
+                        "effect": [
+                            {
+                                "create": {
+                                    "node_type": "SecurityAlert",
+                                    "attributes": {
+                                        "type": "unauthorized_file_modification"
+                                    },
+                                    "bind": "alert"
+                                }
+                            },
+                            {
+                                "create": {
+                                    "relation_type": "detected_on",
+                                    "source": "alert",
+                                    "target": "sensitiveFile"
+                                }
+                            }
+                        ],
+                        "cost": 5000
+                    },
+                    {
+                        "response": "Sysadmin detects and revokes file permissions before attack succeeds",
+                        "probability": 0.1,
+                        "effect": [
+                            {
+                                "update": {
+                                    "node_type": "SensitiveFile",
+                                    "bind": "sensitiveFile",
+                                    "attributes": {
+                                        "writable": false
+                                    }
+                                }
+                            },
+                            {
+                                "delete": {
+                                    "node_type": "EmailAccount",
+                                    "bind": "victimEmail"
+                                }
+                            },
+                            {
+                                "delete": {
+                                    "relation_type": "can_write",
+                                    "source": "victimEmail",
+                                    "target": "sensitiveFile"
+                                }
+                            }
+                        ],
+                        "cost": 2000
+                    }
+                ]
+            },
+            {
+                "id": "RISK003",
+                "title": "Credential Dumping from Compromised Host",
+                "description": "An attacker uses tools to extract cached credentials from memory or files on a compromised machine.\n",
+                "mitre_attack_id": "T1003",
+                "tags": [
+                    "credential-access"
+                ],
+                "preconditions": [
+                    "Host must be compromised",
+                    "Admin credentials cached or stored locally"
+                ],
+                "postconditions": [
+                    "Attacker gains valid credentials"
+                ],
+                "risk_pattern": {
+                    "lhs": [
+                        {
+                            "node_type": "Host",
+                            "attributes": {
+                                "compromised": true
+                            },
+                            "bind": "targetHost"
+                        },
+                        {
+                            "node_type": "User",
+                            "attributes": {
+                                "role": "admin",
+                                "credentials": "secured"
+                            },
+                            "bind": "user"
+                        },
+                        {
+                            "relation_type": "credentials_stored_on",
+                            "source": "user",
+                            "target": "targetHost"
+                        }
+                    ]
+                },
+                "attack_rate": {
+                    "rate_per_year": 4,
+                    "scope": "per compromised host with stored admin credentials"
+                },
+                "outcomes": [
+                    {
+                        "response": "Attacker successfully dumped admin credentials",
+                        "probability": 0.25,
+                        "effect": [
+                            {
+                                "update": {
+                                    "node_type": "User",
+                                    "bind": "user",
+                                    "attributes": {
+                                        "credentials": "exposed"
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 40000,
+                        "followup_attacks": [
+                            "RISK004",
+                            "RISK005",
+                            "RISK006"
+                        ]
+                    },
+                    {
+                        "response": "Partial credentials were obtained",
+                        "probability": 0.15,
+                        "effect": [
+                            {
+                                "update": {
+                                    "node_type": "User",
+                                    "bind": "user",
+                                    "attributes": {
+                                        "credentials": "critical"
+                                    }
+                                }
+                            },
+                            {
+                                "create": {
+                                    "node_type": "SecurityAlert",
+                                    "attributes": {
+                                        "type": "credential_dumping"
+                                    },
+                                    "bind": "alert"
+                                }
+                            },
+                            {
+                                "create": {
+                                    "relation_type": "alerts",
+                                    "source": "alert",
+                                    "target": "targetHost"
+                                }
+                            },
+                            {
+                                "create": {
+                                    "node_type": "Attacker",
+                                    "bind": "attacker"
+                                }
+                            },
+                            {
+                                "create": {
+                                    "relation_type": "targets",
+                                    "source": "attacker",
+                                    "target": "targetHost"
+                                }
+                            }
+
+                        ],
+                        "cost": 15000
+                    },
+                    {
+                        "response": "Credential dumping attempt failed silently",
+                        "probability": 0.5,
+                        "effect": [],
+                        "cost": 0
+                    },
+                    {
+                        "response": "Endpoint security detected the attempt",
+                        "probability": 0.1,
+                        "effect": [
+                            {
+                                "update": {
+                                    "node_type": "User",
+                                    "bind": "user",
+                                    "attributes": {
+                                        "credentials": "secured"
+                                    }
+                                }
+                            },
+                            {
+                                "create": {
+                                    "node_type": "SecurityAlert",
+                                    "attributes": {
+                                        "type": "credential_dumping"
+                                    },
+                                    "bind": "alert"
+                                }
+                            },
+                            {
+                                "create": {
+                                    "relation_type": "alerts",
+                                    "source": "alert",
+                                    "target": "targetHost"
+                                }
+                            },
+                            {
+                                "create": {
+                                    "node_type": "Attacker",
+                                    "bind": "attacker"
+                                }
+                            },{
+                                "create": {
+                                    "relation_type" : "targets",
+                                    "source": "attacker",
+                                    "target": "targetHost"
+                                }
+                            }
+                        ],
+                        "cost": 5000
+                    }
+                ]
+            },
+            {
+                "id": "RISK004",
+                "title": "Remote Service Exploitation (RDP)",
+                "description": "Attacker uses exposed RDP service to gain unauthorized access to internal systems using weak credentials.\n",
+                "mitre_attack_id": "T1021.001",
+                "tags": [
+                    "lateral-movement"
+                ],
+                "preconditions": [
+                    "RDP port open to external network",
+                    "Weak credentials in use"
+                ],
+                "postconditions": [
+                    "The attacker gains control of the host that runs the exploited service or triggers security alerts"
+                ],
+                "risk_pattern": {
+                    "lhs": [
+                        {
+                            "node_type": "Service",
+                            "attributes": {
+                                "type": "RDP",
+                                "exposed": true
+                            },
+                            "bind": "rdpService"
+                        },
+                        {
+                            "node_type": "Host",
+                            "attributes": {
+                                "compromised": false
+                            },
+                            "bind": "internalHost"
+                        },
+                        {
+                            "relation_type": "runs",
+                            "source": "internalHost",
+                            "target": "rdpService"
+                        }
+                    ]
+                },
+                "attack_rate": {
+                    "rate_per_year": 3,
+                    "scope": "per exposed RDP service"
+                },
+                "outcomes": [
+                    {
+                        "response": "Attacker logged in via RDP and gained control",
+                        "probability": 0.2,
+                        "effect": [
+                            {
+                                "update": {
+                                    "node_type": "Host",
+                                    "bind": "internalHost",
+                                    "attributes": {
+                                        "compromised": true
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 35000,
+                        "followup_attacks": [
+                            "RISK003",
+                            "RISK005",
+                            "RISK006"
+                        ]
+                    },
+                    {
+                        "response": "Multiple failed RDP login attempts, security alert triggered",
+                        "probability": 0.2,
+                        "effect": [
+                            {
+                                "create": {
+                                    "node_type": "SecurityAlert",
+                                    "attributes": {
+                                        "type": "rdp_attack_detected"
+                                    },
+                                    "bind": "alert"
+                                }
+                            },
+                            {
+                                "create": {
+                                    "node_type": "Attacker",
+                                    "bind": "attacker"
+                                }
+                            },
+                            {
+                                "create": {
+                                    "relation_type": "targets",
+                                    "source": "attacker",
+                                    "target": "internalHost"
+                                }
+                            },
+                            {
+                                "create": {
+                                    "relation_type": "alerts",
+                                    "source": "alert",
+                                    "target": "rdpService"
+                                }
+                            }
+                        ],
+                        "cost": 5000
+                    },
+                    {
+                        "response": "RDP login attempt failed without detection",
+                        "probability": 0.6,
+                        "effect": [],
+                        "cost": 0
+                    }
+                ]
+            },
+            {
+                "id": "RISK005",
+                "title": "Lateral Movement via Pass-the-Hash",
+                "description": "Attacker reuses stolen NTLM hashes to authenticate and move laterally across hosts in the organization.\n",
+                "mitre_attack_id": "T1550.002",
+                "tags": [
+                    "lateral-movement"
+                ],
+                "preconditions": [
+                    "Hashes harvested from  compromised host",
+                    "Target host accepts NTLM authentication"
+                ],
+                "postconditions": [
+                    "Attacker gains unauthorized access to other systems or generates alerts"
+                ],
+                "risk_pattern": {
+                    "lhs": [
+                        {
+                            "node_type": "Host",
+                            "attributes": {
+                                "compromised": true
+                            },
+                            "bind": "sourceHost"
+                        },
+                        {
+                            "node_type": "Host",
+                            "attributes": {
+                                "accepts_ntlm": true,
+                                "compromised": false
+                            },
+                            "bind": "targetHost"
+                        },
+                        {
+                            "relation_type": "can_access",
+                            "source": "sourceHost",
+                            "target": "targetHost"
+                        }
+                    ]
+                },
+                "attack_rate": {
+                    "rate_per_year": 4,
+                    "scope": "per valid NTLM hash"
+                },
+                "outcomes": [
+                    {
+                        "response": "Attacker successfully authenticated using NTLM hash and compromised host",
+                        "probability": 0.3,
+                        "effect": [
+                            {
+                                "update": {
+                                    "node_type": "Host",
+                                    "bind": "targetHost",
+                                    "attributes": {
+                                        "compromised": true
+                                    }
+                                }
+                            }
+                        ],
+                        "cost": 45000,
+                        "followup_attacks": [
+                            "RISK003",
+                            "RISK006"
+                        ]
+                    },
+                    {
+                        "response": "Suspicious login attempt detected and flagged",
+                        "probability": 0.2,
+                        "effect": [
+                            {
+                                "create": {
+                                    "node_type": "SecurityAlert",
+                                    "attributes": {
+                                        "type": "pass_the_hash_detected"
+                                    },
+                                    "bind": "alert"
+                                }
+                            },
+                            {
+                                "create": {
+                                    "relation_type": "alerts",
+                                    "source": "alert",
+                                    "target": "targetHost"
+                                }
+                            },
+                            {
+                                "create": {
+                                    "node_type": "Attacker",
+                                    "bind": "attacker"
+                                }
+                            },
+                            {
+                                "create": {
+                                    "relation_type": "targets",
+                                    "source": "attacker",
+                                    "target": "targetHost"
+                                }
+                            }
+                           
+                        ],
+                        "cost": 7000
+                    },
+                    {
+                        "response": "Authentication attempt failed and remained undetected",
+                        "probability": 0.5,
+                        "effect": [],
+                        "cost": 0
+                    }
+                ]
+            }
+        ]
+    }
+}

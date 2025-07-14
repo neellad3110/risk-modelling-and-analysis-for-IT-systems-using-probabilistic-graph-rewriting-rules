@@ -2,13 +2,21 @@
     "type_graph": {
         "node_types": [
             {
+                "name": "Organization",
+                "attributes": [
+                    "name"
+                ]
+            },
+            {
+                "name": "Department",
+                "attributes": [
+                    "name"
+                ]
+            },
+            {
                 "name": "User",
                 "attributes": [
-                    "name",
-                    "role",
-                    "department",
-                    "isCompromised",
-                    "mfaEnrolled"
+                    "name"
                 ]
             },
             {
@@ -16,22 +24,25 @@
                 "attributes": [
                     "deviceType",
                     "os",
-                    "isCompromised",
-                    "accepts_ntlm",
-                    "accepts_remote_exec"
+                    "accepts_ntlm"
                 ]
             },
+            {
+                "name": "EmailAccount",
+                "attributes": [
+                    "role",
+                    "domain",
+                    "status",
+                    "compromised"
+                ]
+            },
+
             {
                 "name": "Server",
                 "attributes": [
                     "name",
                     "os",
-                    "networkZone",
-                    "isCompromised",
-                    "exposed",
-                    "criticality",
-                    "accepts_ntlm",
-                    "accepts_remote_exec"
+                    "accepts_ntlm"
                 ]
             },
             {
@@ -39,69 +50,7 @@
                 "attributes": [
                     "os",
                     "compromised",
-                    "accepts_ntlm",
-                    "accepts_remote_exec"
-                ]
-            },
-            {
-                "name": "EmailAccount",
-                "attributes": [
-                    "domain",
-                    "status",
-                    "isMFAEnabled",
-                    "passwordStrength",
-                    "isCompromised"
-                ]
-            },
-            {
-                "name": "SaaSAccount",
-                "attributes": [
-                    "provider",
-                    "protected",
-                    "isCompromised"
-                ]
-            },
-            {
-                "name": "Credentials",
-                "attributes": [
-                    "owner",
-                    "reused",
-                    "compromised",
-                    "role"
-                ]
-            },
-            {
-                "name": "CredentialHash",
-                "attributes": [
-                    "owner",
-                    "stolen"
-                ]
-            },
-            {
-                "name": "SecurityTool",
-                "attributes": [
-                    "toolType",
-                    "active"
-                ]
-            },
-            {
-                "name": "File",
-                "attributes": [
-                    "name",
-                    "canRead",
-                    "canWrite",
-                    "isSensitive",
-                    "sensitivity",
-                    "encryption",
-                    "permission"
-                ]
-            },
-            {
-                "name": "Application",
-                "attributes": [
-                    "exposed",
-                    "vulnerable",
-                    "compromised"
+                    "accepts_ntlm"
                 ]
             },
             {
@@ -112,80 +61,61 @@
                 ]
             },
             {
-                "name": "Script",
+                "name": "File",
                 "attributes": [
-                    "deployed",
-                    "malicious"
+                    "name",
+                    "isSensitive",
+                    "writable",
+                    "tampered"
                 ]
             },
             {
-                "name": "USBDevice",
+                "name": "Credentials",
                 "attributes": [
-                    "malicious"
+                    "owner",
+                    "reused",
+                    "compromised"
                 ]
             },
             {
-                "name": "DNSChannel",
+                "name": "CredentialHash",
                 "attributes": [
-                    "active"
-                ]
-            },
-            {
-                "name": "ScheduledTask",
-                "attributes": [
-                    "persistent"
-                ]
-            },
-            {
-                "name": "RegistryEntry",
-                "attributes": [
-                    "type",
-                    "malicious"
-                ]
-            },
-            {
-                "name": "NetworkZone",
-                "attributes": [
-                    "name"
-                ]
-            },
-            {
-                "name": "Attacker",
-                "attributes": [
-                    "name"
+                    "owner",
+                    "stolen"
                 ]
             }
+            
         ],
         "edge_types": [
+            {
+                "name": "has_department",
+                "source": "Organization",
+                "target": "Department"
+            },
+            {
+                "name": "employs",
+                "source": "Department",
+                "target": "User"
+            },
+            {
+                "name": "uses",
+                "source": "User",
+                "target": "Device"
+            },
             {
                 "name": "owns",
                 "source": "User",
                 "target": "EmailAccount"
             },
             {
-                "name": "owns_device",
-                "source": "User",
-                "target": "Device"
-            },
-            {
-                "name": "has_credentials",
-                "source": "User",
-                "target": "Credentials"
-            },
-            {
-                "name": "has_hash",
-                "source": "User",
-                "target": "CredentialHash"
-            },
-            {
-                "name": "installed_on",
-                "source": "Device",
-                "target": "SecurityTool"
-            },
-            {
-                "name": "installed_on",
+                "name": "runs_on",
                 "source": "Server",
-                "target": "SecurityTool"
+                "target": "Host"
+            },
+            {
+                "name": "runs",
+                "source": "Host",
+                "target": "Service"
             },
             {
                 "name": "can_write",
@@ -198,225 +128,31 @@
                 "target": "File"
             },
             {
-                "name": "has_permission",
+                "name": "can_write",
+                "source": "EmailAccount",
+                "target": "SensitiveFile"
+            },
+            {
+                "name": "has_credentials",
                 "source": "User",
-                "target": "Server"
+                "target": "Credentials"
             },
-            {
-                "name": "connected_to",
+             {
+                "name": "has_hash",
                 "source": "User",
-                "target": "Server"
+                "target": "CredentialHash"
             },
             {
-                "name": "connected_to",
-                "source": "Server",
-                "target": "Server"
-            },
-            {
-                "name": "resides_in",
-                "source": "Server",
-                "target": "NetworkZone"
-            },
-            {
-                "name": "resides_in",
-                "source": "Device",
-                "target": "NetworkZone"
-            },
-            {
-                "name": "trusts",
-                "source": "User",
-                "target": "User"
-            },
-            {
-                "name": "manager_of",
-                "source": "User",
-                "target": "User"
-            },
-            {
-                "name": "runs",
-                "source": "Server",
-                "target": "Service"
-            },
-            {
-                "name": "runs",
+                "name": "can_access",
                 "source": "Host",
-                "target": "Service"
-            },
-            {
-                "name": "exposed_on",
-                "source": "Application",
-                "target": "Server"
-            },
-            {
-                "name": "runs",
-                "source": "Server",
-                "target": "Script"
-            },
-            {
-                "name": "inserted_into",
-                "source": "USBDevice",
                 "target": "Host"
             },
             {
-                "name": "uses",
-                "source": "Host",
-                "target": "DNSChannel"
-            },
-            {
-                "name": "runs_on",
-                "source": "ScheduledTask",
+                "name": "credentials_stored_on",
+                "source": "User",
                 "target": "Host"
-            },
-            {
-                "name": "on_host",
-                "source": "RegistryEntry",
-                "target": "Host"
-            },
-            {
-                "name": "has_access_to",
-                "source": "Attacker",
-                "target": "File"
-            },
-            {
-                "name": "stored_on",
-                "source": "Credentials",
-                "target": "Host"
-            },
-            {
-                "source": "EMP001",
-                "type": "owns",
-                "target": "email_EMP001"
-            },
-            {
-                "source": "EMP002",
-                "type": "owns",
-                "target": "email_EMP002"
-            },
-            {
-                "source": "EMP001",
-                "type": "owns",
-                "target": "saas_EMP001"
-            },
-            {
-                "source": "EMP001",
-                "type": "has_credentials",
-                "target": "cred_EMP001"
-            },
-            {
-                "source": "EMP002",
-                "type": "has_credentials",
-                "target": "cred_EMP002"
-            },
-            {
-                "source": "EMP003",
-                "type": "has_hash",
-                "target": "hash_EMP003"
-            },
-            {
-                "source": "EMP001",
-                "type": "owns_device",
-                "target": "device_EMP001"
-            },
-            {
-                "source": "EMP002",
-                "type": "owns_device",
-                "target": "device_EMP002"
-            },
-            {
-                "source": "device_EMP001",
-                "type": "installed_on",
-                "target": "av1"
-            },
-            {
-                "source": "server1",
-                "type": "installed_on",
-                "target": "edr1"
-            },
-            {
-                "source": "EMP002",
-                "type": "can_write",
-                "target": "file1"
-            },
-            {
-                "source": "EMP003",
-                "type": "can_read",
-                "target": "file2"
-            },
-            {
-                "source": "EMP003",
-                "type": "has_permission",
-                "target": "server2"
-            },
-            {
-                "source": "EMP001",
-                "type": "connected_to",
-                "target": "server1"
-            },
-            {
-                "source": "server1",
-                "type": "resides_in",
-                "target": "dmz"
-            },
-            {
-                "source": "server2",
-                "type": "resides_in",
-                "target": "internal"
-            },
-            {
-                "source": "EMP001",
-                "type": "trusts",
-                "target": "EMP003"
-            },
-            {
-                "source": "EMP003",
-                "type": "manager_of",
-                "target": "EMP002"
-            },
-            {
-                "source": "server1",
-                "type": "runs",
-                "target": "rdp_service1"
-            },
-            {
-                "source": "host1",
-                "type": "runs",
-                "target": "rdp_service1"
-            },
-            {
-                "source": "web_app1",
-                "type": "exposed_on",
-                "target": "server1"
-            },
-            {
-                "source": "server1",
-                "type": "runs",
-                "target": "script1"
-            },
-            {
-                "source": "usb1",
-                "type": "inserted_into",
-                "target": "host1"
-            },
-            {
-                "source": "host1",
-                "type": "uses",
-                "target": "dns1"
-            },
-            {
-                "source": "schedtask1",
-                "type": "runs_on",
-                "target": "host1"
-            },
-            {
-                "source": "regkey1",
-                "type": "on_host",
-                "target": "host1"
-            },
-            {
-                "source": "attacker1",
-                "type": "has_access_to",
-                "target": "file2"
             }
+            
         ]
     }
 }

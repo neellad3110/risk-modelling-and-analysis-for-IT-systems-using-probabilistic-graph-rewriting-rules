@@ -1,0 +1,306 @@
+@startuml BUSINESS_GRAPH
+title "Business Graph"
+skinparam object {
+  
+    BackgroundColor<<User>> #D1E8FF
+    BorderColor<<User>> black
+
+    BackgroundColor<<Device>> #FFF2CC
+    BorderColor<<Device>> black
+
+    BackgroundColor<<Server>> #F4CCCC
+    BorderColor<<Server>> black
+
+    BackgroundColor<<Host>> #D5E8D4
+    BorderColor<<Host>> black
+
+    BackgroundColor<<EmailAccount>> #FFE6CC
+    BorderColor<<EmailAccount>> black
+
+    BackgroundColor<<Credentials>> #D0CECE
+    BorderColor<<Credentials>> black
+
+    BackgroundColor<<CredentialHash>> #F3E2A9
+    BorderColor<<CredentialHash>> black
+
+    BackgroundColor<<SecurityTool>> #D9EAD3
+    BorderColor<<SecurityTool>> black
+
+    BackgroundColor<<File>> #F9CB9C
+    BorderColor<<File>> black
+
+    BackgroundColor<<Application>> #B4A7D6
+    BorderColor<<Application>> black
+
+    BackgroundColor<<Service>> #A2C4C9
+    BorderColor<<Service>> black
+
+    BackgroundColor<<Script>> #F4CCCC
+    BorderColor<<Script>> black
+
+    BackgroundColor<<USBDevice>> #FFE599
+    BorderColor<<USBDevice>> black
+
+    BackgroundColor<<DNSChannel>> #9FC5E8
+    BorderColor<<DNSChannel>> black
+
+    BackgroundColor<<ScheduledTask>> #B6D7A8
+    BorderColor<<ScheduledTask>> black
+
+    BackgroundColor<<RegistryEntry>> #FFD966
+    BorderColor<<RegistryEntry>> black
+
+    BackgroundColor<<NetworkZone>> #CCCCCC
+    BorderColor<<NetworkZone>> black
+
+    BackgroundColor<<Attacker>> #EA9999
+    BorderColor<<Attacker>> black
+  }
+
+
+
+' === USERS ===
+object EMP001 <<User>> {
+  name = Alice
+  role = internal
+  department = Sales
+ 
+}
+object EMP002 <<User>> {
+  name = Bob
+  role = employee
+  department = Engineering
+  
+}
+object EMP003 <<User>> {
+  name = Charlie
+  role = admin
+  department = IT
+
+}
+object EMP004 <<User>> {
+  name = Diana
+  role = HR
+  department = HR
+}
+
+' === DEVICES ===
+object device_EMP001 <<Device>> {
+  deviceType = laptop
+  os = Windows 10
+  accepts_ntlm = true
+  accepts_remote_exec = true
+}
+object device_EMP002 <<Device>> {
+  deviceType = laptop
+  os = Ubuntu
+  accepts_ntlm = false
+  accepts_remote_exec = false
+}
+object device_EMP003 <<Device>> {
+  deviceType = desktop
+  os = Windows 10
+  accepts_ntlm = false
+  accepts_remote_exec = false  
+}
+
+object device_EMP004 <<Device>> {
+  deviceType = desktop
+  os = Windows 10
+  accepts_ntlm = false
+  accepts_remote_exec = false  
+}
+
+' === SERVERS ===
+object server1 <<Server>> {
+  name = RDP-Server
+  os = Windows Server 2019
+  networkZone = internal
+  isCompromised = false
+  exposed = true
+  criticality = high
+  accepts_ntlm = true
+  accepts_remote_exec = true
+}
+object server2 <<Server>> {
+  name = DB-Server
+  os = Ubuntu 20.04
+  networkZone = internal
+  isCompromised = false
+  exposed = false
+  criticality = high
+  accepts_ntlm = false
+  accepts_remote_exec = false
+}
+
+' === HOSTS ===
+object host1 <<Host>> {
+  os = Windows
+  compromised = false
+  accepts_ntlm = true
+  accepts_remote_exec = true
+}
+object host2 <<Host>> {
+  os = Ubuntu
+  compromised = false
+  accepts_ntlm = false
+  accepts_remote_exec = false
+}
+
+' === EMAIL ACCOUNTS ===
+object email_EMP001 <<EmailAccount>> {
+  domain = example.com
+  status = active
+  compromised = false
+}
+object email_EMP002 <<EmailAccount>> {
+  domain = example.com
+  status = active
+  compromised = false
+}
+object email_EMP003 <<EmailAccount>> {
+  domain = example.com
+  status = active
+  compromised = false
+}
+object email_EMP004 <<EmailAccount>> {
+  domain = example.com
+  status = active
+  compromised = false
+}
+
+' === CREDENTIALS ===
+object cred_EMP001 <<Credentials>> {
+  owner = EMP001
+  reused = false
+  compromised = false
+  role = admin
+}
+object cred_EMP002 <<Credentials>> {
+  owner = EMP002
+  reused = true
+  compromised = false
+  role = employee
+}
+
+' === CREDENTIAL HASHES ===
+object hash_EMP003 <<CredentialHash>> {
+  owner = EMP003
+  stolen = false
+}
+
+' === SECURITY TOOLS ===
+object av1 <<SecurityTool>> {
+  toolType = antivirus
+  active = true
+}
+object edr1 <<SecurityTool>> {
+  toolType = EDR
+  active = true
+}
+
+' === FILES ===
+object file1 <<File>> {
+  name = config.sh
+  canRead = true
+  canWrite = true
+  isSensitive = false
+  permission = write
+}
+object file2 <<File>> {
+  name = secrets.txt
+  canRead = true
+  canWrite = false
+  isSensitive = true
+  sensitivity = high
+  encryption = aes256
+}
+
+' === APPLICATIONS ===
+object web_app1 <<Application>> {
+  exposed = true
+  vulnerable = true
+  compromised = false
+}
+
+' === SERVICES ===
+object rdp_service1 <<Service>> {
+  type = RDP
+  exposed = true
+}
+
+' === SCRIPTS ===
+object script1 <<Script>> {
+  deployed = true
+  malicious = true
+}
+
+' === USB DEVICES ===
+object usb1 <<USBDevice>> {
+  malicious = true
+}
+
+' === DNS CHANNEL ===
+object dns1 <<DNSChannel>> {
+  active = true
+}
+
+' === SCHEDULED TASK ===
+object schedtask1 <<ScheduledTask>> {
+  persistent = true
+}
+
+' === REGISTRY ENTRY ===
+object regkey1 <<RegistryEntry>> {
+  type = run_key
+  malicious = true
+}
+
+' === NETWORK ZONES ===
+object dmz <<NetworkZone>> {
+  name = DMZ
+}
+object internal <<NetworkZone>> {
+  name = Internal
+}
+
+' === ATTACKER ===
+object attacker1 <<Attacker>> {
+  origin = external
+}
+
+' === RELATIONS ===
+EMP001 -- email_EMP001 : owns
+EMP002 -- email_EMP002 : owns
+EMP001 -- cred_EMP001 : has_credentials
+EMP002 -- cred_EMP002 : has_credentials
+EMP003 -- hash_EMP003 : has_hash
+EMP001 -- device_EMP001 : owns_device
+EMP002 -- device_EMP002 : owns_device
+
+device_EMP001 -- av1 : installed_on
+server1 -- edr1 : installed_on
+
+EMP002 -- file1 : can_write
+EMP003 -- file2 : can_read
+EMP003 -- server2 : has_permission
+EMP001 -- server1 : connected_to
+
+server1 -- dmz : resides_in
+server2 -- internal : resides_in
+
+EMP001 -- EMP003 : trusts
+EMP003 -- EMP002 : manager_of
+
+server1 -- rdp_service1 : runs
+host1 -- rdp_service1 : runs
+
+web_app1 -- server1 : exposed_on
+server1 -- script1 : runs
+
+usb1 -- host1 : inserted_into
+host1 -- dns1 : uses
+schedtask1 -- host1 : runs_on
+regkey1 -- host1 : on_host
+
+@enduml

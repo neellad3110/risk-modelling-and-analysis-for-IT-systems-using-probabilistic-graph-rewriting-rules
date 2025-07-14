@@ -7,7 +7,7 @@
             {
                 "id": "RISK001",
                 "title": "Phishing Attack on Active Email Account",
-                "description": "A phishing email is sent to an active user email account. The attack attempts to trick the user into entering credentials. Various outcomes are possible depending on the user's response.\n",
+                "description": "A phishing email is sent to an active user email account. The attack attempts to trick the user into entering credentials. Various outcomes are possible depending on the user's response.",
                 "mitre_attack_id": "T1566.001",
                 "tags": [
                     "initial-access",
@@ -54,7 +54,6 @@
                                     }
                                 }
                             }
-                            
                         ],
                         "cost": 30000,
                         "followup_attacks": [
@@ -70,7 +69,11 @@
                             {
                                 "create": {
                                     "node": "SuspiciousActivity",
+                                    "attributes": {
+                                        "type": "phishing_attempt"
+                                    },
                                     "relation": "observed_on",
+                                    "source": "SuspiciousActivity",
                                     "target": "victimEmail"
                                 }
                             }
@@ -83,10 +86,10 @@
                         "effect": [
                             {
                                 "delete": {
-                                    "node_type": "PhishingMessage",
+                                    "node_type": "phishingMessage",
                                     "condition": {
                                         "target": "victimEmail",
-                                        "relation":"targets"
+                                        "relation": "targets"
                                     }
                                 }
                             }
@@ -98,25 +101,32 @@
                         "probability": 0.1,
                         "effect": [
                             {
-                                "create": {
-                                    "node": "SecurityAlert",
-                                    "attributes": {
-                                        "type": "phishing_report"
+                                "delete": {
+                                    "node_type": "phishingMessage",
+                                    "condition": {
+                                        "target": "victimEmail",
+                                        "relation": "targets"
                                     }
                                 }
                             },
                             {
                                 "create": {
-                                    "relation": "alerts",
-                                    "source": "SecurityAlert",
-                                    "target": "SysAdmin"
+                                    "node": "SecurityAlert",
+                                    "attributes": {
+                                        "type": "phishing_report"
+                                    },
+                                    "relation": "reports",
+                                    "source": "user",
+                                    "target": "SecurityAlert"
                                 }
                             },
                             {
                                 "create": {
-                                    "node": "Attacker",
-                                    "relation": "attacks",
-                                    "target": "victimEmail"
+                                    "node": "SysAdmin",
+                                    "attributes": {},
+                                    "relation": "alerts",
+                                    "source": "SecurityAlert",
+                                    "target": "SysAdmin"
                                 }
                             }
                         ],
@@ -126,95 +136,132 @@
             },
             {
                 "id": "RISK002",
-                "title": "Privilege Escalation via Writable File",
-                "description": "An attacker exploits misconfigured file permissions to gain elevated privileges.\n",
-                "mitre_attack_id": "T1548",
+                "title": "Privilege Escalation via Writable Sensitive File",
+                "description": "A compromised user account has write access to a sensitive file (e.g., sudoers file, shell profile, or cron script). The attacker can exploit this by modifying the file to escalate privileges.",
+                "mitre_attack_id": "T1548.001",
                 "tags": [
-                    "privilege-escalation"
+                    "privilege-escalation",
+                    "post-compromise"
                 ],
                 "preconditions": [
-                    "Non-admin user has write access to sensitive file"
+                    "User account is compromised",
+                    "Sensitive file is writable by the user"
                 ],
                 "postconditions": [
-                    "Elevated privileges or alert triggered"
+                    "Attacker may gain elevated privileges or trigger alerts"
                 ],
                 "risk_pattern": {
                     "lhs": [
-                        {
-                            "node": "File",
+                         {
+                            "node": "EmailAccount",
                             "attributes": {
-                                "permission": "write",
-                                "isSensitive": true
+                                "status": "active",
+                                "compromised": true,
+                                "role": "user"
                             },
-                            "bind": "vulnFile"
+                            "bind": "victimEmail"
                         },
                         {
                             "node": "User",
+                            "relation": "owns",
+                            "target": "victimEmail",
+                            "bind": "user"
+                        },
+                        {
+                            "node": "SensitiveFile",
+                            "attributes": {
+                                "writable": true,
+                                "tampered": false
+                            },
+                            "bind": "sensitiveFile"
+                        },
+                        {
                             "relation": "can_write",
-                            "target": "vulnFile",
-                            "bind": "nonAdmin"
+                            "source": "victimEmail",
+                            "target": "sensitiveFile"
                         }
+
+                       
                     ]
                 },
                 "attack_rate": {
-                    "rate_per_year": 2,
-                    "scope": "per vulnerable file"
+                    "rate_per_year": 1,
+                    "scope": "per user account with writable sensitive file"
                 },
                 "outcomes": [
                     {
-                        "response": "Attacker gained admin privileges via file manipulation",
-                        "probability": 0.15,
+                        "response": "Attacker successfully modifies file to escalate privileges",
+                        "probability": 0.6,
                         "effect": [
                             {
                                 "update": {
-                                    "node": "nonAdmin",
+                                    "node": "victimEmail",
                                     "attributes": {
                                         "role": "admin"
                                     }
                                 }
+                            },
+                            {
+                                "update": {
+                                    "node": "sensitiveFile",
+                                    "attributes": {
+                                        "tampered": true
+                                    }
+                                }
                             }
                         ],
-                        "cost": 25000,
+                        "cost": 85000,
                         "followup_attacks": [
                             "RISK005",
-                            "RISK006"
+                            "RISK009"
                         ]
                     },
                     {
-                        "response": "Privilege escalation attempt was detected and blocked",
-                        "probability": 0.35,
+                        "response": "Attack attempt triggers security alert (e.g., file integrity monitoring)",
+                        "probability": 0.3,
                         "effect": [
                             {
                                 "create": {
                                     "node": "SecurityAlert",
                                     "attributes": {
-                                        "type": "privilege_escalation_attempt"
-                                    }
+                                        "type": "unauthorized_file_modification"
+                                    },
+                                    "bind": "securityAlert"
+                                }
+                            },
+                            {
+                                "create": {
+                                    "relation": "detected_on",
+                                    "source": "securityAlert",
+                                    "target": "sensitiveFile"
                                 }
                             }
                         ],
                         "cost": 5000
                     },
                     {
-                        "response": "Privilege escalation failed silently",
-                        "probability": 0.4,
-                        "effect": [],
-                        "cost": 0
-                    },
-                    {
-                        "response": "Attempt triggered an audit event",
+                        "response": "Sysadmin detects and revokes file permissions before attack succeeds",
                         "probability": 0.1,
                         "effect": [
                             {
-                                "create": {
-                                    "node": "AuditEvent",
+                                "update": {
+                                    "node": "sensitiveFile",
                                     "attributes": {
-                                        "type": "escalation_attempt"
+                                        "writable": false
+                                    }
+                                }
+                            },
+                            {
+                                "delete": {
+                                    "node_type": "user",
+                                    "condition": {
+                                        "target": "sensitiveFile",
+                                        "relation": "can_write"
                                     }
                                 }
                             }
                         ],
-                        "cost": 1000
+                        "cost": 2000
                     }
                 ]
             },
@@ -243,13 +290,12 @@
                             "bind": "targetHost"
                         },
                         {
-                            "node": "Credentials",
-                            "attributes": {
-                                "role": "admin"
-                            },
-                            "relation": "stored_on",
+                            "node": "User",
+                            "relation": "credentials_stored_on",
+                            "role": "admin",
+                            "credentials": "secured",
                             "target": "targetHost",
-                            "bind": "adminCreds"
+                            "bind": "user"
                         }
                     ]
                 },
@@ -264,19 +310,13 @@
                         "effect": [
                             {
                                 "update": {
-                                    "node": "adminCreds",
+                                    "node": "user",
                                     "attributes": {
-                                        "exposed": true
+                                        "credentials": "exposed"
                                     }
                                 }
-                            },
-                            {
-                                "create": {
-                                    "node": "Attacker",
-                                    "relation": "has_access_to",
-                                    "target": "adminCreds"
-                                }
                             }
+                            
                         ],
                         "cost": 40000,
                         "followup_attacks": [
@@ -289,14 +329,31 @@
                         "response": "Partial credentials were obtained",
                         "probability": 0.15,
                         "effect": [
-                            {
-                                "create": {
-                                    "node": "SuspiciousActivity",
-                                    "attributes": {
-                                        "type": "partial_cred_dump"
+                            
+                                {
+                                    "update": {
+                                        "node": "user",
+                                        "attributes": {
+                                            "credentials": "critical"
+                                        }
+                                    }
+                                },
+                                {
+                                    "create": {
+                                        "node": "SuspiciousActivity",
+                                        "attributes": {
+                                            "type": "credential_dumping"
+                                        }
+                                    }
+                                },
+                                { 
+                                    "create": {
+                                        "node": "Attacker",
+                                        "relation": "targets",
+                                        "target": "targetHost"
                                     }
                                 }
-                            }
+                            
                         ],
                         "cost": 15000
                     },
@@ -310,14 +367,31 @@
                         "response": "Endpoint security detected the attempt",
                         "probability": 0.1,
                         "effect": [
-                            {
-                                "create": {
-                                    "node": "SecurityAlert",
-                                    "attributes": {
-                                        "type": "credential_dump_detected"
+                            
+                                {
+                                    "update": {
+                                        "node": "user",
+                                        "attributes": {
+                                            "credentials": "secured"
+                                        }
+                                    }
+                                },
+                                {
+                                    "create": {
+                                        "node": "SuspiciousActivity",
+                                        "attributes": {
+                                            "type": "credential_dumping"
+                                        }
+                                    }
+                                },
+                                { 
+                                    "create": {
+                                        "node": "Attacker",
+                                        "relation": "targets",
+                                        "target": "targetHost"
                                     }
                                 }
-                            }
+                            
                         ],
                         "cost": 5000
                     }
@@ -336,7 +410,7 @@
                     "Weak credentials in use"
                 ],
                 "postconditions": [
-                    "Attacker gains control of internal host or triggers alerts"
+                    "The attacker gains control of the host that runs the exploited service or triggers security alerts"
                 ],
                 "risk_pattern": {
                     "lhs": [
@@ -350,6 +424,9 @@
                         },
                         {
                             "node": "Host",
+                            "attributes": {
+                                "compromised": false
+                            },
                             "relation": "runs",
                             "target": "rdpService",
                             "bind": "internalHost"
@@ -390,9 +467,18 @@
                                     "node": "SecurityAlert",
                                     "attributes": {
                                         "type": "rdp_attack_detected"
-                                    }
+                                    },
+                                    "relation" : "detected_on",
+                                    "target": "internalHost"
                                 }
-                            }
+                            },
+                            {
+                                "create": {
+                                    "node": "Attacker",
+                                    "relation": "targets",
+                                    "target": "rdpService"
+                                }
+                            }    
                         ],
                         "cost": 5000,
                         "followup_attacks": []

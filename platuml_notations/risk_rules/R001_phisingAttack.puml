@@ -1,4 +1,4 @@
-@startuml phisingAttack
+@startuml
 title "Phishing Attack Risk Rule"
 
 
@@ -37,10 +37,12 @@ rectangle "Outcome 2 : User clicked link but did not enter credentials" as OUTCO
     status = active 
   }
  
-  object "suspiciousActivity" as suspiciousActivity2 <<SuspiciousActivity>> #ccffcc 
+  object "securityAlert" as securityAlert2 <<SecurityAlert>> #ccffcc {
+    type = phishing_attempt
+  }
 
   user2 -up-> victimEmail2 : owns
-  suspiciousActivity2 -.[#Green]left.-> victimEmail2 : observed_on 
+  securityAlert2 -.[#Green]left.-> victimEmail2 : alerts 
   note left of victimEmail2
     probability = 0.2
     cost = 5000 USD
@@ -55,10 +57,10 @@ rectangle "Outcome 3 : User ignored the email" as OUTCOME_BOX_3 #line:gray {
     compromised = false
     status = active
   }
-  object "phishingMessage" as phishingMessage4 <<PhishingMessage>> #7a9df4
-  user3 -up-> victimEmail4 : owns
-  phishingMessage4 -.[#7a9df4]left.-> victimEmail4 : targets
-  note left of victimEmail4
+  object "phishingMessage" as phishingMessage3 <<PhishingMessage>> #7a9df4
+  user3 -up-> victimEmail3 : owns
+  phishingMessage3 -.[#7a9df4]left.-> victimEmail3 : targets
+  note left of victimEmail3
     probability = 0.6
     cost = 0 USD
   end note
@@ -72,10 +74,17 @@ rectangle "Outcome 4 : User reported the phishing attempt to sysadmin" as OUTCOM
     compromised = false
     status = active
   }
- object "securityAlert" as securityAlert4 <<SecurityAlert>> #ccffcc 
-  user3 -up-> victimEmail3 : owns
-  phishingMessage3 -.[#7a9df4]left.-> victimEmail3 : targets
-  note left of victimEmail3
+  object "phishingMessage" as phishingMessage4 <<PhishingMessage>> #7a9df4
+  object "securityAlert" as securityAlert4 <<SecurityAlert>> #ccffcc {
+   type = phishing_attempt
+  }
+
+   
+  
+  user4 -up-> victimEmail4 : owns
+  phishingMessage4 -.[#7a9df4]left.-> victimEmail4 : targets
+  victimEmail4 .[#Green]down.> securityAlert4 : reports
+  note left of victimEmail4
     probability = 0.6
     cost = 0 USD
   end note

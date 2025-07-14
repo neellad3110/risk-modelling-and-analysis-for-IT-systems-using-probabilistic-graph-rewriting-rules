@@ -1,0 +1,6 @@
+funcion phishingAttack_type(out node EmailAccount){
+	phishing_type(out EmailAccount);
+	phishingAttack_User_clicked_link_and_entered_credentials(EmailAccount);
+}
+node EmailAccount;
+phishingAttack_type(out EmailAccount);

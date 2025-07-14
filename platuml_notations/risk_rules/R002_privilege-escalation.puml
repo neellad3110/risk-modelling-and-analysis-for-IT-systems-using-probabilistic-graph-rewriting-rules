@@ -1,0 +1,93 @@
+@startuml previlageEscalation
+title "Privilege Escalation vve File"
+
+
+rectangle "LHS : User account is compromised and compromised user has write access to a sensitive file " as LHS_BOX #line:gray {
+
+  object "user" as user_lhs <<User>> 
+  object "victimEmail" as victimEmail_lhs  <<EmailAccount>> {
+
+    compromised = true
+    role = user
+  }
+
+  object "file" as file_lhs {
+    isSensitive = true
+    tampered = false
+  }
+  user_lhs -up-> victimEmail_lhs : owns
+  victimEmail_lhs -right-> file_lhs : can_write
+  
+}
+
+rectangle "Outcome 1 : Attacker successfully modifies file to escalate privileges" as OUTCOME_BOX_1 #line:gray {
+
+  object "user" as user1 <<User>> #dddddd
+  object "victimEmail" as victimEmail1 <<EmailAccount>> #dddddd {
+    compromised = true  
+    role = admin
+  }
+  
+  object "file" as file1 <<File>> #dddddd {
+    isSensitive = true
+    tampered = true
+  }
+  user1 -up-> victimEmail1 : owns
+  victimEmail1 -up-> file1 : can_write
+  note right of victimEmail1
+    probability = 0.6
+    cost = 85000 USD
+  end note
+
+}
+
+rectangle "Outcome 2 : Attack attempt triggers security alert (e.g., file integrity monitoring)" as OUTCOME_BOX_2 #line:gray {
+  
+  object "user" as user2 <<User>> #dddddd
+  object "victimEmail" as victimEmail2 <<EmailAccount>> #dddddd {
+    compromised = true 
+    role = user
+  }
+   object "file" as file2  <<File>> {
+    isSensitive = true    
+    tampered = true
+  }
+  object "Attacker" as attcker2 <<Attacker>> #ccffcc {
+  }
+  object "securityAlert" as securityAlert2 <<SecurityAlert>> #ccffcc {
+    type = "file_modification_activity"
+  }
+  
+  user2 -up-> victimEmail2 : owns
+  attcker2 -left-> victimEmail2 : owns
+
+  securityAlert2 .[#Green].> victimEmail2 : alerts 
+  victimEmail2 -up-> file2 : can_write
+  note left of victimEmail2
+    probability = 0.3
+    cost = 5000 USD
+  end note
+
+}
+
+rectangle "Outcome 3 : Sysadmin detects and revokes file permissions before attack succeeds" as OUTCOME_BOX_3 #line:gray {
+
+  object "user" as user3 <<User>> #dddddd
+  object "victimEmail" as victimEmail3 <<EmailAccount>> #dddddd {
+    compromised = true
+  }
+  object "file" as file3 <<File>> #7a9df4{
+    isSensitive = true
+    tampered = true
+  }
+   
+  user3 -up-> victimEmail3 : owns
+  victimEmail3 -.[#7a9df4]right.-> file3 : can_write
+  note left of victimEmail3
+    probability = 0.1
+    cost = 2000 USD
+  end note
+
+}
+
+@enduml

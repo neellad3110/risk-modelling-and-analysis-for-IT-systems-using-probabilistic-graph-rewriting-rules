@@ -2,47 +2,66 @@
     "business_graph": {
         "nodes": [
             {
+                "id": "Org1",
+                "type": "Organization",
+                "attributes": {
+                    "name": "ABC Software Inc."
+                }
+            },
+            {
+                "id": "Sales",
+                "type": "Department",
+                "attributes": {
+                    "name": "Sales"
+                }
+            },
+            {
+                "id": "Eng",
+                "type": "Department",
+                "attributes": {
+                    "name": "Engineering"
+                }
+            },
+            {
+                "id": "IT",
+                "type": "Department",
+                "attributes": {
+                    "name": "IT"
+                }
+            },
+            {
+                "id": "HR",
+                "type": "Department",
+                "attributes": {
+                    "name": "HR"
+                }
+            },
+            {
                 "id": "EMP001",
                 "type": "User",
                 "attributes": {
-                    "name": "Alice",
-                    "role": "internal",
-                    "department": "Sales",
-                    "isCompromised": false,
-                    "mfaEnrolled": true
+                    "name": "Alice"
                 }
             },
             {
                 "id": "EMP002",
                 "type": "User",
                 "attributes": {
-                    "name": "Bob",
-                    "role": "employee",
-                    "department": "Engineering",
-                    "isCompromised": false,
-                    "mfaEnrolled": false
+                    "name": "Bob"
                 }
             },
             {
                 "id": "EMP003",
                 "type": "User",
                 "attributes": {
-                    "name": "Charlie",
-                    "role": "admin",
-                    "department": "IT",
-                    "isCompromised": false,
-                    "mfaEnrolled": true
+                    "name": "Charlie"
                 }
             },
             {
                 "id": "EMP004",
                 "type": "User",
                 "attributes": {
-                    "name": "Diana",
-                    "role": "HR",
-                    "department": "HR",
-                    "isCompromised": false,
-                    "mfaEnrolled": false
+                    "name": "Diana"
                 }
             },
             {
@@ -51,9 +70,7 @@
                 "attributes": {
                     "deviceType": "laptop",
                     "os": "Windows 10",
-                    "isCompromised": false,
-                    "accepts_ntlm": true,
-                    "accepts_remote_exec": true
+                    "accepts_ntlm": true
                 }
             },
             {
@@ -62,9 +79,65 @@
                 "attributes": {
                     "deviceType": "laptop",
                     "os": "Ubuntu",
-                    "isCompromised": false,
-                    "accepts_ntlm": false,
-                    "accepts_remote_exec": false
+                    "accepts_ntlm": false
+                }
+            },
+            {
+                "id": "device_EMP003",
+                "type": "Device",
+                "attributes": {
+                    "deviceType": "desktop",
+                    "os": "Windows 10",
+                    "accepts_ntlm": false
+                }
+            },
+            {
+                "id": "device_EMP004",
+                "type": "Device",
+                "attributes": {
+                    "deviceType": "desktop",
+                    "os": "Windows 10",
+                    "accepts_ntlm": false
+                }
+            },
+            {
+                "id": "email_EMP001",
+                "type": "EmailAccount",
+                "attributes": {
+                    "role": "user",
+                    "domain": "example.com",
+                    "status": "active",
+                    "compromised": false
+                }
+            },
+            {
+                "id": "email_EMP002",
+                "type": "EmailAccount",
+                "attributes": {
+                    "role": "user",
+                    "domain": "example.com",
+                    "status": "active",
+                    "compromised": false
+                }
+            },
+            {
+                "id": "email_EMP003",
+                "type": "EmailAccount",
+                "attributes": {
+                    "role": "admin",
+                    "domain": "example.com",
+                    "status": "active",
+                    "compromised": false
+                }
+            },
+            {
+                "id": "email_EMP004",
+                "type": "EmailAccount",
+                "attributes": {
+                    "role": "user",
+                    "domain": "example.com",
+                    "status": "active",
+                    "compromised": false
                 }
             },
             {
@@ -73,12 +146,7 @@
                 "attributes": {
                     "name": "RDP-Server",
                     "os": "Windows Server 2019",
-                    "networkZone": "internal",
-                    "isCompromised": false,
-                    "exposed": true,
-                    "criticality": "high",
-                    "accepts_ntlm": true,
-                    "accepts_remote_exec": true
+                    "accepts_ntlm": true
                 }
             },
             {
@@ -87,12 +155,7 @@
                 "attributes": {
                     "name": "DB-Server",
                     "os": "Ubuntu 20.04",
-                    "networkZone": "internal",
-                    "isCompromised": false,
-                    "exposed": false,
-                    "criticality": "high",
-                    "accepts_ntlm": false,
-                    "accepts_remote_exec": false
+                    "accepts_ntlm": false
                 }
             },
             {
@@ -101,8 +164,7 @@
                 "attributes": {
                     "os": "Windows",
                     "compromised": false,
-                    "accepts_ntlm": true,
-                    "accepts_remote_exec": true
+                    "accepts_ntlm": true
                 }
             },
             {
@@ -111,116 +173,7 @@
                 "attributes": {
                     "os": "Ubuntu",
                     "compromised": false,
-                    "accepts_ntlm": false,
-                    "accepts_remote_exec": false
-                }
-            },
-            {
-                "id": "email_EMP001",
-                "type": "EmailAccount",
-                "attributes": {
-                    "domain": "example.com",
-                    "status": "active",
-                    "isMFAEnabled": true,
-                    "passwordStrength": "strong",
-                    "isCompromised": false
-                }
-            },
-            {
-                "id": "email_EMP002",
-                "type": "EmailAccount",
-                "attributes": {
-                    "domain": "example.com",
-                    "status": "active",
-                    "isMFAEnabled": false,
-                    "passwordStrength": "weak",
-                    "isCompromised": false
-                }
-            },
-            {
-                "id": "saas_EMP001",
-                "type": "SaaSAccount",
-                "attributes": {
-                    "provider": "Office365",
-                    "protected": false,
-                    "isCompromised": false
-                }
-            },
-            {
-                "id": "cred_EMP001",
-                "type": "Credentials",
-                "attributes": {
-                    "owner": "EMP001",
-                    "reused": false,
-                    "compromised": false,
-                    "role": "admin"
-                }
-            },
-            {
-                "id": "cred_EMP002",
-                "type": "Credentials",
-                "attributes": {
-                    "owner": "EMP002",
-                    "reused": true,
-                    "compromised": false,
-                    "role": "employee"
-                }
-            },
-            {
-                "id": "hash_EMP003",
-                "type": "CredentialHash",
-                "attributes": {
-                    "owner": "EMP003",
-                    "stolen": false
-                }
-            },
-            {
-                "id": "av1",
-                "type": "SecurityTool",
-                "attributes": {
-                    "toolType": "antivirus",
-                    "active": true
-                }
-            },
-            {
-                "id": "edr1",
-                "type": "SecurityTool",
-                "attributes": {
-                    "toolType": "EDR",
-                    "active": true
-                }
-            },
-            {
-                "id": "file1",
-                "type": "File",
-                "attributes": {
-                    "name": "config.sh",
-                    "canRead": true,
-                    "canWrite": true,
-                    "isSensitive": true,
-                    "sensitivity": "medium",
-                    "permission": "write"
-                }
-            },
-            {
-                "id": "file2",
-                "type": "File",
-                "attributes": {
-                    "name": "accounts.txt",
-                    "canRead": true,
-                    "canWrite": false,
-                    "isSensitive": true,
-                    "sensitivity": "high",
-                    "encryption": "aes256"
-                }
-            },
-            {
-                "id": "web_app1",
-                "type": "Application",
-                "attributes": {
-                    "exposed": true,
-                    "vulnerable": true,
-                    "compromised": false
+                    "accepts_ntlm": false
                 }
             },
             {
@@ -232,65 +185,111 @@
                 }
             },
             {
-                "id": "script1",
-                "type": "Script",
+                "id": "file1",
+                "type": "File",
                 "attributes": {
-                    "deployed": true,
-                    "malicious": true
+                    "name": "config.sh",
+                    "isSensitive": true,
+                    "tampered" :false
                 }
             },
             {
-                "id": "usb1",
-                "type": "USBDevice",
+                "id": "file2",
+                "type": "File",
                 "attributes": {
-                    "malicious": true
+                    "name": "secrets.txt",
+                    "isSensitive": true,
+                    "tampered" :false
                 }
             },
             {
-                "id": "dns1",
-                "type": "DNSChannel",
+                "id": "cred_EMP001",
+                "type": "Credentials",
                 "attributes": {
-                    "active": true
+                    "owner": "EMP001",
+                    "reused": false,
+                    "compromised": false
                 }
             },
             {
-                "id": "schedtask1",
-                "type": "ScheduledTask",
+                "id": "cred_EMP002",
+                "type": "Credentials",
                 "attributes": {
-                    "persistent": true
+                    "owner": "EMP002",
+                    "reused": true,
+                    "compromised": false
                 }
             },
             {
-                "id": "regkey1",
-                "type": "RegistryEntry",
+                "id": "hash_EMP003",
+                "type": "CredentialHash",
                 "attributes": {
-                    "type": "run_key",
-                    "malicious": true
+                    "owner": "EMP003",
+                    "stolen": false
                 }
-            },
-            {
-                "id": "dmz",
-                "type": "NetworkZone",
-                "attributes": {
-                    "name": "DMZ"
-                }
-            },
-            {
-                "id": "internal",
-                "type": "NetworkZone",
-                "attributes": {
-                    "name": "Internal"
-                }
-            },
-            {
-                "id": "attacker1",
-                "type": "Attacker",
-                "attributes": {
-                    "name": "external_actor"
-                }
-            }
+            }       
         ],
         "relations": [
+            {
+                "source": "Org1",
+                "type": "has_department",
+                "target": "Sales"
+            },
+            {
+                "source": "Org1",
+                "type": "has_department",
+                "target": "Eng"
+            },
+            {
+                "source": "Org1",
+                "type": "has_department",
+                "target": "IT"
+            },
+            {
+                "source": "Org1",
+                "type": "has_department",
+                "target": "HR"
+            },
+            {
+                "source": "Sales",
+                "type": "employs",
+                "target": "EMP001"
+            },
+            {
+                "source": "Eng",
+                "type": "employs",
+                "target": "EMP002"
+            },
+            {
+                "source": "IT",
+                "type": "employs",
+                "target": "EMP003"
+            },
+            {
+                "source": "HR",
+                "type": "employs",
+                "target": "EMP004"
+            },
+            {
+                "source": "EMP001",
+                "type": "uses",
+                "target": "device_EMP001"
+            },
+            {
+                "source": "EMP002",
+                "type": "uses",
+                "target": "device_EMP002"
+            },
+            {
+                "source": "EMP003",
+                "type": "uses",
+                "target": "device_EMP003"
+            },
+            {
+                "source": "EMP004",
+                "type": "uses",
+                "target": "device_EMP004"
+            },
             {
                 "source": "EMP001",
                 "type": "owns",
@@ -302,13 +301,44 @@
                 "target": "email_EMP002"
             },
             {
-                "source": "EMP001",
+                "source": "EMP003",
                 "type": "owns",
-                "target": "saas_EMP001"
+                "target": "email_EMP003"
+            },
+            {
+                "source": "EMP004",
+                "type": "owns",
+                "target": "email_EMP004"
+            },
+        
+            {
+                "source": "server1",
+                "type": "runs_on",
+                "target": "host1"
+            },
+            {
+                "source": "server2",
+                "type": "runs_on",
+                "target": "host2"
+            },
+            {
+                "source": "host1",
+                "type": "runs",
+                "target": "rdp_service1"
+            },
+            {
+                "source": "email_EMP002",
+                "type": "can_write",
+                "target": "file1"
+            },
+            {
+                "source": "email_EMP003",
+                "type": "can_read",
+                "target": "file2"
             },
             {
                 "source": "EMP001",
-                "type": "has_credentials" ,
+                "type": "has_credentials",
                 "target": "cred_EMP001"
             },
             {
@@ -322,110 +352,16 @@
                 "target": "hash_EMP003"
             },
             {
-                "source": "EMP001",
-                "type": "owns_device",
-                "target": "device_EMP001"
-            },
-            {
-                "source": "EMP002",
-                "type": "owns_device",
-                "target": "device_EMP002"
-            },
-            {
-                "source": "device_EMP001",
-                "type": "installed_on",
-                "target": "av1"
-            },
-            {
-                "source": "server1",
-                "type": "installed_on",
-                "target": "edr1"
-            },
-            {
-                "source": "EMP002",
-                "type": "can_write",
-                "target": "file1"
-            },
-            {
-                "source": "EMP003",
-                "type": "can_read",
-                "target": "file2"
-            },
-            {
-                "source": "EMP003",
-                "type": "has_permission",
-                "target": "server2"
-            },
-            {
-                "source": "EMP001",
-                "type": "connected_to",
-                "target": "server1"
-            },
-            {
-                "source": "server1",
-                "type": "resides_in",
-                "target": "dmz"
-            },
-            {
-                "source": "server2",
-                "type": "resides_in",
-                "target": "internal"
-            },
-            {
-                "source": "EMP001",
-                "type": "trusts",
-                "target": "EMP003"
-            },
-            {
-                "source": "EMP003",
-                "type": "manager_of",
-                "target": "EMP002"
-            },
-            {
-                "source": "server1",
-                "type": "runs",
-                "target": "rdp_service1"
-            },
-            {
                 "source": "host1",
-                "type": "runs",
-                "target": "rdp_service1"
+                "type": "can_access",
+                "target": "host2"
             },
             {
-                "source": "web_app1",
-                "type": "exposed_on",
-                "target": "server1"
-            },
-            {
-                "source": "server1",
-                "type": "runs",
-                "target": "script1"
-            },
-            {
-                "source": "usb1",
-                "type": "inserted_into",
+                "source": "EMP003",
+                "type": "credentials_stored_on",
                 "target": "host1"
-            },
-            {
-                "source": "host1",
-                "type": "uses",
-                "target": "dns1"
-            },
-            {
-                "source": "schedtask1",
-                "type": "runs_on",
-                "target": "host1"
-            },
-            {
-                "source": "regkey1",
-                "type": "on_host",
-                "target": "host1"
-            },
-            {
-                "source": "attacker1",
-                "type": "has_access_to",
-                "target": "file2"
             }
+           
         ]
     }
 }

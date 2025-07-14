@@ -1,243 +1,200 @@
-@startuml
+@startuml BUSINESS_GRAPH_TYPED
+title "Business Graph with Organizational Hierarchy (Typed)"
+
+skinparam object {
+  BackgroundColor<<Organization>> #E3E3E3
+  BackgroundColor<<Department>> #EAD1DC
+  BackgroundColor<<User>> #D1E8FF
+  BackgroundColor<<Device>> #FFF2CC
+  BackgroundColor<<Server>> #F4CCCC
+  BackgroundColor<<Host>> #D5E8D4
+  BackgroundColor<<EmailAccount>> #FFE6CC
+  BackgroundColor<<Credentials>> #D0CECE
+  BackgroundColor<<CredentialHash>> #F3E2A9
+  BackgroundColor<<File>> #F9CB9C
+  BackgroundColor<<Service>> #A2C4C9
+  BackgroundColor<<SensitiveFile>> #FFD966
+  BackgroundColor<<PhishingMessage>> #F6B26B
+  BackgroundColor<<SecurityAlert>> #D9EAD3
+  BackgroundColor<<Attacker>> #EA9999
+}
+
+' === ORGANIZATION HIERARCHY ===
+object Org1 <<Organization>> {
+  name = "ABC Software Inc."
+}
+object DeptSales <<Department>> {
+  name = "Sales"
+}
+object DeptEng <<Department>> {
+  name = "Engineering"
+}
+object DeptIT <<Department>> {
+  name = "IT"
+}
+object DeptHR <<Department>> {
+  name = "HR"
+}
+
+Org1 -- DeptSales : has_department
+Org1 -- DeptEng : has_department
+Org1 -- DeptIT : has_department
+Org1 -- DeptHR : has_department
+
 ' === USERS ===
 object EMP001 <<User>> {
-  name = Alice
-  role = internal
-  department = Sales
-  isCompromised = false
-  mfaEnrolled = true
+  name = "Alice"
 }
 object EMP002 <<User>> {
-  name = Bob
-  role = employee
-  department = Engineering
-  isCompromised = false
-  mfaEnrolled = false
+  name = "Bob"
 }
 object EMP003 <<User>> {
-  name = Charlie
-  role = admin
-  department = IT
-  isCompromised = false
-  mfaEnrolled = true
+  name = "Charlie"
 }
 object EMP004 <<User>> {
-  name = Diana
-  role = HR
-  department = HR
-  isCompromised = false
-  mfaEnrolled = false
+  name = "Diana"
 }
+
+DeptSales -- EMP001 : employs
+DeptEng -- EMP002 : employs
+DeptIT -- EMP003 : employs
+DeptHR -- EMP004 : employs
 
 ' === DEVICES ===
 object device_EMP001 <<Device>> {
-  deviceType = laptop
-  os = Windows 10
-  isCompromised = false
+  deviceType = "laptop"
+  os = "Windows 10"
   accepts_ntlm = true
-  accepts_remote_exec = true
 }
 object device_EMP002 <<Device>> {
-  deviceType = laptop
-  os = Ubuntu
-  isCompromised = false
+  deviceType = "laptop"
+  os = "Ubuntu"
   accepts_ntlm = false
-  accepts_remote_exec = false
+}
+object device_EMP003 <<Device>> {
+  deviceType = "desktop"
+  os = "Windows 10"
+  accepts_ntlm = false
+}
+object device_EMP004 <<Device>> {
+  deviceType = "desktop"
+  os = "Windows 10"
+  accepts_ntlm = false
 }
 
-' === SERVERS ===
-object server1 <<Server>> {
-  name = RDP-Server
-  os = Windows Server 2019
-  networkZone = internal
-  isCompromised = false
-  exposed = true
-  criticality = high
-  accepts_ntlm = true
-  accepts_remote_exec = true
-}
-object server2 <<Server>> {
-  name = DB-Server
-  os = Ubuntu 20.04
-  networkZone = internal
-  isCompromised = false
-  exposed = false
-  criticality = high
-  accepts_ntlm = false
-  accepts_remote_exec = false
-}
-
-' === HOSTS ===
-object host1 <<Host>> {
-  os = Windows
-  compromised = false
-  accepts_ntlm = true
-  accepts_remote_exec = true
-}
-object host2 <<Host>> {
-  os = Ubuntu
-  compromised = false
-  accepts_ntlm = false
-  accepts_remote_exec = false
-}
+EMP001 -- device_EMP001 : uses
+EMP002 -- device_EMP002 : uses
+EMP003 -- device_EMP003 : uses
+EMP004 -- device_EMP004 : uses
 
 ' === EMAIL ACCOUNTS ===
 object email_EMP001 <<EmailAccount>> {
-  domain = example.com
-  status = active
-  isMFAEnabled = true
-  passwordStrength = strong
-  isCompromised = false
+  role: user
+  domain = "example.com"
+  status = "active"
+  compromised = false
 }
 object email_EMP002 <<EmailAccount>> {
-  domain = example.com
-  status = active
-  isMFAEnabled = false
-  passwordStrength = weak
-  isCompromised = false
-}
-
-' === SaaS ACCOUNTS ===
-object saas_EMP001 <<SaaSAccount>> {
-  provider = Office365
-  protected = false
-  isCompromised = false
-}
-
-' === CREDENTIALS ===
-object cred_EMP001 <<Credentials>> {
-  owner = EMP001
-  reused = false
-  compromised = false
-  role = admin
-}
-object cred_EMP002 <<Credentials>> {
-  owner = EMP002
-  reused = true
-  compromised = false
-  role = employee
-}
-
-' === CREDENTIAL HASHES ===
-object hash_EMP003 <<CredentialHash>> {
-  owner = EMP003
-  stolen = false
-}
-
-' === SECURITY TOOLS ===
-object av1 <<SecurityTool>> {
-  toolType = antivirus
-  active = true
-}
-object edr1 <<SecurityTool>> {
-  toolType = EDR
-  active = true
-}
-
-' === FILES ===
-object file1 <<File>> {
-  name = config.sh
-  canRead = true
-  canWrite = true
-  isSensitive = false
-  permission = write
-}
-object file2 <<File>> {
-  name = secrets.txt
-  canRead = true
-  canWrite = false
-  isSensitive = true
-  sensitivity = high
-  encryption = aes256
-}
-
-' === APPLICATIONS ===
-object web_app1 <<Application>> {
-  exposed = true
-  vulnerable = true
+  role: user
+  domain = "example.com"
+  status = "active"
   compromised = false
 }
+object email_EMP003 <<EmailAccount>> {
+  role: admin
+  domain = "example.com"
+  status = "active"
+  compromised = false
+}
+object email_EMP004 <<EmailAccount>> {
+  role: user
+  domain = "example.com"
+  status = "active"
+  compromised = false
+}
+
+EMP001 -- email_EMP001 : owns
+EMP002 -- email_EMP002 : owns
+EMP003 -- email_EMP003 : owns
+EMP004 -- email_EMP004 : owns
+
+' === PHISHING MESSAGE (for RISK001) ===
+
+' === SERVERS & HOSTS ===
+object server1 <<Server>> {
+  name = "RDP-Server"
+  os = "Windows Server 2019"
+  accepts_ntlm = true
+}
+object server2 <<Server>> {
+  name = "DB-Server"
+  os = "Ubuntu 20.04"
+  accepts_ntlm = false
+}
+object host1 <<Host>> {
+  os = "Windows"
+  compromised = false
+  accepts_ntlm = true
+}
+object host2 <<Host>> {
+  os = "Ubuntu"
+  compromised = false
+  accepts_ntlm = false
+}
+
+server1 -- host1 : runs_on
+server2 -- host2 : runs_on
 
 ' === SERVICES ===
 object rdp_service1 <<Service>> {
-  type = RDP
+  type = "RDP"
   exposed = true
 }
+host1 -- rdp_service1 : runs
 
-' === SCRIPTS ===
-object script1 <<Script>> {
-  deployed = true
-  malicious = true
+' === FILES & SENSITIVE FILES ===
+object file1 <<File>> {
+  name = "config.sh"
+  isensitive = true
+  tampered = false
+}
+object file2 <<File>> {
+  name = "accounts.txt"
+  iSensitive = true
+  tampered = false
 }
 
-' === USB DEVICES ===
-object usb1 <<USBDevice>> {
-  malicious = true
+email_EMP002 -- file1 : can_write
+email_EMP003 -- file2 : can_read
+
+
+' === CREDENTIALS & HASHES ===
+object cred_EMP001 <<Credentials>> {
+  owner = "EMP001"
+  reused = false
+  compromised = false
+}
+object cred_EMP002 <<Credentials>> {
+  owner = "EMP002"
+  reused = true
+  compromised = false
+}
+object hash_EMP003 <<CredentialHash>> {
+  owner = "EMP003"
+  stolen = false
 }
 
-' === DNS CHANNEL ===
-object dns1 <<DNSChannel>> {
-  active = true
-}
-
-' === SCHEDULED TASK ===
-object schedtask1 <<ScheduledTask>> {
-  persistent = true
-}
-
-' === REGISTRY ENTRY ===
-object regkey1 <<RegistryEntry>> {
-  type = run_key
-  malicious = true
-}
-
-' === NETWORK ZONES ===
-object dmz <<NetworkZone>> {
-  name = DMZ
-}
-object internal <<NetworkZone>> {
-  name = Internal
-}
-
-' === ATTACKER ===
-object attacker1 <<Attacker>> {
-  name = external_actor
-}
-
-' === RELATIONS ===
-EMP001 -- email_EMP001 : owns
-EMP002 -- email_EMP002 : owns
-EMP001 -- saas_EMP001 : owns
 EMP001 -- cred_EMP001 : has_credentials
 EMP002 -- cred_EMP002 : has_credentials
 EMP003 -- hash_EMP003 : has_hash
-EMP001 -- device_EMP001 : owns_device
-EMP002 -- device_EMP002 : owns_device
 
-device_EMP001 -- av1 : installed_on
-server1 -- edr1 : installed_on
+' === SECURITY ALERT (placeholder, created dynamically in rules) === created dynamically
 
-EMP002 -- file1 : can_write
-EMP003 -- file2 : can_read
-EMP003 -- server2 : has_permission
-EMP001 -- server1 : connected_to
+' === ATTACKER (single, referenced in rules) === created dynamically
 
-server1 -- dmz : resides_in
-server2 -- internal : resides_in
+' === RELATIONS FOR RISK RULES ===
+host1 -- host2 : can_access
+EMP003 -- host1 : credentials_stored_on
 
-EMP001 -- EMP003 : trusts
-EMP003 -- EMP002 : manager_of
 
-server1 -- rdp_service1 : runs
-host1 -- rdp_service1 : runs
-
-web_app1 -- server1 : exposed_on
-server1 -- script1 : runs
-
-usb1 -- host1 : inserted_into
-host1 -- dns1 : uses
-schedtask1 -- host1 : runs_on
-regkey1 -- host1 : on_host
-
-attacker1 -- file2 : has_access_to
 @enduml

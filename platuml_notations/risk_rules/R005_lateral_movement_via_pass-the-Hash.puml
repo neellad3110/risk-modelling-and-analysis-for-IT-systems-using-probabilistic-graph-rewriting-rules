@@ -1,0 +1,104 @@
+@startuml lateralMovementviaPassTheHash
+title "Lateral Movement via Pass-the-Hash"
+
+top to bottom direction
+
+rectangle "LHS : Hashes harvested from  compromised host and target host accepts NTLM authentication " as LHS_BOX #line:gray {
+
+  object "host" as source_host_lhs <<Host>> #dddddd{
+    compromised = true,
+  }
+  object "host" as target_host_lhs <<Host>> {
+    compromised = false,
+    accepts_ntlm = true
+  }
+  source_host_lhs -up-> target_host_lhs : can_access
+}
+
+rectangle "Outcome 1 : Attacker successfully authenticated \n using NTLM hash and compromised host" as OUTCOME_BOX_1 #line:gray {
+
+  object "host" as source_host1 <<Host>> #dddddd{
+    compromised = true,
+  }
+  object "host" as target_host1 <<Host>> {
+    compromised = true,
+    accepts_ntlm = true
+  }
+  source_host1 -up-> target_host1 : can_access
+  note left of source_host1
+    probability = 0.2
+    cost = 45000 USD
+  end note
+
+}
+
+rectangle "Outcome 2 : Suspicious login attempt detected and flagged" as OUTCOME_BOX_2 #line:gray {
+  
+   object "host" as source_host2 <<Host>> #dddddd{
+    compromised = true,
+  }
+  object "host" as target_host2 <<Host>> {
+    compromised = false,
+    accepts_ntlm = true
+  }
+
+  object "securityAlert" as securityAlert2 <<SecurityAlert>> #ccffcc {
+    type = "login_attempt"
+  }
+  
+  object "attacker" as attacker2 <<Attacker>> #ccffcc
+
+  source_host2 -up-> target_host2 : runs
+  securityAlert2 -.[#green]left.-> target_host2 : detected_on
+  attacker2 .[#green]right.> target_host2 : targets
+  note left of source_host2
+    probability = 0.15
+    cost = 7000 USD
+  end note
+
+}
+
+rectangle "Outcome 3 : Target host account locked due to multiple \n failed authentication attempts" as OUTCOME_BOX_3 #line:gray {
+
+
+  object "host" as source_host3 <<Host>> #dddddd{
+    compromised = true,
+  }
+  object "host" as target_host3 <<Host>> {
+    compromised = false,
+    accepts_ntlm = true,
+    status = suspended
+  }
+
+  object "securityAlert" as securityAlert3 <<SecurityAlert>> #ccffcc {
+    type = service_suspended"
+  }
+  
+  object "attacker" as attacker3 <<Attacker>> #ccffcc
+
+  source_host3 -up-> target_host3 : runs
+  securityAlert3 -.[#green]left.-> target_host3 : detected_on
+  attacker3 .[#green]right.> target_host3 : targets
+
+  note left of source_host3
+    probability = 0.25
+    cost = 0 USD
+  end note
+}
+rectangle "Outcome 4 : Authentication attempt failed and remained undetected" as OUTCOME_BOX_4 #line:gray {
+
+    object "host" as source_host4 <<Host>> #dddddd{
+        compromised = true,
+    }
+    object "host" as target_host4 <<Host>> {
+        compromised = false,
+        accepts_ntlm = true
+    }
+    source_host4 -up-> target_host4 : can_access
+    note left of source_host4
+        probability = 0.4
+        cost = 0 USD
+    end note
+}
+
+@enduml
