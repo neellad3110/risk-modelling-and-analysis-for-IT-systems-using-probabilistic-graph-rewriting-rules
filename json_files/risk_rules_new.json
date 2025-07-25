@@ -23,18 +23,18 @@
                 "risk_pattern": {
                     "lhs": [
                         {
-                            "node_type": "User",
+                            "node": "User",
                             "bind": "user"
                         },
                         {
-                            "node_type": "EmailAccount",
+                            "node": "EmailAccount",
                             "attributes": {
                                 "status": "active"
                             },
                             "bind": "victimEmail"
                         },
                         {
-                            "relation_type": "owns",
+                            "edge": "owns",
                             "source": "user",
                             "target": "victimEmail"
                         }
@@ -51,8 +51,7 @@
                         "effect": [
                             {
                                 "update": {
-                                    "node_type": "EmailAccount",
-                                    "bind": "victimEmail",
+                                    "node": "EmailAccount",
                                     "attributes": {
                                         "compromised": true
                                     }
@@ -72,7 +71,7 @@
                         "effect": [
                             {
                                 "create": {
-                                    "node_type": "SecurityAlert",
+                                    "node": "SecurityAlert",
                                     "attributes": {
                                         "type": "phishing_attempt"
                                     },
@@ -81,7 +80,7 @@
                             },
                             {
                                 "create": {
-                                    "relation_type": "alerts",
+                                    "edge": "alerts",
                                     "source": "alert",
                                     "target": "victimEmail"
                                 }
@@ -92,22 +91,7 @@
                     {
                         "response": "User ignored the email",
                         "probability": 0.6,
-                        "effect": [
-                            {
-                                "delete": {
-                                    "node_type": "Attacker",
-                                    "bind": "attacker"
-                                }
-                            },
-                            {
-                                "delete": {
-                                    "relation_type": "targets",
-                                    "source": "attacker",
-                                    "target": "victimEmail"
-                                }
-                            }
-
-                        ],
+                        "effect": [],
                         "cost": 0
                     },
                     {
@@ -115,31 +99,31 @@
                         "probability": 0.1,
                         "effect": [
                             {
-                                "delete": {
-                                    "node_type": "PhishingMessage",
-                                    "bind": "phishingMessage"
+                                "create": {
+                                    "node": "Attacker",
+                                    "bind": "attacker"
                                 }
                             },
                             {
-                                "delete":{
-                                    "relation_type": "targets",
-                                    "source": "phishingMessage",
+                                "create": {
+                                    "edge": "targets",
+                                    "source": "attacker",
                                     "target": "victimEmail"
                                 }
                             },
                             {
                                 "create": {
-                                    "node_type": "SecurityAlert",
+                                    "node": "SecurityAlert",
                                     "attributes": {
-                                        "type": "phishing_report"
+                                        "type": "phishing_attempt"
                                     },
                                     "bind": "alert"
                                 }
                             },
                             {
                                 "create": {
-                                    "relation_type": "reports",
-                                    "source": "user",
+                                    "edge": "reports",
+                                    "source": "victimEmail",
                                     "target": "alert"
                                 }
                             }
@@ -167,19 +151,18 @@
                 "risk_pattern": {
                     "lhs": [
                         {
-                            "node_type": "User",
+                            "node": "User",
                             "bind": "user"
                         },
                         {
-                            "node_type": "EmailAccount",
+                            "node": "EmailAccount",
                             "attributes": {
-                                "compromised": true,
-                                "role": "user"
+                                "compromised": true
                             },
                             "bind": "victimEmail"
                         },
                         {
-                            "node_type": "File",
+                            "node": "File",
                             "attributes": {
                                 "isSensitive": true,
                                 "tampered": false
@@ -187,16 +170,15 @@
                             "bind": "sensitiveFile"
                         },
                         {
-                            "relation_type": "owns",
+                            "edge": "owns",
                             "source": "user",
                             "target": "victimEmail"
                         },
                         {
-                            "relation_type": "can_write",
+                            "edge": "can_write",
                             "source": "victimEmail",
                             "target": "sensitiveFile"
                         }
-                        
                     ]
                 },
                 "attack_rate": {
@@ -210,20 +192,28 @@
                         "effect": [
                             {
                                 "update": {
-                                    "node_type": "EmailAccount",
+                                    "node": "EmailAccount",
                                     "bind": "victimEmail",
                                     "attributes": {
-                                        "role": "admin"
+                                        "role": "admin",
+                                        "compromised": true
                                     }
                                 }
                             },
                             {
                                 "update": {
-                                    "node_type": "SensitiveFile",
+                                    "node": "File",
                                     "bind": "sensitiveFile",
                                     "attributes": {
                                         "tampered": true
                                     }
+                                }
+                            },
+                            {
+                                "create": {
+                                    "edge": "manages",
+                                    "source": "victimEmail",
+                                    "target": "EmailAccount"
                                 }
                             }
                         ],
@@ -239,7 +229,7 @@
                         "effect": [
                             {
                                 "create": {
-                                    "node_type": "SecurityAlert",
+                                    "node": "SecurityAlert",
                                     "attributes": {
                                         "type": "unauthorized_file_modification"
                                     },
@@ -248,9 +238,22 @@
                             },
                             {
                                 "create": {
-                                    "relation_type": "detected_on",
+                                    "edge": "alerts",
                                     "source": "alert",
                                     "target": "sensitiveFile"
+                                }
+                            },
+                            {
+                                "create": {
+                                    "node": "Attacker",
+                                    "bind": "attacker"
+                                }
+                            },
+                            {
+                                "create": {
+                                    "edge": "targets",
+                                    "source": "attacker",
+                                    "target": "victimEmail"
                                 }
                             }
                         ],
@@ -262,22 +265,22 @@
                         "effect": [
                             {
                                 "update": {
-                                    "node_type": "SensitiveFile",
+                                    "node": "File",
                                     "bind": "sensitiveFile",
                                     "attributes": {
-                                        "writable": false
+                                        "tampered": false
                                     }
                                 }
                             },
                             {
                                 "delete": {
-                                    "node_type": "EmailAccount",
+                                    "node": "EmailAccount",
                                     "bind": "victimEmail"
                                 }
                             },
                             {
                                 "delete": {
-                                    "relation_type": "can_write",
+                                    "edge": "can_write",
                                     "source": "victimEmail",
                                     "target": "sensitiveFile"
                                 }
@@ -305,24 +308,33 @@
                 "risk_pattern": {
                     "lhs": [
                         {
-                            "node_type": "Host",
+                            "node": "User",
+                            "bind": "user"
+                        },
+                        {
+                            "node": "Host",
                             "attributes": {
                                 "compromised": true
                             },
                             "bind": "targetHost"
                         },
                         {
-                            "node_type": "User",
+                            "node": "EmailAccount",
                             "attributes": {
                                 "role": "admin",
-                                "credentials": "secured"
+                                "compromised": false
                             },
-                            "bind": "user"
+                            "bind": "victimEmail"
                         },
                         {
-                            "relation_type": "credentials_stored_on",
+                            "edge": "credentials_stored_on",
                             "source": "user",
                             "target": "targetHost"
+                        },
+                        {
+                            "edge": "owns",
+                            "source": "user",
+                            "target": "victimEmail"
                         }
                     ]
                 },
@@ -337,10 +349,10 @@
                         "effect": [
                             {
                                 "update": {
-                                    "node_type": "User",
-                                    "bind": "user",
+                                    "node": "EmailAccount",
+                                    "bind": "victimEmail",
                                     "attributes": {
-                                        "credentials": "exposed"
+                                        "compromised": true
                                     }
                                 }
                             }
@@ -358,43 +370,42 @@
                         "effect": [
                             {
                                 "update": {
-                                    "node_type": "User",
-                                    "bind": "user",
+                                    "node": "EmailAccount",
+                                    "bind": "victimEmail",
                                     "attributes": {
-                                        "credentials": "critical"
+                                        "compromised": true
                                     }
                                 }
                             },
                             {
                                 "create": {
-                                    "node_type": "SecurityAlert",
+                                    "node": "SecurityAlert",
                                     "attributes": {
-                                        "type": "credential_dumping"
+                                        "type": "partial_credentials_used"
                                     },
                                     "bind": "alert"
                                 }
                             },
                             {
                                 "create": {
-                                    "relation_type": "alerts",
+                                    "edge": "alerts",
                                     "source": "alert",
-                                    "target": "targetHost"
+                                    "target": "victimEmail"
                                 }
                             },
                             {
                                 "create": {
-                                    "node_type": "Attacker",
+                                    "node": "Attacker",
                                     "bind": "attacker"
                                 }
                             },
                             {
                                 "create": {
-                                    "relation_type": "targets",
+                                    "edge": "targets",
                                     "source": "attacker",
                                     "target": "targetHost"
                                 }
                             }
-
                         ],
                         "cost": 15000
                     },
@@ -410,16 +421,16 @@
                         "effect": [
                             {
                                 "update": {
-                                    "node_type": "User",
-                                    "bind": "user",
+                                    "node": "EmailAccount",
+                                    "bind": "victimEmail",
                                     "attributes": {
-                                        "credentials": "secured"
+                                        "compromised": false
                                     }
                                 }
                             },
                             {
                                 "create": {
-                                    "node_type": "SecurityAlert",
+                                    "node": "SecurityAlert",
                                     "attributes": {
                                         "type": "credential_dumping"
                                     },
@@ -428,19 +439,20 @@
                             },
                             {
                                 "create": {
-                                    "relation_type": "alerts",
+                                    "edge": "alerts",
                                     "source": "alert",
-                                    "target": "targetHost"
+                                    "target": "victimEmail"
                                 }
                             },
                             {
                                 "create": {
-                                    "node_type": "Attacker",
+                                    "node": "Attacker",
                                     "bind": "attacker"
                                 }
-                            },{
+                            },
+                            {
                                 "create": {
-                                    "relation_type" : "targets",
+                                    "edge": "attacks",
                                     "source": "attacker",
                                     "target": "targetHost"
                                 }
@@ -452,8 +464,8 @@
             },
             {
                 "id": "RISK004",
-                "title": "Remote Service Exploitation (RDP)",
-                "description": "Attacker uses exposed RDP service to gain unauthorized access to internal systems using weak credentials.\n",
+                "title": "Remote Service Exploitation",
+                "description": "Attackers exploiting vulnerabilities in remote services to gain unauthorized access to systems. These attacks often leverage remote access tools (RATs) or vulnerabilities in protocols like Remote Desktop Protocol (RDP) or Secure Shell (SSH).\n",
                 "mitre_attack_id": "T1021.001",
                 "tags": [
                     "lateral-movement"
@@ -468,7 +480,15 @@
                 "risk_pattern": {
                     "lhs": [
                         {
-                            "node_type": "Service",
+                            "node": "EmailAccount",
+                            "bind": "victimEmail"
+                        },
+                        {
+                            "node": "Server",
+                            "bind": "rdpServer"
+                        },
+                        {
+                            "node": "Service",
                             "attributes": {
                                 "type": "RDP",
                                 "exposed": true
@@ -476,16 +496,26 @@
                             "bind": "rdpService"
                         },
                         {
-                            "node_type": "Host",
+                            "node": "Host",
                             "attributes": {
                                 "compromised": false
                             },
                             "bind": "internalHost"
                         },
                         {
-                            "relation_type": "runs",
+                            "edge": "runs",
                             "source": "internalHost",
                             "target": "rdpService"
+                        },
+                        {
+                            "edge": "credentials_stored_on",
+                            "source": "victimEmail",
+                            "target": "rdpService"
+                        },
+                        {
+                            "edge": "runs_on",
+                            "source": "internalHost",
+                            "target": "rdpServer"
                         }
                     ]
                 },
@@ -500,7 +530,7 @@
                         "effect": [
                             {
                                 "update": {
-                                    "node_type": "Host",
+                                    "node": "Host",
                                     "bind": "internalHost",
                                     "attributes": {
                                         "compromised": true
@@ -521,31 +551,39 @@
                         "effect": [
                             {
                                 "create": {
-                                    "node_type": "SecurityAlert",
+                                    "node": "SecurityAlert",
                                     "attributes": {
-                                        "type": "rdp_attack_detected"
+                                        "type": "rdp_login_attempt_detected"
                                     },
                                     "bind": "alert"
                                 }
                             },
                             {
                                 "create": {
-                                    "node_type": "Attacker",
+                                    "node": "Attacker",
                                     "bind": "attacker"
                                 }
                             },
                             {
+                                "update": {
+                                    "node": "rdpService",
+                                    "attributes": {
+                                        "exposed": false
+                                    }
+                                }
+                            },
+                            {
                                 "create": {
-                                    "relation_type": "targets",
+                                    "edge": "attacks",
                                     "source": "attacker",
                                     "target": "internalHost"
                                 }
                             },
                             {
                                 "create": {
-                                    "relation_type": "alerts",
+                                    "edge": "alerts",
                                     "source": "alert",
-                                    "target": "rdpService"
+                                    "target": "victimEmail"
                                 }
                             }
                         ],
@@ -568,7 +606,7 @@
                     "lateral-movement"
                 ],
                 "preconditions": [
-                    "Hashes harvested from  compromised host",
+                    "Hashes harvested from compromised host",
                     "Target host accepts NTLM authentication"
                 ],
                 "postconditions": [
@@ -576,15 +614,19 @@
                 ],
                 "risk_pattern": {
                     "lhs": [
+                         {
+                            "node": "EmailAccount",
+                            "bind": "victimEmail"
+                        },
                         {
-                            "node_type": "Host",
+                            "node": "Host",
                             "attributes": {
                                 "compromised": true
                             },
                             "bind": "sourceHost"
                         },
                         {
-                            "node_type": "Host",
+                            "node": "Host",
                             "attributes": {
                                 "accepts_ntlm": true,
                                 "compromised": false
@@ -592,9 +634,14 @@
                             "bind": "targetHost"
                         },
                         {
-                            "relation_type": "can_access",
+                            "edge": "can_access",
                             "source": "sourceHost",
                             "target": "targetHost"
+                        },
+                        {
+                            "edge": "credentials_stored_on",
+                            "source": "victimEmail",
+                            "target": "sourceHost"
                         }
                     ]
                 },
@@ -609,7 +656,7 @@
                         "effect": [
                             {
                                 "update": {
-                                    "node_type": "Host",
+                                    "node": "Host",
                                     "bind": "targetHost",
                                     "attributes": {
                                         "compromised": true
@@ -629,7 +676,7 @@
                         "effect": [
                             {
                                 "create": {
-                                    "node_type": "SecurityAlert",
+                                    "node": "SecurityAlert",
                                     "attributes": {
                                         "type": "pass_the_hash_detected"
                                     },
@@ -638,25 +685,24 @@
                             },
                             {
                                 "create": {
-                                    "relation_type": "alerts",
+                                    "edge": "alerts",
                                     "source": "alert",
-                                    "target": "targetHost"
+                                    "target": "victimEmail"
                                 }
                             },
                             {
                                 "create": {
-                                    "node_type": "Attacker",
+                                    "node": "Attacker",
                                     "bind": "attacker"
                                 }
                             },
                             {
                                 "create": {
-                                    "relation_type": "targets",
+                                    "edge": "attacks",
                                     "source": "attacker",
                                     "target": "targetHost"
                                 }
                             }
-                           
                         ],
                         "cost": 7000
                     },

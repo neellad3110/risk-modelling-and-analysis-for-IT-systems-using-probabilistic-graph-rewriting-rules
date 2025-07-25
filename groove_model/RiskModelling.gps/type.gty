@@ -4,182 +4,325 @@
         <attr name="$version">
             <string>curly</string>
         </attr>
-        <node id="n1">
+        <node id="n11">
             <attr name="layout">
-                <string>585 112 19 19</string>
-            </attr>
-        </node>
-        <node id="n5">
-            <attr name="layout">
-                <string>155 220 19 19</string>
-            </attr>
-        </node>
-        <node id="n6">
-            <attr name="layout">
-                <string>162 364 19 19</string>
-            </attr>
-        </node>
-        <node id="n7">
-            <attr name="layout">
-                <string>162 494 19 19</string>
+                <string>221 643 19 19</string>
             </attr>
         </node>
         <node id="n9">
             <attr name="layout">
-                <string>718 422 123 64</string>
+                <string>82 338 19 19</string>
             </attr>
         </node>
         <node id="n10">
             <attr name="layout">
-                <string>893 377 104 48</string>
+                <string>148 522 19 19</string>
             </attr>
         </node>
-        <node id="n0">
+        <node id="n14">
             <attr name="layout">
-                <string>585 14 19 19</string>
-            </attr>
-        </node>
-        <node id="n2">
-            <attr name="layout">
-                <string>588 226 19 19</string>
-            </attr>
-        </node>
-        <node id="n3">
-            <attr name="layout">
-                <string>354 421 19 19</string>
-            </attr>
-        </node>
-        <node id="n4">
-            <attr name="layout">
-                <string>524 385 123 80</string>
+                <string>772 351 19 19</string>
             </attr>
         </node>
         <node id="n8">
             <attr name="layout">
-                <string>538 568 104 80</string>
+                <string>281 339 19 19</string>
             </attr>
         </node>
-        <edge from="n1" to="n1">
-            <attr name="label">
-                <string>type:Department</string>
-            </attr>
-        </edge>
-        <edge from="n1" to="n1">
-            <attr name="label">
-                <string>string:name</string>
-            </attr>
-        </edge>
-        <edge from="n1" to="n2">
-            <attr name="label">
-                <string>employs</string>
-            </attr>
-        </edge>
-        <edge from="n5" to="n5">
-            <attr name="label">
-                <string>type:Server</string>
-            </attr>
-        </edge>
-        <edge from="n5" to="n5">
-            <attr name="label">
-                <string>bool:accepts_ntlm</string>
-            </attr>
-        </edge>
-        <edge from="n5" to="n5">
-            <attr name="label">
-                <string>string:name</string>
-            </attr>
-        </edge>
-        <edge from="n5" to="n5">
-            <attr name="label">
-                <string>string:os</string>
-            </attr>
-        </edge>
-        <edge from="n5" to="n6">
-            <attr name="label">
-                <string>runs_on</string>
-            </attr>
-        </edge>
-        <edge from="n6" to="n6">
-            <attr name="label">
-                <string>type:Host</string>
-            </attr>
-        </edge>
-        <edge from="n6" to="n6">
-            <attr name="label">
-                <string>bool:accepts_ntlm</string>
-            </attr>
-        </edge>
-        <edge from="n6" to="n6">
-            <attr name="label">
-                <string>bool:compromised</string>
-            </attr>
-        </edge>
-        <edge from="n6" to="n6">
-            <attr name="label">
-                <string>string:os</string>
-            </attr>
-        </edge>
-        <edge from="n6" to="n7">
-            <attr name="label">
-                <string>runs</string>
-            </attr>
-        </edge>
-        <edge from="n6" to="n6">
-            <attr name="label">
-                <string>can_access</string>
-            </attr>
+        <node id="n7">
             <attr name="layout">
-                <string>1 1 172 374 278 374 172 374 11</string>
+                <string>569 548 19 19</string>
             </attr>
-        </edge>
-        <edge from="n7" to="n7">
+        </node>
+        <node id="n12">
+            <attr name="layout">
+                <string>445 599 19 19</string>
+            </attr>
+        </node>
+        <node id="n13">
+            <attr name="layout">
+                <string>578 393 19 19</string>
+            </attr>
+        </node>
+        <node id="n5">
+            <attr name="layout">
+                <string>599 160 19 19</string>
+            </attr>
+        </node>
+        <node id="n4">
+            <attr name="layout">
+                <string>580 112 19 19</string>
+            </attr>
+        </node>
+        <node id="n3">
+            <attr name="layout">
+                <string>319 115 19 19</string>
+            </attr>
+        </node>
+        <node id="n2">
+            <attr name="layout">
+                <string>304 155 19 19</string>
+            </attr>
+        </node>
+        <node id="n0">
+            <attr name="layout">
+                <string>436 18 19 19</string>
+            </attr>
+        </node>
+        <node id="n6">
+            <attr name="layout">
+                <string>462 221 19 19</string>
+            </attr>
+        </node>
+        <node id="n1">
+            <attr name="layout">
+                <string>435 121 19 19</string>
+            </attr>
+        </node>
+        <edge from="n11" to="n11">
             <attr name="label">
                 <string>type:Service</string>
             </attr>
         </edge>
-        <edge from="n7" to="n7">
+        <edge from="n11" to="n11">
             <attr name="label">
                 <string>bool:exposed</string>
             </attr>
         </edge>
-        <edge from="n7" to="n7">
+        <edge from="n11" to="n11">
             <attr name="label">
                 <string>string:type</string>
             </attr>
         </edge>
         <edge from="n9" to="n9">
             <attr name="label">
-                <string>type:Credentials</string>
+                <string>type:Server</string>
             </attr>
         </edge>
         <edge from="n9" to="n9">
+            <attr name="label">
+                <string>bool:accepts_ntlm</string>
+            </attr>
+        </edge>
+        <edge from="n9" to="n9">
+            <attr name="label">
+                <string>string:name</string>
+            </attr>
+        </edge>
+        <edge from="n9" to="n9">
+            <attr name="label">
+                <string>string:os</string>
+            </attr>
+        </edge>
+        <edge from="n9" to="n10">
+            <attr name="label">
+                <string>runs_on</string>
+            </attr>
+        </edge>
+        <edge from="n10" to="n10">
+            <attr name="label">
+                <string>type:Host</string>
+            </attr>
+        </edge>
+        <edge from="n10" to="n10">
+            <attr name="label">
+                <string>bool:accepts_ntlm</string>
+            </attr>
+        </edge>
+        <edge from="n10" to="n10">
             <attr name="label">
                 <string>bool:compromised</string>
             </attr>
         </edge>
-        <edge from="n9" to="n9">
+        <edge from="n10" to="n10">
             <attr name="label">
-                <string>bool:reused</string>
+                <string>string:os</string>
             </attr>
         </edge>
-        <edge from="n9" to="n9">
+        <edge from="n10" to="n11">
             <attr name="label">
-                <string>string:owner</string>
+                <string>runs</string>
             </attr>
         </edge>
         <edge from="n10" to="n10">
+            <attr name="label">
+                <string>can_access</string>
+            </attr>
+            <attr name="layout">
+                <string>234 27 191 515 332 515 191 515 11</string>
+            </attr>
+        </edge>
+        <edge from="n14" to="n14">
             <attr name="label">
                 <string>type:CredentialHash</string>
             </attr>
         </edge>
-        <edge from="n10" to="n10">
+        <edge from="n14" to="n14">
             <attr name="label">
                 <string>bool:stolen</string>
             </attr>
         </edge>
-        <edge from="n10" to="n10">
+        <edge from="n14" to="n14">
             <attr name="label">
                 <string>string:owner</string>
+            </attr>
+        </edge>
+        <edge from="n8" to="n8">
+            <attr name="label">
+                <string>type:EmailAccount</string>
+            </attr>
+        </edge>
+        <edge from="n8" to="n8">
+            <attr name="label">
+                <string>bool:compromised</string>
+            </attr>
+        </edge>
+        <edge from="n8" to="n8">
+            <attr name="label">
+                <string>string:domain</string>
+            </attr>
+        </edge>
+        <edge from="n8" to="n8">
+            <attr name="label">
+                <string>string:role</string>
+            </attr>
+        </edge>
+        <edge from="n8" to="n8">
+            <attr name="label">
+                <string>string:status</string>
+            </attr>
+        </edge>
+        <edge from="n8" to="n12">
+            <attr name="label">
+                <string>can_read</string>
+            </attr>
+        </edge>
+        <edge from="n8" to="n12">
+            <attr name="label">
+                <string>can_write</string>
+            </attr>
+        </edge>
+        <edge from="n8" to="n7">
+            <attr name="label">
+                <string>uses</string>
+            </attr>
+        </edge>
+        <edge from="n8" to="n10">
+            <attr name="label">
+                <string>credentials_stored_on</string>
+            </attr>
+        </edge>
+        <edge from="n8" to="n8">
+            <attr name="label">
+                <string>manages</string>
+            </attr>
+            <attr name="layout">
+                <string>500 2 352 359 426 359 352 359 11</string>
+            </attr>
+        </edge>
+        <edge from="n7" to="n7">
+            <attr name="label">
+                <string>type:Device</string>
+            </attr>
+        </edge>
+        <edge from="n7" to="n7">
+            <attr name="label">
+                <string>bool:accepts_ntlm</string>
+            </attr>
+        </edge>
+        <edge from="n7" to="n7">
+            <attr name="label">
+                <string>string:deviceType</string>
+            </attr>
+        </edge>
+        <edge from="n7" to="n7">
+            <attr name="label">
+                <string>string:os</string>
+            </attr>
+        </edge>
+        <edge from="n12" to="n12">
+            <attr name="label">
+                <string>type:File</string>
+            </attr>
+        </edge>
+        <edge from="n12" to="n12">
+            <attr name="label">
+                <string>bool:isSensitive</string>
+            </attr>
+        </edge>
+        <edge from="n12" to="n12">
+            <attr name="label">
+                <string>bool:tampered</string>
+            </attr>
+        </edge>
+        <edge from="n12" to="n12">
+            <attr name="label">
+                <string>bool:writable</string>
+            </attr>
+        </edge>
+        <edge from="n12" to="n12">
+            <attr name="label">
+                <string>string:name</string>
+            </attr>
+        </edge>
+        <edge from="n13" to="n13">
+            <attr name="label">
+                <string>type:Credentials</string>
+            </attr>
+        </edge>
+        <edge from="n13" to="n13">
+            <attr name="label">
+                <string>bool:compromised</string>
+            </attr>
+        </edge>
+        <edge from="n13" to="n13">
+            <attr name="label">
+                <string>bool:reused</string>
+            </attr>
+        </edge>
+        <edge from="n13" to="n13">
+            <attr name="label">
+                <string>string:owner</string>
+            </attr>
+        </edge>
+        <edge from="n5" to="n5">
+            <attr name="label">
+                <string>type:HR</string>
+            </attr>
+        </edge>
+        <edge from="n5" to="n1">
+            <attr name="label">
+                <string>sub:</string>
+            </attr>
+        </edge>
+        <edge from="n4" to="n4">
+            <attr name="label">
+                <string>type:IT</string>
+            </attr>
+        </edge>
+        <edge from="n4" to="n1">
+            <attr name="label">
+                <string>sub:</string>
+            </attr>
+        </edge>
+        <edge from="n3" to="n3">
+            <attr name="label">
+                <string>type:Engineering</string>
+            </attr>
+        </edge>
+        <edge from="n3" to="n1">
+            <attr name="label">
+                <string>sub:</string>
+            </attr>
+        </edge>
+        <edge from="n2" to="n2">
+            <attr name="label">
+                <string>type:Sales</string>
+            </attr>
+        </edge>
+        <edge from="n2" to="n1">
+            <attr name="label">
+                <string>sub:</string>
             </attr>
         </edge>
         <edge from="n0" to="n0">
@@ -197,125 +340,47 @@
                 <string>has_department</string>
             </attr>
         </edge>
-        <edge from="n2" to="n2">
+        <edge from="n6" to="n6">
             <attr name="label">
                 <string>type:User</string>
             </attr>
         </edge>
-        <edge from="n2" to="n2">
+        <edge from="n6" to="n6">
             <attr name="label">
                 <string>string:name</string>
             </attr>
         </edge>
-        <edge from="n2" to="n6">
-            <attr name="label">
-                <string>credentials_stored_on</string>
-            </attr>
-        </edge>
-        <edge from="n2" to="n4">
-            <attr name="label">
-                <string>owns</string>
-            </attr>
-        </edge>
-        <edge from="n2" to="n3">
-            <attr name="label">
-                <string>uses</string>
-            </attr>
-        </edge>
-        <edge from="n2" to="n10">
+        <edge from="n6" to="n14">
             <attr name="label">
                 <string>has_hash</string>
             </attr>
         </edge>
-        <edge from="n2" to="n9">
+        <edge from="n6" to="n8">
+            <attr name="label">
+                <string>owns</string>
+            </attr>
+        </edge>
+        <edge from="n6" to="n13">
             <attr name="label">
                 <string>has_credentials</string>
             </attr>
         </edge>
-        <edge from="n3" to="n3">
+        <edge from="n1" to="n1">
             <attr name="label">
-                <string>type:Device</string>
+                <string>type:Department</string>
             </attr>
         </edge>
-        <edge from="n3" to="n3">
-            <attr name="label">
-                <string>bool:accepts_ntlm</string>
-            </attr>
-        </edge>
-        <edge from="n3" to="n3">
-            <attr name="label">
-                <string>string:deviceType</string>
-            </attr>
-        </edge>
-        <edge from="n3" to="n3">
-            <attr name="label">
-                <string>string:os</string>
-            </attr>
-        </edge>
-        <edge from="n4" to="n4">
-            <attr name="label">
-                <string>type:EmailAccount</string>
-            </attr>
-        </edge>
-        <edge from="n4" to="n4">
-            <attr name="label">
-                <string>bool:compromised</string>
-            </attr>
-        </edge>
-        <edge from="n4" to="n4">
-            <attr name="label">
-                <string>string:domain</string>
-            </attr>
-        </edge>
-        <edge from="n4" to="n4">
-            <attr name="label">
-                <string>string:role</string>
-            </attr>
-        </edge>
-        <edge from="n4" to="n4">
-            <attr name="label">
-                <string>string:status</string>
-            </attr>
-        </edge>
-        <edge from="n4" to="n8">
-            <attr name="label">
-                <string>can_read</string>
-            </attr>
-            <attr name="layout">
-                <string>450 -26 562 464 693 607 11</string>
-            </attr>
-        </edge>
-        <edge from="n4" to="n8">
-            <attr name="label">
-                <string>can_write</string>
-            </attr>
-            <attr name="layout">
-                <string>627 29 514 464 520 595 11</string>
-            </attr>
-        </edge>
-        <edge from="n8" to="n8">
-            <attr name="label">
-                <string>type:File</string>
-            </attr>
-        </edge>
-        <edge from="n8" to="n8">
-            <attr name="label">
-                <string>bool:isSensitive</string>
-            </attr>
-        </edge>
-        <edge from="n8" to="n8">
-            <attr name="label">
-                <string>bool:tampered</string>
-            </attr>
-        </edge>
-        <edge from="n8" to="n8">
-            <attr name="label">
-                <string>bool:writable</string>
-            </attr>
-        </edge>
-        <edge from="n8" to="n8">
+        <edge from="n1" to="n1">
             <attr name="label">
                 <string>string:name</string>
+            </attr>
+        </edge>
+        <edge from="n1" to="n6">
+            <attr name="label">
+                <string>employs</string>
+            </attr>
+            <attr name="layout">
+                <string>500 -10 472 152 472 210 11</string>
             </attr>
         </edge>
     </graph>

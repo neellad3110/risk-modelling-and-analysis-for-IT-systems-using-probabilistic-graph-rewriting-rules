@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/typeGraph.schema.json",
+  "title": "TypeGraph Schema",
+  "type": "object",
+  "required": ["id", "nodes", "edges"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type"],
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "isAbstract": {
+            "type": "boolean"
+          },
+          "isSubTypeOf": {
+            "type": "string",
+            "minLength": 1
+          },
+          "attributes": {
+            "type": "object",
+            "additionalProperties": {
+              "$comment": "Attributes are key-value pairs where the value is a types name and is stored as a string. It can be just the values of the specified enum",
+              "type": "string",
+              "enum": ["string", "boolean", "integer", "number", "array"],
+              "not": { "const": null }
+            }
+          }
+        },
+        "allOf": [
+            {
+              "if": {
+                "required": ["isAbstract"]
+              },
+              "then": {
+                "properties": {
+                  "isAbstract": {
+                    "$comment": "Omit the 'isAbstract' field when the value would be false to reduce json verbosity and emphasize abstraction only when relevant.",
+                    "const": true
+                  }
+                }
+              }
+            }
+          ],
+        "additionalProperties": false
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "source", "target"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1
+          },
+          "target": {
+            "type": "string",
+            "minLength": 1
+          },
+          "multiplicity": {
+            "$comment": "if this field is not given in a JSON, the multiplicity is assumbed to be 0:*",
+            "type": "object",
+            "required": ["lower", "upper"],
+            "additionalProperties": false,
+            "properties": {
+              "lower": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "upper": {
+                "oneOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  {
+                    "type": "string",
+                    "const": "*"
+                  }
+                ]
+              }
+            }
+          },
+          "attributes": {
+            "type": "object",
+            "additionalProperties": {
+              "$comment": "Attributes are key-value pairs where the value is a types name and is stored as a string. It can be just the values of the specified enum",
+              "type": "string",
+              "enum": ["string", "boolean", "integer", "number", "array"],
+              "not": { "const": null }
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
+
+      

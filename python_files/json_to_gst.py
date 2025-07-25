@@ -10,8 +10,12 @@ def main():
     json_path = base / "json_files/business_graph.json"
     gst_path = base / "groove_model/RiskModelling.gps/host.gst"
 
+    # Load business graph (now as a list of graphs)
     with open(json_path) as f:
-        data = json.load(f)["business_graph"]
+        data = json.load(f)
+        # If it's a list, take the first graph object
+        if isinstance(data, list):
+            data = data[0]
 
     # Assign node ids
     node_id_map = {}
@@ -41,8 +45,10 @@ def main():
             <attr name="label"><string>let:{k}={v_str}</string></attr>
         </edge>''')
 
-    # Relations as edges
-    for rel in data["relations"]:
+    # Edges (relations)
+    # Accept both "edges" and "relations" for compatibility
+    edge_list = data.get("edges") or data.get("relations") or []
+    for rel in edge_list:
         src = node_id_map[rel["source"]]
         tgt = node_id_map[rel["target"]]
         label = escape(rel["type"])

@@ -1,121 +1,115 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
-    <graph role="type" edgeids="false" edgemode="directed" id="privilege_escalation_type">
+    <graph role="rule" edgeids="false" edgemode="directed" id="passTheHash_lateralMovement_Suspicious_login_attempt_detected_and_flagged">
+        <attr name="priority">
+            <string>1</string>
+        </attr>
         <attr name="$version">
             <string>curly</string>
         </attr>
         <node id="n0">
             <attr name="layout">
-                <string>366 161 87 32</string>
-            </attr>
-        </node>
-        <node id="n1">
-            <attr name="layout">
-                <string>639 294 19 19</string>
+                <string>594 307 19 19</string>
             </attr>
         </node>
         <node id="n2">
             <attr name="layout">
-                <string>400 460 19 19</string>
+                <string>595 422 19 19</string>
             </attr>
         </node>
         <node id="n3">
             <attr name="layout">
-                <string>397 293 19 19</string>
+                <string>306 418 19 19</string>
+            </attr>
+        </node>
+        <node id="n1">
+            <attr name="layout">
+                <string>303 307 19 19</string>
             </attr>
         </node>
         <node id="n4">
             <attr name="layout">
-                <string>124 274 96 48</string>
+                <string>292 161 19 19</string>
             </attr>
         </node>
-        <edge from="n0" to="n3">
+        <edge from="n0" to="n0">
             <attr name="label">
-                <string>alerts</string>
-            </attr>
-            <attr name="layout">
-                <string>513 -26 401 177 406 302 11</string>
+                <string>parin:0</string>
             </attr>
         </edge>
         <edge from="n0" to="n0">
             <attr name="label">
-                <string>type:SecurityAlert</string>
+                <string>type:Host</string>
             </attr>
         </edge>
         <edge from="n0" to="n0">
             <attr name="label">
-                <string>string:type</string>
+                <string>test:compromised=true</string>
             </attr>
         </edge>
-        <edge from="n1" to="n3">
+        <edge from="n0" to="n1">
             <attr name="label">
-                <string>owns</string>
-            </attr>
-        </edge>
-        <edge from="n1" to="n1">
-            <attr name="label">
-                <string>type:Attacker</string>
-            </attr>
-        </edge>
-        <edge from="n2" to="n3">
-            <attr name="label">
-                <string>owns</string>
-            </attr>
-            <attr name="layout">
-                <string>490 -5 409 469 406 302 11</string>
+                <string>can_access</string>
             </attr>
         </edge>
         <edge from="n2" to="n2">
             <attr name="label">
-                <string>type:User</string>
-            </attr>
-        </edge>
-        <edge from="n3" to="n3">
-            <attr name="label">
-                <string>string:role</string>
-            </attr>
-        </edge>
-        <edge from="n3" to="n4">
-            <attr name="label">
-                <string>can_write</string>
-            </attr>
-        </edge>
-        <edge from="n3" to="n3">
-            <attr name="label">
                 <string>type:EmailAccount</string>
             </attr>
         </edge>
-        <edge from="n3" to="n3">
+        <edge from="n2" to="n0">
             <attr name="label">
-                <string>string:status</string>
-            </attr>
-        </edge>
-        <edge from="n3" to="n0">
-            <attr name="label">
-                <string>reports</string>
-            </attr>
-            <attr name="layout">
-                <string>530 -33 406 302 401 177 11</string>
+                <string>credentials_stored_on</string>
             </attr>
         </edge>
         <edge from="n3" to="n3">
             <attr name="label">
-                <string>bool:compromised</string>
+                <string>new:</string>
+            </attr>
+        </edge>
+        <edge from="n3" to="n3">
+            <attr name="label">
+                <string>type:SecurityAlert</string>
+            </attr>
+        </edge>
+        <edge from="n3" to="n3">
+            <attr name="label">
+                <string>let:type="pass_the_hash_detected"</string>
+            </attr>
+        </edge>
+        <edge from="n3" to="n2">
+            <attr name="label">
+                <string>alerts</string>
+            </attr>
+        </edge>
+        <edge from="n1" to="n1">
+            <attr name="label">
+                <string>type:Host</string>
+            </attr>
+        </edge>
+        <edge from="n1" to="n1">
+            <attr name="label">
+                <string>let:compromised=false</string>
+            </attr>
+        </edge>
+        <edge from="n1" to="n1">
+            <attr name="label">
+                <string>test:accepts_ntlm=true</string>
             </attr>
         </edge>
         <edge from="n4" to="n4">
             <attr name="label">
-                <string>type:File</string>
+                <string>new:</string>
             </attr>
         </edge>
         <edge from="n4" to="n4">
             <attr name="label">
-                <string>bool:isSensitive</string>
+                <string>type:Attacker</string>
             </attr>
         </edge>
-        <edge from="n4" to="n4">
+        <edge from="n4" to="n1">
             <attr name="label">
-                <string>bool:tampered</string>
+                <string>attacks</string>
             </attr>
         </edge>
     </graph>

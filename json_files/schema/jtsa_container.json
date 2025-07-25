@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/meta.schema.json",
+  "title": "Meta schema for GTS Systems",
+  "$comment": "JTSA: Json Type Safte Attributes for Nodes and Edges (more restrictive)",
+  "$defs": {
+    "TypeGraph": {
+      "$ref": "jtsa_typeGraph.schema.json"
+    },
+    "TypedGraphs": {
+      "$ref": "jtsa_typedGraphs.schema.json"
+    }
+  }
+}

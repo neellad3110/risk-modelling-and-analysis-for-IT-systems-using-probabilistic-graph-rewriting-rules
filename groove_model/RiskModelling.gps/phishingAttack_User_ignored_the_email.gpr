@@ -1,48 +1,48 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
-    <graph role="rule" edgeids="false" edgemode="directed" id="phishingAttack_User_clicked_link_and_entered_credentials">
+    <graph role="rule" edgeids="false" edgemode="directed" id="phishingAttack_User_ignored_the_email">
         <attr name="$version">
             <string>curly</string>
         </attr>
         <attr name="priority">
             <string>1</string>
         </attr>
-        <node id="n0">
-            <attr name="layout">
-                <string>353 385 19 19</string>
-            </attr>
-        </node>
         <node id="n1">
             <attr name="layout">
-                <string>302 201 121 54</string>
+                <string>376 427 19 19</string>
             </attr>
         </node>
-        <edge from="n0" to="n0">
+        <node id="n0">
+            <attr name="layout">
+                <string>265 284 244 36</string>
+            </attr>
+        </node>
+        <edge from="n1" to="n1">
             <attr name="label">
                 <string>type:User</string>
             </attr>
         </edge>
-        <edge from="n0" to="n1">
+        <edge from="n1" to="n0">
             <attr name="label">
                 <string>owns</string>
             </attr>
         </edge>
-        <edge from="n1" to="n1">
+        <edge from="n0" to="n0">
             <attr name="label">
                 <string>parin:0</string>
             </attr>
         </edge>
-        <edge from="n1" to="n1">
+        <edge from="n0" to="n0">
             <attr name="label">
                 <string>type:EmailAccount</string>
             </attr>
         </edge>
-        <edge from="n1" to="n1">
+        <edge from="n0" to="n0">
             <attr name="label">
-                <string>let:compromised=true</string>
+                <string>let:compromised=false</string>
             </attr>
         </edge>
-        <edge from="n1" to="n1">
+        <edge from="n0" to="n0">
             <attr name="label">
                 <string>test:status="active"</string>
             </attr>

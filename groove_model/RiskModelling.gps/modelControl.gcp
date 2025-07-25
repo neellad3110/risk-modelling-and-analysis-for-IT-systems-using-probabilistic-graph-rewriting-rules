@@ -1,0 +1,53 @@
+function phishingAttackRR(out node victimEmail)
+{
+    phishingAttack(out victimEmail); // risk pattern
+    phishingAttack_User_clicked_link_and_entered_credentials(victimEmail) | // outcome 1: enter password
+    phishingAttack_User_clicked_link_but_did_not_enter_credentials(victimEmail) | // outcome 2: did not enter the password
+    phishingAttack_User_ignored_the_email(victimEmail)|  // outcome 3: ignored the email
+    phishingAttack_User_reported_the_phishing_attempt(victimEmail); // outcome : reported phisihing attempt
+}
+
+function privilegeEscalationRR(node victimEmail)
+{
+    privilegeEscalation(victimEmail);
+    privilegeEscalation_attacker_successfully_modifies_file_to_escalate_priviledges(victimEmail)|
+    privilegeEscalation_attack_attempt_triggers_security_alert_by_file_integrity_monitoring(victimEmail)|
+    privilegeEscalation_sysadmin_detects_and_revokes_file_permissions_before_attack_succeeds(victimEmail);
+}
+
+function remoteServiceExploitationRR(out node host)
+{
+	remoteServiceExploitation(out host);
+	remoteServiceExploitationAttacker_logged_in_via_RDP_and_gained_control(host)|
+	remoteServiceExploitation_RDP_login_attempt_failed_without_detection(host)|
+	remoteServiceExploitation_multiple_failed_RDP_login_attempts_security_alert_triggered_systemAdmin_closed_RDP_port(host);
+}
+
+function credentialDumpingRR(node host){
+
+	credentialDumping(host);
+	credentialDumping_attacker_dumps_admin_credentials(host)|
+	credentialDumping_endpoint_security_detected_the_attempt(host)|
+	credentialDumping_attempt_failed_silently(host)|
+	credentialDumping_endpoint_security_detected_the_attempt(host);
+
+}
+/*
+function passTheHash_lateralMovementRR(node compromisedHost){
+
+	passTheHash_lateralMovement(compromisedHost);
+	passTheHash_lateralMovement_Attacker_successfully_authenticated_using_NTLM_hash_and_compromised_host(compromisedHost)|
+	passTheHash_lateralMovement_Suspicious_login_attempt_detected_and_flagged(compromisedHost)|
+	passTheHash_lateralMovement_Authentication_attempt_failed_and_remained_undetected(compromisedHost);
+}*/
+
+node host;
+node victimEmail;
+
+phishingAttackRR(out victimEmail); 
+privilegeEscalationRR(victimEmail);
+remoteServiceExploitationRR(out host);
+credentialDumpingRR(host);    
+//passTheHash_lateralMovementRR(host);
+
+

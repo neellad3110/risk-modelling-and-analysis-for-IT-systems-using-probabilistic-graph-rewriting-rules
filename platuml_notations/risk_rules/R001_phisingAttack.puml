@@ -13,6 +13,25 @@ rectangle "LHS : User has active email account" as LHS_BOX #line:gray {
   
 }
 
+rectangle "Start graph : Phishing Attack" as START_GRAPH_BOX #line:gray {
+
+  object "user" as user_start <<User>> 
+  object "victimEmail" as victimEmail_start  <<EmailAccount>> {
+    compromised = false
+    status = active
+  }
+  object "securityAlert" as securityAlert_start <<SecurityAlert>> #ccffcc {
+    type = phishing_attempt
+  }
+
+  object "attacker" as attacker_start <<Attacker>> #ccffcc 
+
+  user_start -up-> victimEmail_start : owns
+  securityAlert_start -.[#Green]left.-> victimEmail_start : alerts
+  attacker_start -.[#Green]right.-> victimEmail_start : targets
+
+}
+
 rectangle "Outcome 1 : User clicked link and entered credentials" as OUTCOME_BOX_1 #line:gray {
 
   object "user" as user1 <<User>> #dddddd
@@ -20,7 +39,8 @@ rectangle "Outcome 1 : User clicked link and entered credentials" as OUTCOME_BOX
     compromised = true 
     status = active 
   }
- 
+  object "attacker" as attacker1 <<Attacker>> #ccffcc 
+  attacker1 -.[#Green]right.-> victimEmail1 : targets
   user1 -up-> victimEmail1 : owns
   note right of victimEmail1
     probability = 0.1
@@ -41,8 +61,10 @@ rectangle "Outcome 2 : User clicked link but did not enter credentials" as OUTCO
     type = phishing_attempt
   }
 
+  object "attacker" as attacker2 <<Attacker>> #7a9df4
   user2 -up-> victimEmail2 : owns
-  securityAlert2 -.[#Green]left.-> victimEmail2 : alerts 
+  securityAlert2 .[#Green]down.> victimEmail2 : alerts 
+  attacker2 .[#7a9df4]left.> victimEmail2 : targets
   note left of victimEmail2
     probability = 0.2
     cost = 5000 USD
@@ -79,8 +101,6 @@ rectangle "Outcome 4 : User reported the phishing attempt to sysadmin" as OUTCOM
    type = phishing_attempt
   }
 
-   
-  
   user4 -up-> victimEmail4 : owns
   phishingMessage4 -.[#7a9df4]left.-> victimEmail4 : targets
   victimEmail4 .[#Green]down.> securityAlert4 : reports

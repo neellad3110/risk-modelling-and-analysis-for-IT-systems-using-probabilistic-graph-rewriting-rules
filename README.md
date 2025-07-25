@@ -32,47 +32,53 @@ support for administrators seeking to prioritize vulnerabilities and mitigate ri
 
 [comment]: # (You can add as many additional bullet points as necessary by adding an additional hyphon symbol '-' at the end of each list) 
 
-Essential:
-- **Typed Attributed Multigraph (Business Graph):**
-  - The system must represent the IT infrastructure as a typed attributed multigraph, capturing users, assets, services, and their relations.
-- **Machine-Readable Risk Rules:**
-  - Risk rules (vulnerability patterns, rates, outcomes) must be stored in a structured format (e.g., YAML, JSON, DSL).
-- **Pattern Matching Engine:**
-  - The system must support matching rule patterns (LHS) against the business graph to detect vulnerabilities.
+### Essential:
+- **Foundational Literature and Tooling Review:** <br>
+    - Before developing a prototype, it is essential to build a strong foundational understanding of graph-based modeling and transformation within the context of software engineering. This includes a solid grasp of the MITRE ATT&CK framework for identifying and categorizing adversarial behaviors, as well as hands-on familiarity with graph rewriting tools such as GROOVE for pattern matching and rule application. Additionally, background knowledge of Continuous-Time Markov Decision Processes (CTMDPs) and probabilistic model checking—using tools like PRISM—is crucial for accurately simulating attack propagation and analyzing risk over time. These foundational elements are critical to effectively designing and implementing the proposed risk modeling system.
+
+
+- **Typed Attributed Multigraph Representation:**<br> 
+    - The system must support modelling IT infrastructures as typed attributed multigraphs, including nodes (users, servers, devices, etc.), edges (relations), and attributes (e.g., has_access_to, owns, runs_on, alerts role).
+
+- **Formal Rule Specification Language:**<br>
+    - There must be a machine-readable format (e.g., YAML, JSON) for defining graph rewriting rules with vulnerability patterns, attack rates, and probabilistic outcomes.
+
+- **JSON to Groove Automation:**<br>
+    - An automated script which will generate Groove based notations for type graph, host graph and risk rules. The script should take consider all nodes, edges, relations, LHS pattern and RHS (outcomes) of risk rule will support Groove graph modeling syntax. 
+	
 - **Probabilistic Risk Analytics:**
-  - For each pattern match, the system must estimate risk using attack rates, outcome probabilities, and costs.
-- **MITRE ATT&CK Alignment:**
+  - For each pattern match, the system must estimate risk using attack rates per year, outcome probabilities of attack, and costs to company.
+
+- **MITRE ATT&CK:**
   - Risk rules must be grounded in real-world attack techniques (e.g., MITRE ATT&CK).
+ 
 - **Model Consistency Checking:**
   - The system must validate that the graph and rules are consistent and compatible for matching.
 
-Desirable:
-- **Graph Visualization:**
-  - Visual representation of the business graph and attack surface (e.g., using Neo4j, GraphML, or matplotlib).
-- **Modular Rule Organization:**
-  - Rules organized by tactics/techniques or attack phases for easier management and extensibility.
-- **Scenario/What-if Analysis:**
-  - Ability to modify the business graph or rules and re-run risk analytics for comparative studies.
-- **Export to Model Checker:**
-  - Ability to export the system model to tools like PRISM or STORM for formal CTMDP analysis.
-- **Automated Consistency Checking:**
-  - Automated checks for rule/graph schema mismatches and missing elements.
+### Desirable:
 
-Optional:
-- **Interactive User Interface:**
-  - Web or desktop UI for rule editing, graph manipulation, and results exploration.
-- **Integration with Live Data:**
-  - Ability to ingest real network/system data for graph construction.
-- **Semi-automatic Rule Extraction:**
-  - Use of LLMs or NLP to extract risk rules from policy or threat intelligence documents.
-- **Defense/Mitigation Modeling:**
-  - Incorporate defense rules (e.g., MFA, patching) and simulate their effect on risk.
+- **Graph Visualization:**<br>
+  - Visual representation of the business graph and attack surface (e.g., using, GROOVE, PlantUML) should be useful.
+
+- **Modular Rule Organization:**<br>
+  - Rules should be organized by tactics/techniques or attack phases for easier management and extensibility.
+
+- **Export/ Derive to Model Checker:**
+  - Ability to export/derive the system model to tools like PRISM or STORM for formal CTMDP analysis should be implemented.
+
+- **Continuous-Time Markov Decision Process (CTMDP) Integration:**
+  - Formal semantics and simulation using CTMDP tools (e.g., PRISM, STORM) for advanced risk propagation analysis is desirable.
+
+### Optional:
+
+- **Use of NLP or LLMs for suggesting recovery or precautions:**
+  - After analysing attack patterns its outcomes LLMs can be used to generate some suggestions for recovery and necessary precautions. 
+
+- **Interactive Dashboard:**
+  - GUI dashboard could provide an interactive exploration of the business graph and risk analytics.
+
 - **OCL-like Constraints:**
-  - Support for expressing and enforcing advanced constraints on pattern matching.
-- **Simulation Timeline Visualization:**
-  - Animated or time-based visualization of risk propagation and mitigations.
-
-
+  - Support for expressing and enforcing may provide advanced constraints on pattern matching.
 
 ## Information about this repository
 This is the repository that you are going to use **individually** for developing your project. Please use the resources provided in the module to learn about **plagiarism** and how plagiarism awareness can foster your learning.

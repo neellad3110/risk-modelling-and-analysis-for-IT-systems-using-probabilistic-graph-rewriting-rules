@@ -3,7 +3,10 @@ title "Business Graph with Organizational Hierarchy (Typed)"
 
 skinparam object {
   BackgroundColor<<Organization>> #E3E3E3
-  BackgroundColor<<Department>> #EAD1DC
+  BackgroundColor<<Sales>> #EAD1DC
+  BackgroundColor<<Engineering>> #EAD1DC
+  BackgroundColor<<IT>> #EAD1DC
+  BackgroundColor<<HR>> #EAD1DC
   BackgroundColor<<User>> #D1E8FF
   BackgroundColor<<Device>> #FFF2CC
   BackgroundColor<<Server>> #F4CCCC
@@ -13,188 +16,180 @@ skinparam object {
   BackgroundColor<<CredentialHash>> #F3E2A9
   BackgroundColor<<File>> #F9CB9C
   BackgroundColor<<Service>> #A2C4C9
-  BackgroundColor<<SensitiveFile>> #FFD966
-  BackgroundColor<<PhishingMessage>> #F6B26B
-  BackgroundColor<<SecurityAlert>> #D9EAD3
-  BackgroundColor<<Attacker>> #EA9999
 }
 
-' === ORGANIZATION HIERARCHY ===
-object Org1 <<Organization>> {
+
+object "org_1 : Organization" as org_1 <<Organization>>  {
   name = "ABC Software Inc."
 }
-object DeptSales <<Department>> {
+
+
+object "dept_Sales : Sales" as dept_Sales <<Sales>>  {
   name = "Sales"
 }
-object DeptEng <<Department>> {
+object "dept_Eng : Engineering" as dept_Eng <<Engineering>>  {
   name = "Engineering"
 }
-object DeptIT <<Department>> {
+object "dept_IT : IT" as dept_IT <<IT>>  {
   name = "IT"
 }
-object DeptHR <<Department>> {
+object "dept_HR : HR" as dept_HR <<HR>>  {
   name = "HR"
 }
-
-Org1 -- DeptSales : has_department
-Org1 -- DeptEng : has_department
-Org1 -- DeptIT : has_department
-Org1 -- DeptHR : has_department
-
-' === USERS ===
-object EMP001 <<User>> {
+object "user_EMP001 : User" as user_EMP001 <<User>>  {
   name = "Alice"
 }
-object EMP002 <<User>> {
+object "user_EMP002 : User" as user_EMP002 <<User>>  {
   name = "Bob"
 }
-object EMP003 <<User>> {
+object "user_EMP003 : User" as user_EMP003 <<User>>  {
   name = "Charlie"
 }
-object EMP004 <<User>> {
+object "user_EMP004 : User" as user_EMP004 <<User>>  {
   name = "Diana"
 }
 
-DeptSales -- EMP001 : employs
-DeptEng -- EMP002 : employs
-DeptIT -- EMP003 : employs
-DeptHR -- EMP004 : employs
-
-' === DEVICES ===
-object device_EMP001 <<Device>> {
+object "device_EMP001 : Device" as device_EMP001 <<Device>>  {
   deviceType = "laptop"
   os = "Windows 10"
   accepts_ntlm = true
 }
-object device_EMP002 <<Device>> {
+object "device_EMP002 : Device" as device_EMP002 <<Device>>  {
   deviceType = "laptop"
   os = "Ubuntu"
   accepts_ntlm = false
 }
-object device_EMP003 <<Device>> {
+object "device_EMP003 : Device" as device_EMP003 <<Device>>  {
   deviceType = "desktop"
   os = "Windows 10"
   accepts_ntlm = false
 }
-object device_EMP004 <<Device>> {
+object "device_EMP004 : Device" as device_EMP004 <<Device>>  {
   deviceType = "desktop"
   os = "Windows 10"
   accepts_ntlm = false
 }
 
-EMP001 -- device_EMP001 : uses
-EMP002 -- device_EMP002 : uses
-EMP003 -- device_EMP003 : uses
-EMP004 -- device_EMP004 : uses
 
-' === EMAIL ACCOUNTS ===
-object email_EMP001 <<EmailAccount>> {
-  role: user
+object "email_EMP001 : EmailAccount" as email_EMP001 <<EmailAccount>>  {
+  role = "user"
   domain = "example.com"
   status = "active"
   compromised = false
 }
-object email_EMP002 <<EmailAccount>> {
-  role: user
+object "email_EMP002 : EmailAccount" as email_EMP002 <<EmailAccount>>  {
+  role = "user"
   domain = "example.com"
   status = "active"
   compromised = false
 }
-object email_EMP003 <<EmailAccount>> {
-  role: admin
+object "email_EMP003 : EmailAccount" as email_EMP003 <<EmailAccount>>  {
+  role = "admin"
   domain = "example.com"
   status = "active"
   compromised = false
 }
-object email_EMP004 <<EmailAccount>> {
-  role: user
+object "email_EMP004 : EmailAccount" as email_EMP004 <<EmailAccount>>  {
+  role = "user"
   domain = "example.com"
   status = "active"
   compromised = false
 }
 
-EMP001 -- email_EMP001 : owns
-EMP002 -- email_EMP002 : owns
-EMP003 -- email_EMP003 : owns
-EMP004 -- email_EMP004 : owns
-
-' === PHISHING MESSAGE (for RISK001) ===
-
-' === SERVERS & HOSTS ===
-object server1 <<Server>> {
+object "server1 : Server" as server1 <<Server>>  {
   name = "RDP-Server"
   os = "Windows Server 2019"
   accepts_ntlm = true
 }
-object server2 <<Server>> {
+object "server2 : Server" as server2 <<Server>>  {
   name = "DB-Server"
   os = "Ubuntu 20.04"
   accepts_ntlm = false
 }
-object host1 <<Host>> {
+
+
+object "host1 : Host" as host1 <<Host>>  {
   os = "Windows"
   compromised = false
   accepts_ntlm = true
 }
-object host2 <<Host>> {
+object "host2 : Host" as host2 <<Host>>  {
   os = "Ubuntu"
   compromised = false
   accepts_ntlm = false
 }
 
-server1 -- host1 : runs_on
-server2 -- host2 : runs_on
 
-' === SERVICES ===
-object rdp_service1 <<Service>> {
+object "rdp_service1 : Service" as rdp_service1 <<Service>>  {
   type = "RDP"
   exposed = true
 }
-host1 -- rdp_service1 : runs
-
-' === FILES & SENSITIVE FILES ===
-object file1 <<File>> {
+object "file1 : File" as file1 <<File>>  {
   name = "config.sh"
-  isensitive = true
+  isSensitive = true
   tampered = false
 }
-object file2 <<File>> {
-  name = "accounts.txt"
-  iSensitive = true
+object "file2 : File" as file2 <<File>>  {
+  name = "secrets.txt"
+  isSensitive = true
   tampered = false
 }
+
+
+object "cred_EMP001 : Credentials" as cred_EMP001 <<Credentials>>  {
+  owner = "user_EMP001"
+  reused = false
+  compromised = false
+}
+object "cred_EMP002 : Credentials" as cred_EMP002 <<Credentials>>  {
+  owner = "user_EMP002"
+  reused = true
+  compromised = false
+}
+
+
+object "hash_EMP003 : CredentialHash" as hash_EMP003 <<CredentialHash>>  {
+  owner = "user_EMP003"
+  stolen = false
+}
+
+org_1 -- dept_Sales : has_department
+org_1 -- dept_Eng : has_department
+org_1 -- dept_IT : has_department
+org_1 -- dept_HR : has_department
+
+dept_Sales -- user_EMP001 : employs
+dept_Eng -- user_EMP002 : employs
+dept_IT -- user_EMP003 : employs
+dept_HR -- user_EMP004 : employs
+
+email_EMP001 -- device_EMP001 : uses
+email_EMP002 -- device_EMP002 : uses
+email_EMP003 -- device_EMP003 : uses
+email_EMP004 -- device_EMP004 : uses
+
+email_EMP003 -- email_EMP001 : manages
+email_EMP003 -- email_EMP002 : manages
+email_EMP003 -- email_EMP004 : manages
+
+user_EMP001 -- email_EMP001 : owns
+user_EMP002 -- email_EMP002 : owns
+user_EMP003 -- email_EMP003 : owns
+user_EMP004 -- email_EMP004 : owns
+
+server1 -- host1 : runs_on
+server2 -- host2 : runs_on
+
+host1 -- rdp_service1 : runs
 
 email_EMP002 -- file1 : can_write
 email_EMP003 -- file2 : can_read
 
+user_EMP001 -- cred_EMP001 : has_credentials
+user_EMP002 -- cred_EMP002 : has_credentials
+user_EMP003 -- hash_EMP003 : has_hash
 
-' === CREDENTIALS & HASHES ===
-object cred_EMP001 <<Credentials>> {
-  owner = "EMP001"
-  reused = false
-  compromised = false
-}
-object cred_EMP002 <<Credentials>> {
-  owner = "EMP002"
-  reused = true
-  compromised = false
-}
-object hash_EMP003 <<CredentialHash>> {
-  owner = "EMP003"
-  stolen = false
-}
-
-EMP001 -- cred_EMP001 : has_credentials
-EMP002 -- cred_EMP002 : has_credentials
-EMP003 -- hash_EMP003 : has_hash
-
-' === SECURITY ALERT (placeholder, created dynamically in rules) === created dynamically
-
-' === ATTACKER (single, referenced in rules) === created dynamically
-
-' === RELATIONS FOR RISK RULES ===
 host1 -- host2 : can_access
-EMP003 -- host1 : credentials_stored_on
-
+email_EMP003 -- host1 : credentials_stored_on
 
 @enduml

@@ -1,64 +1,66 @@
-{
-    "business_graph": {
+[
+    {
+        "id": "business_graph",
+        "typedOver": "type_graph.json",
         "nodes": [
             {
-                "id": "Org1",
+                "id": "org_1",
                 "type": "Organization",
                 "attributes": {
                     "name": "ABC Software Inc."
                 }
             },
             {
-                "id": "Sales",
-                "type": "Department",
+                "id": "dept_Sales",
+                "type": "Sales",
                 "attributes": {
                     "name": "Sales"
                 }
             },
             {
-                "id": "Eng",
-                "type": "Department",
+                "id": "dept_Eng",
+                "type": "Engineering",
                 "attributes": {
                     "name": "Engineering"
                 }
             },
             {
-                "id": "IT",
-                "type": "Department",
+                "id": "dept_IT",
+                "type": "IT",
                 "attributes": {
                     "name": "IT"
                 }
             },
             {
-                "id": "HR",
-                "type": "Department",
+                "id": "dept_HR",
+                "type": "HR",
                 "attributes": {
                     "name": "HR"
                 }
             },
             {
-                "id": "EMP001",
+                "id": "user_EMP001",
                 "type": "User",
                 "attributes": {
                     "name": "Alice"
                 }
             },
             {
-                "id": "EMP002",
+                "id": "user_EMP002",
                 "type": "User",
                 "attributes": {
                     "name": "Bob"
                 }
             },
             {
-                "id": "EMP003",
+                "id": "user_EMP003",
                 "type": "User",
                 "attributes": {
                     "name": "Charlie"
                 }
             },
             {
-                "id": "EMP004",
+                "id": "user_EMP004",
                 "type": "User",
                 "attributes": {
                     "name": "Diana"
@@ -173,7 +175,7 @@
                 "attributes": {
                     "os": "Ubuntu",
                     "compromised": false,
-                    "accepts_ntlm": false
+                    "accepts_ntlm": true
                 }
             },
             {
@@ -190,7 +192,7 @@
                 "attributes": {
                     "name": "config.sh",
                     "isSensitive": true,
-                    "tampered" :false
+                    "tampered": false
                 }
             },
             {
@@ -199,14 +201,14 @@
                 "attributes": {
                     "name": "secrets.txt",
                     "isSensitive": true,
-                    "tampered" :false
+                    "tampered": false
                 }
             },
             {
                 "id": "cred_EMP001",
                 "type": "Credentials",
                 "attributes": {
-                    "owner": "EMP001",
+                    "owner": "user_EMP001",
                     "reused": false,
                     "compromised": false
                 }
@@ -215,7 +217,7 @@
                 "id": "cred_EMP002",
                 "type": "Credentials",
                 "attributes": {
-                    "owner": "EMP002",
+                    "owner": "user_EMP002",
                     "reused": true,
                     "compromised": false
                 }
@@ -224,144 +226,186 @@
                 "id": "hash_EMP003",
                 "type": "CredentialHash",
                 "attributes": {
-                    "owner": "EMP003",
+                    "owner": "user_EMP003",
                     "stolen": false
                 }
-            }       
+            }
         ],
-        "relations": [
+        "edges": [
             {
-                "source": "Org1",
+                "id": "e1",
+                "source": "org_1",
                 "type": "has_department",
-                "target": "Sales"
+                "target": "dept_Sales"
             },
             {
-                "source": "Org1",
+                "id": "e2",
+                "source": "org_1",
                 "type": "has_department",
-                "target": "Eng"
+                "target": "dept_Eng"
             },
             {
-                "source": "Org1",
+                "id": "e3",
+                "source": "org_1",
                 "type": "has_department",
-                "target": "IT"
+                "target": "dept_IT"
             },
             {
-                "source": "Org1",
+                "id": "e4",
+                "source": "org_1",
                 "type": "has_department",
-                "target": "HR"
+                "target": "dept_HR"
             },
             {
-                "source": "Sales",
+                "id": "e5",
+                "source": "dept_Sales",
                 "type": "employs",
-                "target": "EMP001"
+                "target": "user_EMP001"
             },
             {
-                "source": "Eng",
+                "id": "e6",
+                "source": "dept_Eng",
                 "type": "employs",
-                "target": "EMP002"
+                "target": "user_EMP002"
             },
             {
-                "source": "IT",
+                "id": "e7",
+                "source": "dept_IT",
                 "type": "employs",
-                "target": "EMP003"
+                "target": "user_EMP003"
             },
             {
-                "source": "HR",
+                "id": "e8",
+                "source": "dept_HR",
                 "type": "employs",
-                "target": "EMP004"
+                "target": "user_EMP004"
             },
             {
-                "source": "EMP001",
+                "id": "e9",
+                "source": "email_EMP001",
                 "type": "uses",
                 "target": "device_EMP001"
             },
             {
-                "source": "EMP002",
+                "id": "e10",
+                "source": "email_EMP002",
                 "type": "uses",
                 "target": "device_EMP002"
             },
             {
-                "source": "EMP003",
+                "id": "e11",
+                "source": "email_EMP003",
                 "type": "uses",
                 "target": "device_EMP003"
             },
             {
-                "source": "EMP004",
+                "id": "e12",
+                "source": "email_EMP004",
                 "type": "uses",
                 "target": "device_EMP004"
             },
             {
-                "source": "EMP001",
+                "id": "e13",
+                "source": "email_EMP003",
+                "type": "manages",
+                "target": "email_EMP001"
+            },
+            {
+                "id": "e14",
+                "source": "email_EMP003",
+                "type": "manages",
+                "target": "email_EMP002"
+            },
+            {
+                "id": "e15",
+                "source": "email_EMP003",
+                "type": "manages",
+                "target": "email_EMP004"
+            },
+            {
+                "id": "e16",
+                "source": "user_EMP001",
                 "type": "owns",
                 "target": "email_EMP001"
             },
             {
-                "source": "EMP002",
+                "id": "e17",
+                "source": "user_EMP002",
                 "type": "owns",
                 "target": "email_EMP002"
             },
             {
-                "source": "EMP003",
+                "id": "e18",
+                "source": "user_EMP003",
                 "type": "owns",
                 "target": "email_EMP003"
             },
             {
-                "source": "EMP004",
+                "id": "e19",
+                "source": "user_EMP004",
                 "type": "owns",
                 "target": "email_EMP004"
             },
-        
             {
+                "id": "e20",
                 "source": "server1",
                 "type": "runs_on",
                 "target": "host1"
             },
             {
+                "id": "e21",
                 "source": "server2",
                 "type": "runs_on",
                 "target": "host2"
             },
             {
+                "id": "e22",
                 "source": "host1",
                 "type": "runs",
                 "target": "rdp_service1"
             },
             {
+                "id": "e23",
                 "source": "email_EMP002",
                 "type": "can_write",
                 "target": "file1"
             },
             {
+                "id": "e24",
                 "source": "email_EMP003",
                 "type": "can_read",
                 "target": "file2"
             },
             {
-                "source": "EMP001",
+                "id": "e25",
+                "source": "user_EMP001",
                 "type": "has_credentials",
                 "target": "cred_EMP001"
             },
             {
-                "source": "EMP002",
+                "id": "e26",
+                "source": "user_EMP002",
                 "type": "has_credentials",
                 "target": "cred_EMP002"
             },
             {
-                "source": "EMP003",
+                "id": "e27",
+                "source": "user_EMP003",
                 "type": "has_hash",
                 "target": "hash_EMP003"
             },
             {
+                "id": "e28",
                 "source": "host1",
                 "type": "can_access",
                 "target": "host2"
             },
             {
-                "source": "EMP003",
+                "id": "e29",
+                "source": "email_EMP003",
                 "type": "credentials_stored_on",
                 "target": "host1"
             }
-           
         ]
     }
-}
+]

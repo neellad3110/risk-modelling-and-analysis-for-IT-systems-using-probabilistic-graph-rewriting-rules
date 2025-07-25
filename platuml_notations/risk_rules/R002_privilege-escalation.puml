@@ -1,5 +1,5 @@
 @startuml previlageEscalation
-title "Privilege Escalation vve File"
+title "Privilege Escalation Risk Rule"
 
 
 rectangle "LHS : User account is compromised and compromised user has write access to a sensitive file " as LHS_BOX #line:gray {

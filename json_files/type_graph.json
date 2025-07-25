@@ -1,0 +1,223 @@
+{
+  "id": "type_graph",
+  "nodes": [
+    {
+      "type": "Organization",
+      "attributes": {
+        "name": "string"
+      }
+    },
+    {
+      "type": "Department",
+      "isAbstract": true,
+      "attributes": {
+        "name": "string"
+      }
+    },
+    {
+      "type": "Sales",
+      "isSubTypeOf": "Department"
+    },
+    {
+      "type": "Engineering",
+      "isSubTypeOf": "Department"
+    },
+    {
+      "type": "IT",
+      "isSubTypeOf": "Department"
+    },
+    {
+      "type": "HR",
+      "isSubTypeOf": "Department"
+    },
+    {
+      "type": "User",
+      "attributes": {
+        "name": "string"
+      }
+    },
+    {
+      "type": "Device",
+      "attributes": {
+        "deviceType": "string",
+        "os": "string",
+        "accepts_ntlm": "boolean"
+      }
+    },
+    {
+      "type": "EmailAccount",
+      "attributes": {
+        "role": "string",
+        "domain": "string",
+        "status": "string",
+        "compromised": "boolean"
+      }
+    },
+    {
+      "type": "Server",
+      "attributes": {
+        "name": "string",
+        "os": "string",
+        "accepts_ntlm": "boolean"
+      }
+    },
+    {
+      "type": "Host",
+      "attributes": {
+        "os": "string",
+        "compromised": "boolean",
+        "accepts_ntlm": "boolean"
+      }
+    },
+    {
+      "type": "Service",
+      "attributes": {
+        "type": "string",
+        "exposed": "boolean"
+      }
+    },
+    {
+      "type": "File",
+      "attributes": {
+        "name": "string",
+        "isSensitive": "boolean",
+        "writable": "boolean",
+        "tampered": "boolean"
+      }
+    },
+    {
+      "type": "Credentials",
+      "attributes": {
+        "owner": "string",
+        "reused": "boolean",
+        "compromised": "boolean"
+      }
+    },
+    {
+      "type": "CredentialHash",
+      "attributes": {
+        "owner": "string",
+        "stolen": "boolean"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "type": "has_department",
+      "source": "Organization",
+      "target": "Department",
+      "multiplicity": {
+        "lower": 1,
+        "upper": "*"
+      }
+    },
+    {
+      "type": "employs",
+      "source": "Department",
+      "target": "User",
+      "multiplicity": {
+        "lower": 0,
+        "upper": "*"
+      }
+    },
+    {
+      "type": "uses",
+      "source": "EmailAccount",
+      "target": "Device",
+      "multiplicity": {
+        "lower": 0,
+        "upper": "*"
+      }
+    },
+    {
+      "type": "owns",
+      "source": "User",
+      "target": "EmailAccount",
+      "multiplicity": {
+        "lower": 1,
+        "upper": "1"
+      }
+    },
+    {
+      "type": "manages",
+      "source": "EmailAccount",
+      "target": "EmailAccount",
+      "multiplicity": {
+        "lower": 0,
+        "upper": "*"
+      }
+    },
+    {
+      "type": "runs_on",
+      "source": "Server",
+      "target": "Host",
+      "multiplicity": {
+        "lower": 1,
+        "upper": 1
+      }
+    },
+    {
+      "type": "runs",
+      "source": "Host",
+      "target": "Service",
+      "multiplicity": {
+        "lower": 0,
+        "upper": "*"
+      }
+    },
+    {
+      "type": "can_write",
+      "source": "EmailAccount",
+      "target": "File",
+      "multiplicity": {
+        "lower": 0,
+        "upper": "*"
+      }
+    },
+    {
+      "type": "can_read",
+      "source": "EmailAccount",
+      "target": "File",
+      "multiplicity": {
+        "lower": 0,
+        "upper": "*"
+      }
+    },
+    {
+      "type": "has_credentials",
+      "source": "User",
+      "target": "Credentials",
+      "multiplicity": {
+        "lower": 1,
+        "upper": "*"
+      }
+    },
+    {
+      "type": "has_hash",
+      "source": "User",
+      "target": "CredentialHash",
+      "multiplicity": {
+        "lower": 0,
+        "upper": "*"
+      }
+    },
+    {
+      "type": "can_access",
+      "source": "Host",
+      "target": "Host",
+      "multiplicity": {
+        "lower": 0,
+        "upper": "*"
+      }
+    },
+    {
+      "type": "credentials_stored_on",
+      "source": "EmailAccount",
+      "target": "Host",
+      "multiplicity": {
+        "lower": 0,
+        "upper": "*"
+      }
+    }
+  ]
+}

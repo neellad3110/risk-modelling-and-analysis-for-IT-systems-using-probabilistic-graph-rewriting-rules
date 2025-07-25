@@ -1,147 +1,90 @@
-@startuml
+@startuml type_graph_class_diagram
+title "Type Graph Class Diagram"
 
+
+class Department <<abstract>> {
+  name: string
+}
+
+class Sales
+class Engineering 
+class IT
+class HR 
+
+
+Sales --|> Department
+Engineering -left-|> Department
+IT --|> Department
+HR -right-|> Department
+
+class Organization {
+  name: string
+}
 
 class User {
-  +name: String
-  +role: String
-  +department: String
-  +isCompromised: Boolean
-  +mfaEnrolled: Boolean
+  name: string
 }
 
 class Device {
-  +deviceType: String
-  +os: String
-  +isCompromised: Boolean
-  +accepts_ntlm: Boolean
-  +accepts_remote_exec: Boolean
-}
-
-class Server {
-  +name: String
-  +os: String
-  +networkZone: String
-  +isCompromised: Boolean
-  +exposed: Boolean
-  +criticality: String
-  +accepts_ntlm: Boolean
-  +accepts_remote_exec: Boolean
-}
-
-class Host {
-  +os: String
-  +compromised: Boolean
-  +accepts_ntlm: Boolean
-  +accepts_remote_exec: Boolean
+  deviceType: string
+  os: string
+  accepts_ntlm: boolean
 }
 
 class EmailAccount {
-  +domain: String
-  +status: String
-  +isMFAEnabled: Boolean
-  +passwordStrength: String
-  +isCompromised: Boolean
+  role: string
+  domain: string
+  status: string
+  compromised: boolean
 }
 
-class SaaSAccount {
-  +provider: String
-  +protected: Boolean
-  +isCompromised: Boolean
+class Server {
+  name: string
+  os: string
+  accepts_ntlm: boolean
 }
 
-class Credentials {
-  +owner: String
-  +reused: Boolean
-  +compromised: Boolean
-  +role: String
-}
-
-class CredentialHash {
-  +owner: String
-  +stolen: Boolean
-}
-
-class SecurityTool {
-  +toolType: String
-  +active: Boolean
-}
-
-class File {
-  +name: String
-  +canRead: Boolean
-  +canWrite: Boolean
-  +isSensitive: Boolean
-  +sensitivity: String
-  +encryption: String
-  +permission: String
-}
-
-class Application {
-  +exposed: Boolean
-  +vulnerable: Boolean
-  +compromised: Boolean
+class Host {
+  os: string
+  compromised: boolean
+  accepts_ntlm: boolean
 }
 
 class Service {
-  +type: String
-  +exposed: Boolean
+  type: string
+  exposed: boolean
 }
 
-class Script {
-  +deployed: Boolean
-  +malicious: Boolean
+class File {
+  name: string
+  isSensitive: boolean
+  writable: boolean
+  tampered: boolean
 }
 
-class USBDevice {
-  +malicious: Boolean
+class Credentials {
+  owner: string
+  reused: boolean
+  compromised: boolean
 }
 
-class DNSChannel {
-  +active: Boolean
+class CredentialHash {
+  owner: string
+  stolen: boolean
 }
 
-class ScheduledTask {
-  +persistent: Boolean
-}
-
-class RegistryEntry {
-  +type: String
-  +malicious: Boolean
-}
-
-class NetworkZone {
-  +name: String
-}
-
-class Attacker {
-  +name: String
-}
-
-
-User "1" -- "0..*" EmailAccount : owns
-User "1" -- "0..*" Device : owns_device
-User "1" -- "0..*" Credentials : has_credentials
-User "1" -- "0..*" CredentialHash : has_hash
-Device "1" -- "0..*" SecurityTool : installed_on
-Server "1" -- "0..*" SecurityTool : installed_on
-User "1" -- "0..*" File : can_write
-User "1" -- "0..*" File : can_read
-User "1" -- "0..*" Server : has_permission
-User "1" -- "0..*" Server : connected_to
-Server "1" -- "0..*" Server : connected_to
-Server "1" -- "0..*" NetworkZone : resides_in
-Device "1" -- "0..*" NetworkZone : resides_in
-User "1" -- "0..*" User : trusts
-User "1" -- "0..*" User : manager_of
-Server "1" -- "0..*" Service : runs
-Host "1" -- "0..*" Service : runs
-Application "1" -- "0..*" Server : exposed_on
-Server "1" -- "0..*" Script : runs
-USBDevice "1" -- "0..*" Host : inserted_into
-Host "1" -- "0..*" DNSChannel : uses
-ScheduledTask "1" -- "0..*" Host : runs_on
-RegistryEntry "1" -- "0..*" Host : on_host
-Attacker "1" -- "0..*" File : has_access_to
-Credentials "1" -- "0..*" Host : stored_on
+Organization "1" -- "1..*" Department : has_department
+Department "1..*" -- "0..*" User : employs
+EmailAccount "0..*" -- "0..*" Device : uses
+User "1" -- "1" EmailAccount : owns
+EmailAccount "0..*" -- "0..*" EmailAccount : manages
+Server "1" -- "1" Host : runs_on
+Host "0..*" -- "0..*" Service : runs
+EmailAccount "0..*" -- "0..*" File : can_write
+EmailAccount "0..*" -- "0..*" File : can_read
+User "1" -- "1..*" Credentials : has_credentials
+User "0..*" -- "0..*" CredentialHash : has_hash
+Host "0..*" -- "0..*" Host : can_access
+EmailAccount "0..*" -- "0..*" Host : credentials_stored_on
 
 @enduml
