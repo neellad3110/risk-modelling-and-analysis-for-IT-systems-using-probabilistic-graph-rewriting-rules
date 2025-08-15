@@ -34,6 +34,21 @@
         </edge>
         <edge from="n0" to="n0">
             <attr name="label">
+                <string>test:status="active"</string>
+            </attr>
+        </edge>
+        <edge from="n0" to="n2">
+            <attr name="label">
+                <string>can_write</string>
+            </attr>
+        </edge>
+        <edge from="n0" to="n3">
+            <attr name="label">
+                <string>new:manages</string>
+            </attr>
+        </edge>
+        <edge from="n0" to="n0">
+            <attr name="label">
                 <string>type:EmailAccount</string>
             </attr>
         </edge>
@@ -45,21 +60,6 @@
         <edge from="n0" to="n0">
             <attr name="label">
                 <string>test:compromised=true</string>
-            </attr>
-        </edge>
-        <edge from="n0" to="n0">
-            <attr name="label">
-                <string>test:status="active"</string>
-            </attr>
-        </edge>
-        <edge from="n0" to="n3">
-            <attr name="label">
-                <string>new:manages</string>
-            </attr>
-        </edge>
-        <edge from="n0" to="n2">
-            <attr name="label">
-                <string>can_write</string>
             </attr>
         </edge>
         <edge from="n1" to="n1">
@@ -77,12 +77,12 @@
         </edge>
         <edge from="n2" to="n2">
             <attr name="label">
-                <string>type:File</string>
+                <string>let:tampered=true</string>
             </attr>
         </edge>
         <edge from="n2" to="n2">
             <attr name="label">
-                <string>let:tampered=true</string>
+                <string>type:File</string>
             </attr>
         </edge>
         <edge from="n2" to="n2">

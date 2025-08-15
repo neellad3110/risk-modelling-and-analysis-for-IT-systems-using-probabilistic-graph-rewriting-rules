@@ -58,7 +58,8 @@
       "attributes": {
         "name": "string",
         "os": "string",
-        "accepts_ntlm": "boolean"
+        "accepts_ntlm": "boolean",
+        "scriptExecutionEnabled ": "boolean"
       }
     },
     {
@@ -73,7 +74,8 @@
       "type": "Service",
       "attributes": {
         "type": "string",
-        "exposed": "boolean"
+        "exposed": "boolean",
+        "status": "string"
       }
     },
     {
@@ -82,7 +84,8 @@
         "name": "string",
         "isSensitive": "boolean",
         "writable": "boolean",
-        "tampered": "boolean"
+        "tampered": "boolean",
+        "encrypted": "boolean"
       }
     },
     {
@@ -100,6 +103,7 @@
         "stolen": "boolean"
       }
     }
+    
   ],
   "edges": [
     {
@@ -135,7 +139,7 @@
       "target": "EmailAccount",
       "multiplicity": {
         "lower": 1,
-        "upper": "1"
+        "upper": "*"
       }
     },
     {
@@ -148,7 +152,16 @@
       }
     },
     {
-      "type": "runs_on",
+      "type": "trusts",
+      "source": "User",
+      "target": "User",
+      "multiplicity": {
+        "lower": 0,
+        "upper": "*"
+      }
+    },
+    {
+      "type": "deployed_on",
       "source": "Server",
       "target": "Host",
       "multiplicity": {
@@ -157,9 +170,9 @@
       }
     },
     {
-      "type": "runs",
-      "source": "Host",
-      "target": "Service",
+      "type": "hosted_on",
+      "source": "Service",
+      "target": "Server",
       "multiplicity": {
         "lower": 0,
         "upper": "*"
@@ -176,6 +189,15 @@
     },
     {
       "type": "can_read",
+      "source": "EmailAccount",
+      "target": "File",
+      "multiplicity": {
+        "lower": 0,
+        "upper": "*"
+      }
+    },
+    {
+      "type": "",
       "source": "EmailAccount",
       "target": "File",
       "multiplicity": {
@@ -218,6 +240,16 @@
         "lower": 0,
         "upper": "*"
       }
+    },
+    {
+      "type": "monitors",
+      "source": "EmailAccount",
+      "target": "Server",
+      "multiplicity": {
+        "lower": 0,
+        "upper": "*"
+      }
     }
+  
   ]
 }

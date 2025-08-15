@@ -12,14 +12,14 @@
                 <string>423 483 19 19</string>
             </attr>
         </node>
+        <node id="n1">
+            <attr name="layout">
+                <string>368 305 118 36</string>
+            </attr>
+        </node>
         <node id="n2">
             <attr name="layout">
                 <string>152 313 19 19</string>
-            </attr>
-        </node>
-        <node id="n1">
-            <attr name="layout">
-                <string>367 305 121 36</string>
             </attr>
         </node>
         <edge from="n0" to="n0">
@@ -35,6 +35,31 @@
                 <string>490 -5 432 492 428 324 11</string>
             </attr>
         </edge>
+        <edge from="n1" to="n1">
+            <attr name="label">
+                <string>parout:0</string>
+            </attr>
+        </edge>
+        <edge from="n1" to="n1">
+            <attr name="label">
+                <string>test:compromised=true</string>
+            </attr>
+        </edge>
+        <edge from="n1" to="n1">
+            <attr name="label">
+                <string>type:EmailAccount</string>
+            </attr>
+        </edge>
+        <edge from="n1" to="n2">
+            <attr name="label">
+                <string>can_write</string>
+            </attr>
+        </edge>
+        <edge from="n2" to="n2">
+            <attr name="label">
+                <string>test:isSensitive=true</string>
+            </attr>
+        </edge>
         <edge from="n2" to="n2">
             <attr name="label">
                 <string>type:File</string>
@@ -43,31 +68,6 @@
         <edge from="n2" to="n2">
             <attr name="label">
                 <string>let:tampered=false</string>
-            </attr>
-        </edge>
-        <edge from="n2" to="n2">
-            <attr name="label">
-                <string>test:isSensitive=true</string>
-            </attr>
-        </edge>
-        <edge from="n1" to="n1">
-            <attr name="label">
-                <string>parin:0</string>
-            </attr>
-        </edge>
-        <edge from="n1" to="n1">
-            <attr name="label">
-                <string>type:EmailAccount</string>
-            </attr>
-        </edge>
-        <edge from="n1" to="n1">
-            <attr name="label">
-                <string>test:compromised=true</string>
-            </attr>
-        </edge>
-        <edge from="n1" to="n2">
-            <attr name="label">
-                <string>can_write</string>
             </attr>
         </edge>
     </graph>

@@ -1,4 +1,4 @@
-function phishingAttackRR(out node victimEmail)
+function phishingAttack_Rule(out node victimEmail)
 {
     phishingAttack(out victimEmail); // risk pattern
     phishingAttack_User_clicked_link_and_entered_credentials(victimEmail) | // outcome 1: enter password
@@ -7,47 +7,99 @@ function phishingAttackRR(out node victimEmail)
     phishingAttack_User_reported_the_phishing_attempt(victimEmail); // outcome : reported phisihing attempt
 }
 
-function privilegeEscalationRR(node victimEmail)
+function privilegeEscalation_Rule(out node compromisedEmail)
 {
-    privilegeEscalation(victimEmail);
-    privilegeEscalation_attacker_successfully_modifies_file_to_escalate_priviledges(victimEmail)|
-    privilegeEscalation_attack_attempt_triggers_security_alert_by_file_integrity_monitoring(victimEmail)|
-    privilegeEscalation_sysadmin_detects_and_revokes_file_permissions_before_attack_succeeds(victimEmail);
+    privilegeEscalation(out compromisedEmail);
+    privilegeEscalation_attacker_successfully_modifies_file_to_escalate_priviledges(compromisedEmail)|
+    privilegeEscalation_attack_attempt_triggers_security_alert_by_file_integrity_monitoring(compromisedEmail)|
+    privilegeEscalation_sysadmin_detects_and_revokes_file_permissions_before_attack_succeeds(compromisedEmail);
 }
 
-function remoteServiceExploitationRR(out node host)
+function remoteServiceExploitation_Rule(out node userEmail)
 {
-	remoteServiceExploitation(out host);
-	remoteServiceExploitationAttacker_logged_in_via_RDP_and_gained_control(host)|
-	remoteServiceExploitation_RDP_login_attempt_failed_without_detection(host)|
-	remoteServiceExploitation_multiple_failed_RDP_login_attempts_security_alert_triggered_systemAdmin_closed_RDP_port(host);
+	remoteServiceExploitation(out userEmail);
+	remoteServiceExploitationAttacker_logged_in_via_RDP_and_gained_control(userEmail)|
+	remoteServiceExploitation_RDP_login_attempt_failed_without_detection(userEmail)|
+	remoteServiceExploitation_multiple_failed_RDP_login_attempts_security_alert_triggered_systemAdmin_closed_RDP_port(userEmail);
 }
 
-function credentialDumpingRR(node host){
+function credentialDumping_Rule(out node compromisedHost){
 
-	credentialDumping(host);
-	credentialDumping_attacker_dumps_admin_credentials(host)|
-	credentialDumping_endpoint_security_detected_the_attempt(host)|
-	credentialDumping_attempt_failed_silently(host)|
-	credentialDumping_endpoint_security_detected_the_attempt(host);
+	credentialDumping(out compromisedHost);
+	credentialDumping_attacker_dumps_admin_credentials(compromisedHost)|
+	credentialDumping_endpoint_security_detected_the_attempt(compromisedHost)|
+	credentialDumping_attempt_failed_silently(compromisedHost)|
+	credentialDumping_endpoint_security_detected_the_attempt(compromisedHost);
 
 }
-/*
-function passTheHash_lateralMovementRR(node compromisedHost){
 
-	passTheHash_lateralMovement(compromisedHost);
+function passTheHash_lateralMovement_Rule(out node compromisedHost){
+
+	passTheHash_lateralMovement(out compromisedHost);
 	passTheHash_lateralMovement_Attacker_successfully_authenticated_using_NTLM_hash_and_compromised_host(compromisedHost)|
 	passTheHash_lateralMovement_Suspicious_login_attempt_detected_and_flagged(compromisedHost)|
 	passTheHash_lateralMovement_Authentication_attempt_failed_and_remained_undetected(compromisedHost);
-}*/
+}
 
-node host;
+function unauthorized_script_execution_Rule(out node compromisedEmail2){
+
+	UnauthorizedScriptExecution(out compromisedEmail2);
+	UnauthorizedScriptExecution_Script_is_executed_successfully(compromisedEmail2)|
+	UnauthorizedScriptExecution_Attack_attempt_triggers_security_alert(compromisedEmail2)|
+	UnauthorizedScriptExecution_Script_detected_during_execution_by_antivirus_or_EDR(compromisedEmail2)|
+	UnauthorizedScriptExecution_Script_Execution_failed_silently(compromisedEmail2);
+
+}
+
+function maliciousUSBDevice_Rule(out node compromisedEmail3){
+	maliciousUSBDevice(out compromisedEmail3);
+	maliciousUSBDevice_Payload_executed_but_user_account_is_not_compromised(compromisedEmail3)|
+	maliciousUSBDevice_Payload_executed_and_host_was_compromised(compromisedEmail3)|
+	maliciousUSBDevice_Antivirus_detected_and_blocked_payload_execution(compromisedEmail3)|
+	maliciousUSBDevice_Device_was_removed_before_execution(compromisedEmail3)|
+	maliciousUSBDeviceUSB_device_not_recognized_by_the_system(compromisedEmail3);
+}
+
+function ransomwareDeployment_Rule(out node compromisedEmail4){
+	ransomwareDeployment(out compromisedEmail4);
+	ransomwareDeployment_Attacker_encrypted_the_file_and_demanded_ransom_for_decryption(compromisedEmail4)|
+	ransomwareDeployment_Ransom_paid_to_attacker_and_files_decrypted(compromisedEmail4)|
+	ransomwareDeployment_Files_restored_from_backup_permission_revoked_and_user_account_was_recovered_attack_mitigated(compromisedEmail4)|
+	ransomwareDeployment_Security_alert_triggered_and_file_permission_revoked_before_encryption(compromisedEmail4)|
+	ransomwareDeployment_attack_failed_silently(compromisedEmail4);
+
+}
+
+function dosAttack_Rule(out node compromisedService){
+	DOSAttack(out compromisedService);
+	DOSAttack_Service_unavailable(compromisedService)|
+	DOSAttack_attack_detected_and_mitigated(compromisedService)|
+	DOSAttack_attaker_degrades_the_service_partially(compromisedService)|
+	DOSAttack_attack_failed_silently(compromisedService);
+	
+}
+
+function trustedRelationship_Rule(out node compromisedEmail5){
+
+	trustedRelationship(out compromisedEmail5);
+	trustedRelationship_Attacker_user_abuses_trust_and_gains_access_to_sensitive_file_to_extract_data(compromisedEmail5)|
+	trustedRelationship_Suspicious_activity_detected_and_alert_triggered(compromisedEmail5)|
+	trustedRelationship_attack_failed_silently(compromisedEmail5);
+}
+
 node victimEmail;
-
-phishingAttackRR(out victimEmail); 
-privilegeEscalationRR(victimEmail);
-remoteServiceExploitationRR(out host);
-credentialDumpingRR(host);    
-//passTheHash_lateralMovementRR(host);
-
-
+node compromisedEmail1,compromisedEmail2,compromisedEmail3,compromisedEmail4,compromisedEmail5;
+node userEmail;
+node compromisedHost;
+node compromisedService;
+//
+phishingAttack_Rule(out victimEmail);
+privilegeEscalation_Rule(out compromisedEmail1);
+remoteServiceExploitation_Rule(out userEmail) ;
+//credentialDumping_Rule(out compromisedHost) ;
+//passTheHash_lateralMovement_Rule(out compromisedHost);
+//unauthorized_script_execution_Rule(out compromisedEmail2);
+//maliciousUSBDevice_Rule(out compromisedEmail3);
+//ransomwareDeployment_Rule(out compromisedEmail4);
+//dosAttack_Rule(out compromisedService);
+//trustedRelationship_Rule(out compromisedEmail5);

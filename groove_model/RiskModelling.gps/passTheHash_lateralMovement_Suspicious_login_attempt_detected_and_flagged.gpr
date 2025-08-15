@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
     <graph role="rule" edgeids="false" edgemode="directed" id="passTheHash_lateralMovement_Suspicious_login_attempt_detected_and_flagged">
-        <attr name="priority">
-            <string>1</string>
-        </attr>
         <attr name="$version">
             <string>curly</string>
+        </attr>
+        <attr name="priority">
+            <string>1</string>
         </attr>
         <node id="n0">
             <attr name="layout">
                 <string>594 307 19 19</string>
+            </attr>
+        </node>
+        <node id="n1">
+            <attr name="layout">
+                <string>303 307 19 19</string>
             </attr>
         </node>
         <node id="n2">
@@ -19,12 +24,7 @@
         </node>
         <node id="n3">
             <attr name="layout">
-                <string>306 418 19 19</string>
-            </attr>
-        </node>
-        <node id="n1">
-            <attr name="layout">
-                <string>303 307 19 19</string>
+                <string>305 417 19 19</string>
             </attr>
         </node>
         <node id="n4">
@@ -52,39 +52,9 @@
                 <string>can_access</string>
             </attr>
         </edge>
-        <edge from="n2" to="n2">
-            <attr name="label">
-                <string>type:EmailAccount</string>
-            </attr>
-        </edge>
-        <edge from="n2" to="n0">
-            <attr name="label">
-                <string>credentials_stored_on</string>
-            </attr>
-        </edge>
-        <edge from="n3" to="n3">
-            <attr name="label">
-                <string>new:</string>
-            </attr>
-        </edge>
-        <edge from="n3" to="n3">
-            <attr name="label">
-                <string>type:SecurityAlert</string>
-            </attr>
-        </edge>
-        <edge from="n3" to="n3">
-            <attr name="label">
-                <string>let:type="pass_the_hash_detected"</string>
-            </attr>
-        </edge>
-        <edge from="n3" to="n2">
-            <attr name="label">
-                <string>alerts</string>
-            </attr>
-        </edge>
         <edge from="n1" to="n1">
             <attr name="label">
-                <string>type:Host</string>
+                <string>test:accepts_ntlm=true</string>
             </attr>
         </edge>
         <edge from="n1" to="n1">
@@ -94,7 +64,37 @@
         </edge>
         <edge from="n1" to="n1">
             <attr name="label">
-                <string>test:accepts_ntlm=true</string>
+                <string>type:Host</string>
+            </attr>
+        </edge>
+        <edge from="n2" to="n0">
+            <attr name="label">
+                <string>credentials_stored_on</string>
+            </attr>
+        </edge>
+        <edge from="n2" to="n2">
+            <attr name="label">
+                <string>type:EmailAccount</string>
+            </attr>
+        </edge>
+        <edge from="n3" to="n3">
+            <attr name="label">
+                <string>new:</string>
+            </attr>
+        </edge>
+        <edge from="n3" to="n3">
+            <attr name="label">
+                <string>let:type="pass_the_hash_detected"</string>
+            </attr>
+        </edge>
+        <edge from="n3" to="n3">
+            <attr name="label">
+                <string>type:SecurityAlert</string>
+            </attr>
+        </edge>
+        <edge from="n3" to="n2">
+            <attr name="label">
+                <string>alerts</string>
             </attr>
         </edge>
         <edge from="n4" to="n4">
@@ -102,14 +102,14 @@
                 <string>new:</string>
             </attr>
         </edge>
-        <edge from="n4" to="n4">
-            <attr name="label">
-                <string>type:Attacker</string>
-            </attr>
-        </edge>
         <edge from="n4" to="n1">
             <attr name="label">
                 <string>attacks</string>
+            </attr>
+        </edge>
+        <edge from="n4" to="n4">
+            <attr name="label">
+                <string>type:Attacker</string>
             </attr>
         </edge>
     </graph>

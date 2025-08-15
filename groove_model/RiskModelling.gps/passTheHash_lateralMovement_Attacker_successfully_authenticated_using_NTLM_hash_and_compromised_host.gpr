@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
     <graph role="rule" edgeids="false" edgemode="directed" id="passTheHash_lateralMovement_Attacker_successfully_authenticated_using_NTLM_hash_and_compromised_host">
-        <attr name="priority">
-            <string>1</string>
-        </attr>
         <attr name="$version">
             <string>curly</string>
+        </attr>
+        <attr name="priority">
+            <string>1</string>
         </attr>
         <node id="n0">
             <attr name="layout">
@@ -29,12 +29,12 @@
         </edge>
         <edge from="n0" to="n0">
             <attr name="label">
-                <string>type:Host</string>
+                <string>test:compromised=true</string>
             </attr>
         </edge>
         <edge from="n0" to="n0">
             <attr name="label">
-                <string>test:compromised=true</string>
+                <string>type:Host</string>
             </attr>
         </edge>
         <edge from="n0" to="n1">

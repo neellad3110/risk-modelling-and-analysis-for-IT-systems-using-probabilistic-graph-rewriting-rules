@@ -67,6 +67,13 @@
                 }
             },
             {
+                "id": "user_EMP005",
+                "type": "User",
+                "attributes": {
+                    "name": "Peter"
+                }
+            },
+            {
                 "id": "device_EMP001",
                 "type": "Device",
                 "attributes": {
@@ -99,6 +106,15 @@
                 "attributes": {
                     "deviceType": "desktop",
                     "os": "Windows 10",
+                    "accepts_ntlm": false
+                }
+            },
+            {
+                "id": "device_EMP005",
+                "type": "Device",
+                "attributes": {
+                    "deviceType": "desktop",
+                    "os": "Windows 11",
                     "accepts_ntlm": false
                 }
             },
@@ -143,12 +159,23 @@
                 }
             },
             {
+                "id": "email_EMP005",
+                "type": "EmailAccount",
+                "attributes": {
+                    "role": "user",
+                    "domain": "example.com",
+                    "status": "active",
+                    "compromised": false
+                }
+            },
+            {
                 "id": "server1",
                 "type": "Server",
                 "attributes": {
                     "name": "RDP-Server",
                     "os": "Windows Server 2019",
-                    "accepts_ntlm": true
+                    "accepts_ntlm": true,
+                    "scriptExecutionEnabled": true
                 }
             },
             {
@@ -157,9 +184,11 @@
                 "attributes": {
                     "name": "DB-Server",
                     "os": "Ubuntu 20.04",
-                    "accepts_ntlm": false
+                    "accepts_ntlm": false,
+                    "scriptExecutionEnabled": true
                 }
             },
+            
             {
                 "id": "host1",
                 "type": "Host",
@@ -187,6 +216,15 @@
                 }
             },
             {
+                "id": "web_service1",
+                "type": "Service",
+                "attributes": {
+                    "type": "Web Application",
+                    "status": "active",
+                    "exposed": true
+                }
+            },
+            {
                 "id": "file1",
                 "type": "File",
                 "attributes": {
@@ -199,9 +237,10 @@
                 "id": "file2",
                 "type": "File",
                 "attributes": {
-                    "name": "secrets.txt",
+                    "name": "accounts.db",
                     "isSensitive": true,
-                    "tampered": false
+                    "tampered": false,
+                    "encrypted": true
                 }
             },
             {
@@ -349,20 +388,21 @@
             {
                 "id": "e20",
                 "source": "server1",
-                "type": "runs_on",
+                "type": "deployed_on",
                 "target": "host1"
             },
             {
                 "id": "e21",
                 "source": "server2",
-                "type": "runs_on",
+                "type": "deployed_on",
                 "target": "host2"
             },
+        
             {
                 "id": "e22",
-                "source": "host1",
-                "type": "runs",
-                "target": "rdp_service1"
+                "source": "rdp_service1",
+                "type": "hosted_on",
+                "target": "server1"
             },
             {
                 "id": "e23",
@@ -405,7 +445,56 @@
                 "source": "email_EMP003",
                 "type": "credentials_stored_on",
                 "target": "host1"
+            },
+            {
+                "id": "e30",
+                "source": "",
+                "type": "credentials_stored_on",
+                "target": "host1"
+            },
+            {
+                "id": "e31",
+                "source": "dept_IT",
+                "type": "employs",
+                "target": "user_EMP005"
+            },
+             {
+                "id": "e32",
+                "source": "user_EMP005",
+                "type": "owns",
+                "target": "email_EMP005"
+            },
+             {
+                "id": "e33",
+                "source": "email_EMP005",
+                "type": "uses",
+                "target": "device_EMP005"
+            },
+            {
+                "id": "e34",
+                "source": "email_EMP003",
+                "type": "manages",
+                "target": "email_EMP005"
+            },
+            {
+                "id": "e35",
+                "source": "email_EMP005",
+                "type": "monitors",
+                "target": "server2"
+            },
+            {
+                "id": "e36",
+                "source": "web_service1",
+                "type": "hosted_on",
+                "target": "server2"
+            },
+            {
+                "id": "e37",
+                "source": "user_EMP001",
+                "type": "trusts",
+                "target": "user_EMP002"
             }
+          
         ]
     }
 ]

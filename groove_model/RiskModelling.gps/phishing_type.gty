@@ -4,70 +4,45 @@
         <attr name="$version">
             <string>curly</string>
         </attr>
-        <node id="n3">
-            <attr name="layout">
-                <string>583 199 19 19</string>
-            </attr>
-        </node>
-        <node id="n4">
-            <attr name="layout">
-                <string>336 73 19 19</string>
-            </attr>
-        </node>
-        <node id="n2">
-            <attr name="layout">
-                <string>341 198 19 19</string>
-            </attr>
-        </node>
-        <node id="n1">
+        <node id="n0">
             <attr name="layout">
                 <string>312 358 82 32</string>
             </attr>
         </node>
-        <edge from="n3" to="n3">
+        <node id="n1">
+            <attr name="layout">
+                <string>341 198 19 19</string>
+            </attr>
+        </node>
+        <node id="n2">
+            <attr name="layout">
+                <string>583 199 19 19</string>
+            </attr>
+        </node>
+        <node id="n3">
+            <attr name="layout">
+                <string>336 73 19 19</string>
+            </attr>
+        </node>
+        <edge from="n0" to="n0">
             <attr name="label">
-                <string>type:Attacker</string>
+                <string>type:User</string>
             </attr>
         </edge>
-        <edge from="n3" to="n2">
+        <edge from="n0" to="n1">
             <attr name="label">
-                <string>targets</string>
-            </attr>
-        </edge>
-        <edge from="n4" to="n4">
-            <attr name="label">
-                <string>type:SecurityAlert</string>
-            </attr>
-        </edge>
-        <edge from="n4" to="n4">
-            <attr name="label">
-                <string>string:type</string>
-            </attr>
-        </edge>
-        <edge from="n4" to="n2">
-            <attr name="label">
-                <string>alerts</string>
+                <string>owns</string>
             </attr>
             <attr name="layout">
-                <string>513 -26 345 82 350 207 11</string>
+                <string>490 -5 353 374 350 207 11</string>
             </attr>
         </edge>
-        <edge from="n2" to="n2">
+        <edge from="n1" to="n1">
             <attr name="label">
                 <string>type:EmailAccount</string>
             </attr>
         </edge>
-        <edge from="n2" to="n2">
-            <attr name="label">
-                <string>bool:compromised</string>
-            </attr>
-        </edge>
-        <edge from="n2" to="n2">
-            <attr name="label">
-                <string>string:status</string>
-            </attr>
-        </edge>
-        <edge from="n2" to="n4">
+        <edge from="n1" to="n3">
             <attr name="label">
                 <string>reports</string>
             </attr>
@@ -77,15 +52,40 @@
         </edge>
         <edge from="n1" to="n1">
             <attr name="label">
-                <string>type:User</string>
+                <string>bool:compromised</string>
             </attr>
         </edge>
-        <edge from="n1" to="n2">
+        <edge from="n1" to="n1">
             <attr name="label">
-                <string>owns</string>
+                <string>string:status</string>
+            </attr>
+        </edge>
+        <edge from="n2" to="n1">
+            <attr name="label">
+                <string>targets</string>
+            </attr>
+        </edge>
+        <edge from="n2" to="n2">
+            <attr name="label">
+                <string>type:Attacker</string>
+            </attr>
+        </edge>
+        <edge from="n3" to="n1">
+            <attr name="label">
+                <string>alerts</string>
             </attr>
             <attr name="layout">
-                <string>490 -5 353 374 350 207 11</string>
+                <string>513 -26 345 82 350 207 11</string>
+            </attr>
+        </edge>
+        <edge from="n3" to="n3">
+            <attr name="label">
+                <string>type:SecurityAlert</string>
+            </attr>
+        </edge>
+        <edge from="n3" to="n3">
+            <attr name="label">
+                <string>string:type</string>
             </attr>
         </edge>
     </graph>

@@ -73,6 +73,7 @@ class CredentialHash {
   stolen: boolean
 }
 
+
 Organization "1" -- "1..*" Department : has_department
 Department "1..*" -- "0..*" User : employs
 EmailAccount "0..*" -- "0..*" Device : uses

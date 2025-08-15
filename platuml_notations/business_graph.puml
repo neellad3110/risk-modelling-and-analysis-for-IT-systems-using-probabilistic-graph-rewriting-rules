@@ -1,5 +1,5 @@
 @startuml BUSINESS_GRAPH_TYPED
-title "Business Graph with Organizational Hierarchy (Typed)"
+title "Business Graph with Organizational Hierarchy"
 
 skinparam object {
   BackgroundColor<<Organization>> #E3E3E3

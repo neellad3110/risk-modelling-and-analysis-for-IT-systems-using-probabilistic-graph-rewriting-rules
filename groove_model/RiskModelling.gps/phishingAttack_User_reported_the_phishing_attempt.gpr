@@ -7,6 +7,11 @@
         <attr name="priority">
             <string>1</string>
         </attr>
+        <node id="n0">
+            <attr name="layout">
+                <string>318 275 138 54</string>
+            </attr>
+        </node>
         <node id="n1">
             <attr name="layout">
                 <string>382 431 19 19</string>
@@ -22,51 +27,6 @@
                 <string>584 295 19 19</string>
             </attr>
         </node>
-        <node id="n0">
-            <attr name="layout">
-                <string>318 275 138 54</string>
-            </attr>
-        </node>
-        <edge from="n1" to="n1">
-            <attr name="label">
-                <string>type:User</string>
-            </attr>
-        </edge>
-        <edge from="n1" to="n0">
-            <attr name="label">
-                <string>owns</string>
-            </attr>
-        </edge>
-        <edge from="n2" to="n2">
-            <attr name="label">
-                <string>new:</string>
-            </attr>
-        </edge>
-        <edge from="n2" to="n2">
-            <attr name="label">
-                <string>type:SecurityAlert</string>
-            </attr>
-        </edge>
-        <edge from="n2" to="n2">
-            <attr name="label">
-                <string>let:type="phishing_attempt"</string>
-            </attr>
-        </edge>
-        <edge from="n3" to="n3">
-            <attr name="label">
-                <string>new:</string>
-            </attr>
-        </edge>
-        <edge from="n3" to="n3">
-            <attr name="label">
-                <string>type:Attacker</string>
-            </attr>
-        </edge>
-        <edge from="n3" to="n0">
-            <attr name="label">
-                <string>targets</string>
-            </attr>
-        </edge>
         <edge from="n0" to="n0">
             <attr name="label">
                 <string>parin:0</string>
@@ -77,9 +37,12 @@
                 <string>type:EmailAccount</string>
             </attr>
         </edge>
-        <edge from="n0" to="n0">
+        <edge from="n0" to="n2">
             <attr name="label">
-                <string>let:compromised=false</string>
+                <string>new:reports</string>
+            </attr>
+            <attr name="layout">
+                <string>465 -2 388 303 394 168 11</string>
             </attr>
         </edge>
         <edge from="n0" to="n0">
@@ -87,12 +50,49 @@
                 <string>test:status="active"</string>
             </attr>
         </edge>
-        <edge from="n0" to="n2">
+        <edge from="n0" to="n0">
             <attr name="label">
-                <string>new:reports</string>
+                <string>let:compromised=false</string>
             </attr>
-            <attr name="layout">
-                <string>465 -2 388 303 394 168 11</string>
+        </edge>
+        <edge from="n1" to="n0">
+            <attr name="label">
+                <string>owns</string>
+            </attr>
+        </edge>
+        <edge from="n1" to="n1">
+            <attr name="label">
+                <string>type:User</string>
+            </attr>
+        </edge>
+        <edge from="n2" to="n2">
+            <attr name="label">
+                <string>new:</string>
+            </attr>
+        </edge>
+        <edge from="n2" to="n2">
+            <attr name="label">
+                <string>let:type="phishing_attempt"</string>
+            </attr>
+        </edge>
+        <edge from="n2" to="n2">
+            <attr name="label">
+                <string>type:SecurityAlert</string>
+            </attr>
+        </edge>
+        <edge from="n3" to="n3">
+            <attr name="label">
+                <string>new:</string>
+            </attr>
+        </edge>
+        <edge from="n3" to="n0">
+            <attr name="label">
+                <string>targets</string>
+            </attr>
+        </edge>
+        <edge from="n3" to="n3">
+            <attr name="label">
+                <string>type:Attacker</string>
             </attr>
         </edge>
     </graph>
