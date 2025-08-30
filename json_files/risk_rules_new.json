@@ -1,13 +1,13 @@
 {
     "risk_specification": {
-        "name": "Business Risk Specification",
-        "description": "Rules to assess business risks based on various attributes.",
-        "version": 2.1,
+        "name": "Comprehensive Business Risk Specification",
+        "description": "Complete risk rules covering all attack patterns from GROOVE model files",
+        "version": "2.2",
         "rules": [
             {
                 "id": "RISK001",
                 "title": "Phishing Attack on Active Email Account",
-                "description": "A phishing email is sent to an active user email account. The attack attempts to trick the user into entering credentials. Various outcomes are possible depending on the user's response.",
+                "description": "A phishing email is sent to an active user email account attempting to trick the user into entering credentials",
                 "mitre_attack_id": "T1566.001",
                 "tags": [
                     "initial-access",
@@ -21,24 +21,47 @@
                     "Attacker may gain access to user credentials or trigger alerts"
                 ],
                 "risk_pattern": {
-                    "lhs": [
-                        {
-                            "node": "User",
-                            "bind": "user"
-                        },
-                        {
-                            "node": "EmailAccount",
-                            "attributes": {
-                                "status": "active"
+                    "lhs": {
+                        "nodes": [
+                            {
+                                "type": "User",
+                                "op": "type",
+                                "bind": "user"
                             },
-                            "bind": "victimEmail"
-                        },
-                        {
-                            "edge": "owns",
-                            "source": "user",
-                            "target": "victimEmail"
-                        }
-                    ]
+                            {
+                                "type": "EmailAccount",
+                                "op": "type",
+                                "bind": "victimEmail",
+                                "role": "input",
+                                "attributes": {
+                                    "test:status": "active"
+                                }
+                            },
+                            {
+                                "type": "Message",
+                                "op": "new",
+                                "bind": "phishingMessage",
+                                "role": "output",
+                                "attributes": {
+                                    "let:type": "phishing_message"
+                                }
+                            }
+                        ],
+                        "edges": [
+                            {
+                                "type": "owns",
+                                "op": "type",
+                                "source": "user",
+                                "target": "victimEmail"
+                            },
+                            {
+                                "type": "sent",
+                                "op": "new",
+                                "source": "phishingMessage",
+                                "target": "victimEmail"
+                            }
+                        ]
+                    }
                 },
                 "attack_rate": {
                     "rate_per_year": 5,
@@ -46,91 +69,107 @@
                 },
                 "outcomes": [
                     {
-                        "response": "User clicked link and entered credentials",
+                        "name": "User clicked link and entered credentials",
                         "probability": 0.1,
-                        "effect": [
+                        "cost": 30000,
+                        "nodes": [
                             {
-                                "update": {
-                                    "node": "EmailAccount",
-                                    "attributes": {
-                                        "compromised": true
-                                    }
+                                "type": "EmailAccount",
+                                "op": "type",
+                                "bind": "victimEmail",
+                                "attributes": {
+                                    "let:compromised": true
                                 }
                             }
-                        ],
-                        "cost": 30000
+                        ]
                     },
                     {
-                        "response": "User clicked link but did not enter credentials",
+                        "name": "User clicked link but did not enter credentials",
                         "probability": 0.2,
-                        "effect": [
+                        "cost": 5000,
+                        "nodes": [
                             {
-                                "create": {
-                                    "node": "SecurityAlert",
-                                    "attributes": {
-                                        "type": "phishing_attempt"
-                                    },
-                                    "bind": "alert"
-                                }
-                            },
-                            {
-                                "create": {
-                                    "edge": "alerts",
-                                    "source": "alert",
-                                    "target": "victimEmail"
+                                "type": "SecurityAlert",
+                                "op": "new",
+                                "bind": "alert",
+                                "attributes": {
+                                    "let:type": "phishing_attempt"
                                 }
                             }
                         ],
-                        "cost": 5000
+                        "edges": [
+                            {
+                                "type": "alerts",
+                                "op": "new",
+                                "source": "alert",
+                                "target": "victimEmail"
+                            }
+                        ]
                     },
                     {
-                        "response": "User ignored the email",
+                        "name": "User ignored the email",
                         "probability": 0.6,
-                        "effect": [],
-                        "cost": 0
-                    },
-                    {
-                        "response": "User reported the phishing attempt",
-                        "probability": 0.1,
-                        "effect": [
+                        "cost": 0,
+                        "nodes": [
                             {
-                                "create": {
-                                    "node": "Attacker",
-                                    "bind": "attacker"
-                                }
-                            },
-                            {
-                                "create": {
-                                    "edge": "targets",
-                                    "source": "attacker",
-                                    "target": "victimEmail"
-                                }
-                            },
-                            {
-                                "create": {
-                                    "node": "SecurityAlert",
-                                    "attributes": {
-                                        "type": "phishing_attempt"
-                                    },
-                                    "bind": "alert"
-                                }
-                            },
-                            {
-                                "create": {
-                                    "edge": "reports",
-                                    "source": "victimEmail",
-                                    "target": "alert"
+                                "type": "Message",
+                                "op": "del",
+                                "bind": "phishingMessage",
+                                "role": "output",
+                                "attributes": {
+                                    "let:type": "phishing_message"
                                 }
                             }
                         ],
-                        "cost": 1000
+                        "edges": [
+                            {
+                                "type": "sent",
+                                "op": "del",
+                                "source": "phishingMessage",
+                                "target": "victimEmail"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "User reported the phishing attempt",
+                        "probability": 0.1,
+                        "cost": 1000,
+                        "nodes": [
+                            {
+                                "type": "SecurityAlert",
+                                "op": "new",
+                                "bind": "alert",
+                                "attributes": {
+                                    "let:type": "phishing_attempt"
+                                }
+                            },
+                            {
+                                "type": "Attacker",
+                                "op": "new",
+                                "bind": "attacker"
+                            }
+                        ],
+                        "edges": [
+                            {
+                                "type": "targets",
+                                "op": "new",
+                                "source": "attacker",
+                                "target": "victimEmail"
+                            },
+                            {
+                                "type": "reports",
+                                "op": "new",
+                                "source": "victimEmail",
+                                "target": "alert"
+                            }
+                        ]
                     }
                 ]
             },
             {
                 "id": "RISK002",
                 "title": "Privilege Escalation via Writable Sensitive File",
-                "description": "A compromised user account has write access to a sensitive file (e.g., sudoers file, shell profile, or cron script). The attacker can exploit this by modifying the file to escalate privileges.",
+                "description": "A compromised user account has write access to a sensitive file and attempts to escalate privileges",
                 "mitre_attack_id": "T1548.001",
                 "tags": [
                     "privilege-escalation",
@@ -144,37 +183,48 @@
                     "Attacker may gain elevated privileges or trigger alerts"
                 ],
                 "risk_pattern": {
-                    "lhs": [
-                        {
-                            "node": "User",
-                            "bind": "user"
-                        },
-                        {
-                            "node": "EmailAccount",
-                            "attributes": {
-                                "compromised": true
+                    "lhs": {
+                        "nodes": [
+                            {
+                                "type": "User",
+                                "op": "type",
+                                "bind": "user"
                             },
-                            "bind": "victimEmail"
-                        },
-                        {
-                            "node": "File",
-                            "attributes": {
-                                "isSensitive": true,
-                                "tampered": false
+                            {
+                                "type": "EmailAccount",
+                                "op": "type",
+                                "bind": "victimEmail",
+                                "role": "input",
+                                "attributes": {
+                                    "test:status": "active",
+                                    "test:compromised": true
+                                }
                             },
-                            "bind": "sensitiveFile"
-                        },
-                        {
-                            "edge": "owns",
-                            "source": "user",
-                            "target": "victimEmail"
-                        },
-                        {
-                            "edge": "can_write",
-                            "source": "victimEmail",
-                            "target": "sensitiveFile"
-                        }
-                    ]
+                            {
+                                "type": "File",
+                                "op": "type",
+                                "bind": "sensitiveFile",
+                                "attributes": {
+                                    "test:isSensitive": true,
+                                    "test:tampered": false
+                                }
+                            }
+                        ],
+                        "edges": [
+                            {
+                                "type": "owns",
+                                "op": "type",
+                                "source": "user",
+                                "target": "victimEmail"
+                            },
+                            {
+                                "type": "can_write",
+                                "op": "type",
+                                "source": "victimEmail",
+                                "target": "sensitiveFile"
+                            }
+                        ]
+                    }
                 },
                 "attack_rate": {
                     "rate_per_year": 1,
@@ -182,667 +232,758 @@
                 },
                 "outcomes": [
                     {
-                        "response": "Attacker successfully modifies file to escalate privileges",
+                        "name": "Attacker successfully modifies file to escalate privileges",
                         "probability": 0.6,
-                        "effect": [
+                        "cost": 85000,
+                        "nodes": [
                             {
-                                "update": {
-                                    "node": "EmailAccount",
-                                    "bind": "victimEmail",
-                                    "attributes": {
-                                        "role": "admin",
-                                        "compromised": true
-                                    }
+                                "type": "EmailAccount",
+                                "op": "type",
+                                "bind": "victimEmail",
+                                "attributes": {
+                                    "let:role": "admin",
+                                    "test:compromised": true,
+                                    "test:status": "active"
                                 }
                             },
                             {
-                                "update": {
-                                    "node": "File",
-                                    "bind": "sensitiveFile",
-                                    "attributes": {
-                                        "tampered": true
-                                    }
+                                "type": "File",
+                                "op": "type",
+                                "bind": "sensitiveFile",
+                                "attributes": {
+                                    "test:isSensitive": true,
+                                    "let:tampered": true
                                 }
                             },
                             {
-                                "create": {
-                                    "edge": "manages",
-                                    "source": "victimEmail",
-                                    "target": "EmailAccount"
+                                "type": "EmailAccount",
+                                "op": "type",
+                                "bind": "adminAccount",
+                                "attributes": {
+                                    "test:compromised": false,
+                                    "test:role": "user"
                                 }
                             }
                         ],
-                        "cost": 85000
+                        "edges": [
+                            {
+                                "type": "manages",
+                                "op": "new",
+                                "source": "victimEmail",
+                                "target": "adminAccount"
+                            }
+                        ]
                     },
                     {
-                        "response": "Attack attempt triggers security alert (e.g., file integrity monitoring)",
+                        "name": "Attack attempt triggers security alert by file integrity monitoring",
                         "probability": 0.3,
-                        "effect": [
+                        "cost": 5000,
+                        "nodes": [
                             {
-                                "create": {
-                                    "node": "SecurityAlert",
-                                    "attributes": {
-                                        "type": "unauthorized_file_modification"
-                                    },
-                                    "bind": "alert"
-                                }
-                            },
-                            {
-                                "create": {
-                                    "edge": "alerts",
-                                    "source": "alert",
-                                    "target": "sensitiveFile"
-                                }
-                            },
-                            {
-                                "create": {
-                                    "node": "Attacker",
-                                    "bind": "attacker"
-                                }
-                            },
-                            {
-                                "create": {
-                                    "edge": "targets",
-                                    "source": "attacker",
-                                    "target": "victimEmail"
+                                "type": "SecurityAlert",
+                                "op": "new",
+                                "bind": "alert",
+                                "attributes": {
+                                    "let:type": "unauthorized_file_modification"
                                 }
                             }
                         ],
-                        "cost": 5000
+                        "edges": [
+                            {
+                                "type": "alerts",
+                                "op": "new",
+                                "source": "alert",
+                                "target": "victimEmail"
+                            }
+                        ]
                     },
                     {
-                        "response": "Sysadmin detects and revokes file permissions before attack succeeds",
+                        "name": "Sysadmin detects and revokes file permissions before attack succeeds",
                         "probability": 0.1,
-                        "effect": [
+                        "cost": 2000,
+                        "nodes": [
                             {
-                                "update": {
-                                    "node": "File",
-                                    "bind": "sensitiveFile",
-                                    "attributes": {
-                                        "tampered": false
-                                    }
+                                "type": "File",
+                                "op": "type",
+                                "bind": "sensitiveFile",
+                                "attributes": {
+                                    "let:tampered": false,
+                                    "test:isSensitive": true
                                 }
                             },
                             {
-                                "delete": {
-                                    "node": "EmailAccount"
+                                "type": "EmailAccount",
+                                "op": "type",
+                                "bind": "victimEmail",
+                                "attributes": {
+                                    "let:role": "user",
+                                    "let:status": "suspended",
+                                    "test:compromised": true
                                 }
+                            },
+                            {
+                                "type": "EmailAccount",
+                                "op": "type",
+                                "bind": "adminAccount",
+                                "attributes": {
+                                    "let:role": "admin"
+                                }
+                            },
+                            {
+                                "type": "Attacker",
+                                "op": "new",
+                                "bind": "attacker"
                             }
                         ],
-                        "cost": 2000
+                        "edges": [
+                            {
+                                "type": "can_write",
+                                "op": "del",
+                                "source": "victimEmail",
+                                "target": "sensitiveFile"
+                            },
+                            {
+                                "type": "manages",
+                                "op": "type",
+                                "source": "adminAccount",
+                                "target": "victimEmail"
+                            },
+                            {
+                                "type": "can_write",
+                                "op": "new",
+                                "source": "adminAccount",
+                                "target": "sensitiveFile"
+                            },
+                            {
+                                "type": "targets",
+                                "op": "new",
+                                "source": "attacker",
+                                "target": "victimEmail"
+                            }
+                        ]
                     }
                 ]
             },
             {
                 "id": "RISK003",
                 "title": "Credential Dumping from Compromised Host",
-                "description": "An attacker uses tools to extract cached credentials from memory or files on a compromised machine.\n",
+                "description": "An attacker with access to a compromised host attempts to dump stored credentials",
                 "mitre_attack_id": "T1003",
                 "tags": [
-                    "credential-access"
+                    "credential-access",
+                    "post-compromise"
                 ],
                 "preconditions": [
-                    "Host must be compromised",
-                    "Admin credentials cached or stored locally"
+                    "Host is compromised",
+                    "Credentials are stored on the host"
                 ],
                 "postconditions": [
-                    "Attacker gains valid credentials"
+                    "Attacker may obtain additional credentials or trigger detection"
                 ],
                 "risk_pattern": {
-                    "lhs": [
-                        {
-                            "node": "User",
-                            "bind": "user"
-                        },
-                        {
-                            "node": "Host",
-                            "attributes": {
-                                "compromised": true
+                    "lhs": {
+                        "nodes": [
+                            {
+                                "type": "Host",
+                                "op": "type",
+                                "bind": "compromisedHost",
+                                "role": "input",
+                                "attributes": {
+                                    "test:compromised": true
+                                }
                             },
-                            "bind": "targetHost"
-                        },
-                        {
-                            "node": "EmailAccount",
-                            "attributes": {
-                                "role": "admin",
-                                "compromised": false
+                            {
+                                "type": "EmailAccount",
+                                "op": "type",
+                                "bind": "storedAccount",
+                                "attributes": {
+                                    "test:compromised": false
+                                }
                             },
-                            "bind": "victimEmail"
-                        },
-                        {
-                            "edge": "credentials_stored_on",
-                            "source": "user",
-                            "target": "targetHost"
-                        },
-                        {
-                            "edge": "owns",
-                            "source": "user",
-                            "target": "victimEmail"
-                        }
-                    ]
+                            {
+                                "type": "User",
+                                "op": "type",
+                                "bind": "user"
+                            }
+                        ],
+                        "edges": [
+                            {
+                                "type": "credentials_stored_on",
+                                "op": "type",
+                                "source": "storedAccount",
+                                "target": "compromisedHost"
+                            },
+                            {
+                                "type": "owns",
+                                "op": "type",
+                                "source": "user",
+                                "target": "storedAccount"
+                            }
+                        ]
+                    }
                 },
                 "attack_rate": {
-                    "rate_per_year": 4,
-                    "scope": "per compromised host with stored admin credentials"
+                    "rate_per_year": 2,
+                    "scope": "per compromised host with stored credentials"
                 },
                 "outcomes": [
                     {
-                        "response": "Attacker successfully dumped admin credentials",
-                        "probability": 0.25,
-                        "effect": [
+                        "name": "Attacker dumps admin credentials",
+                        "probability": 0.4,
+                        "cost": 75000,
+                        "nodes": [
                             {
-                                "update": {
-                                    "node": "EmailAccount",
-                                    "bind": "victimEmail",
-                                    "attributes": {
-                                        "compromised": true
-                                    }
+                                "type": "EmailAccount",
+                                "op": "type",
+                                "bind": "storedAccount",
+                                "attributes": {
+                                    "let:compromised": true
                                 }
                             }
-                        ],
-                        "cost": 40000
+                        ]
                     },
                     {
-                        "response": "Partial credentials were obtained",
+                        "name": "Endpoint security detected the attempt",
+                        "probability": 0.35,
+                        "cost": 8000,
+                        "nodes": [
+                            {
+                                "type": "SecurityAlert",
+                                "op": "new",
+                                "bind": "alert",
+                                "attributes": {
+                                    "let:type": "credential_dumping"
+                                }
+                            },
+                            {
+                                "type": "Attacker",
+                                "op": "new",
+                                "bind": "attacker"
+                            }
+                        ],
+                        "edges": [
+                            {
+                                "type": "alerts",
+                                "op": "new",
+                                "source": "alert",
+                                "target": "storedAccount"
+                            },
+                            {
+                                "type": "attacks",
+                                "op": "new",
+                                "source": "attacker",
+                                "target": "compromisedHost"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Partial credentials are obtained",
                         "probability": 0.15,
-                        "effect": [
+                        "cost": 25000,
+                        "nodes": [
                             {
-                                "update": {
-                                    "node": "EmailAccount",
-                                    "bind": "victimEmail",
-                                    "attributes": {
-                                        "compromised": true
-                                    }
+                                "type": "EmailAccount",
+                                "op": "type",
+                                "bind": "storedAccount",
+                                "attributes": {
+                                    "let:compromised": true
                                 }
                             },
                             {
-                                "create": {
-                                    "node": "SecurityAlert",
-                                    "attributes": {
-                                        "type": "partial_credentials_used"
-                                    },
-                                    "bind": "alert"
+                                "type": "SecurityAlert",
+                                "op": "new",
+                                "bind": "alert",
+                                "attributes": {
+                                    "let:type": "partial_credentials_used"
                                 }
                             },
                             {
-                                "create": {
-                                    "edge": "alerts",
-                                    "source": "alert",
-                                    "target": "victimEmail"
-                                }
-                            },
-                            {
-                                "create": {
-                                    "node": "Attacker",
-                                    "bind": "attacker"
-                                }
-                            },
-                            {
-                                "create": {
-                                    "edge": "targets",
-                                    "source": "attacker",
-                                    "target": "targetHost"
-                                }
+                                "type": "Attacker",
+                                "op": "new",
+                                "bind": "attacker"
                             }
                         ],
-                        "cost": 15000
+                        "edges": [
+                            {
+                                "type": "attacks",
+                                "op": "new",
+                                "source": "attacker",
+                                "target": "compromisedHost"
+                            },
+                            {
+                                "type": "alerts",
+                                "op": "new",
+                                "source": "alert",
+                                "target": "storedAccount"
+                            }
+                        ]
                     },
                     {
-                        "response": "Credential dumping attempt failed silently",
-                        "probability": 0.5,
-                        "effect": [],
-                        "cost": 0
-                    },
-                    {
-                        "response": "Endpoint security detected the attempt",
+                        "name": "Attempt failed silently",
                         "probability": 0.1,
-                        "effect": [
-                            {
-                                "update": {
-                                    "node": "EmailAccount",
-                                    "bind": "victimEmail",
-                                    "attributes": {
-                                        "compromised": false
-                                    }
-                                }
-                            },
-                            {
-                                "create": {
-                                    "node": "SecurityAlert",
-                                    "attributes": {
-                                        "type": "credential_dumping"
-                                    },
-                                    "bind": "alert"
-                                }
-                            },
-                            {
-                                "create": {
-                                    "edge": "alerts",
-                                    "source": "alert",
-                                    "target": "victimEmail"
-                                }
-                            },
-                            {
-                                "create": {
-                                    "node": "Attacker",
-                                    "bind": "attacker"
-                                }
-                            },
-                            {
-                                "create": {
-                                    "edge": "attacks",
-                                    "source": "attacker",
-                                    "target": "targetHost"
-                                }
-                            }
-                        ],
-                        "cost": 5000
+                        "cost": 0
                     }
                 ]
             },
             {
                 "id": "RISK004",
-                "title": "Remote Service Exploitation",
-                "description": "Attackers exploiting vulnerabilities in remote services to gain unauthorized access to systems. These attacks often leverage remote access tools (RATs) or vulnerabilities in protocols like Remote Desktop Protocol (RDP) or Secure Shell (SSH).\n",
-                "mitre_attack_id": "T1021.001",
+                "title": "Unauthorized Script Execution",
+                "description": "An attacker executes malicious scripts on a compromised host",
+                "mitre_attack_id": "T1059",
                 "tags": [
-                    "lateral-movement"
+                    "execution",
+                    "post-compromise"
                 ],
                 "preconditions": [
-                    "RDP port open to external network"
+                    "Server allows script execution from a compromised account",
+                    "script is executable"
                 ],
                 "postconditions": [
-                    "The attacker gains control of the host that runs the exploited service or triggers security alerts"
+                    "Malicious script may execute or be detected "
                 ],
                 "risk_pattern": {
-                    "lhs": [
-                        {
-                            "node": "EmailAccount",
-                            "bind": "victimEmail"
-                        },
-                        {
-                            "node": "Server",
-                            "bind": "rdpServer"
-                        },
-                        {
-                            "node": "Service",
-                            "attributes": {
-                                "type": "RDP",
-                                "exposed": true
+                    "lhs": {
+                        "nodes": [
+                            {
+                                "type": "Host",
+                                "op": "type",
+                                "bind": "targetHost",
+                                "role": "input",
+                                "attributes": {
+                                    "test:compromised": false
+                                }
                             },
-                            "bind": "rdpService"
-                        },
-                        {
-                            "node": "Host",
-                            "attributes": {
-                                "compromised": false
+                            {
+                                "type": "EmailAccount",
+                                "op": "type",
+                                "bind": "userAccount",
+                                "attributes": {
+                                    "test:compromised": true
+                                }
                             },
-                            "bind": "internalHost"
-                        },
-                        {
-                            "edge": "runs",
-                            "source": "internalHost",
-                            "target": "rdpService"
-                        },
-                        {
-                            "edge": "credentials_stored_on",
-                            "source": "victimEmail",
-                            "target": "rdpService"
-                        },
-                        {
-                            "edge": "runs_on",
-                            "source": "internalHost",
-                            "target": "rdpServer"
-                        }
-                    ]
+                            {
+                                "type": "Server",
+                                "op": "type",
+                                "bind": "server",
+                                "attributes": {
+                                    "test:scriptExecutionEnabled": true
+                                }
+                            },
+                            {
+                                "type": "User",
+                                "op": "type",
+                                "bind": "user"
+                            }
+                        ],
+                        "edges": [
+                            {
+                                "type": "owns",
+                                "op": "type",
+                                "source": "user",
+                                "target": "userAccount"
+                            },
+                            {
+                                "type": "monitors",
+                                "op": "type",
+                                "source": "userAccount",
+                                "target": "server"
+                            },
+                            {
+                                "type": "deployed_on",
+                                "op": "type",
+                                "source": "server",
+                                "target": "targetHost"
+                            }
+                        ]
+                    }
                 },
                 "attack_rate": {
                     "rate_per_year": 3,
-                    "scope": "per exposed RDP service"
+                    "scope": "per compromised host with script execution enabled"
                 },
                 "outcomes": [
                     {
-                        "response": "Attacker logged in via RDP and gained control",
-                        "probability": 0.2,
-                        "effect": [
+                        "name": "Script is executed successfully",
+                        "probability": 0.3,
+                        "cost": 45000,
+                        "nodes": [
                             {
-                                "update": {
-                                    "node": "Host",
-                                    "bind": "internalHost",
-                                    "attributes": {
-                                        "compromised": true
-                                    }
+                                "type": "Host",
+                                "op": "type",
+                                "bind": "targetHost",
+                                "role": "input",
+                                "attributes": {
+                                    "let:compromised": true
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Script detected during execution by antivirus",
+                        "probability": 0.4,
+                        "cost": 12000,
+                        "nodes": [
+                            {
+                                "type": "Script",
+                                "op": "new",
+                                "bind": "maliciousScript",
+                                "attributes": {
+                                    "let:name": "backdoor_init.py"
+                                }
+                            },
+                            {
+                                "type": "Attacker",
+                                "op": "new",
+                                "bind": "attacker"
+                            }
+                        ],
+                        "edges": [
+                            {
+                                "type": "executed_on",
+                                "op": "new",
+                                "source": "maliciousScript",
+                                "target": "server"
+                            },
+                            {
+                                "type": "uses",
+                                "op": "new",
+                                "source": "attacker",
+                                "target": "maliciousScript"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Attack attempt triggers security alert",
+                        "probability": 0.2,
+                        "cost": 6000,
+                        "nodes": [
+                            {
+                                "type": "SecurityAlert",
+                                "op": "new",
+                                "bind": "alert",
+                                "attributes": {
+                                    "let:type": "script_execution_attempt"
+                                }
+                            },
+                            {
+                                "type": "Attacker",
+                                "op": "new",
+                                "bind": "attacker"
+                            },
+                            {
+                                "type": "Script",
+                                "op": "new",
+                                "bind": "maliciousScript",
+                                "attributes": {
+                                    "let:name": "backdoor_init.py"
                                 }
                             }
                         ],
-                        "cost": 35000
-                    },
-                    {
-                        "response": "Multiple failed RDP login attempts, security alert triggered",
-                        "probability": 0.2,
-                        "effect": [
+                        "edges": [
                             {
-                                "create": {
-                                    "node": "SecurityAlert",
-                                    "attributes": {
-                                        "type": "rdp_login_attempt_detected"
-                                    },
-                                    "bind": "alert"
-                                }
+                                "type": "alerts",
+                                "op": "new",
+                                "source": "alert",
+                                "target": "userAccount"
                             },
                             {
-                                "create": {
-                                    "node": "Attacker",
-                                    "bind": "attacker"
-                                }
+                                "type": "executed_on",
+                                "op": "new",
+                                "source": "maliciousScript",
+                                "target": "server"
                             },
                             {
-                                "update": {
-                                    "node": "rdpService",
-                                    "attributes": {
-                                        "exposed": false
-                                    }
-                                }
-                            },
-                            {
-                                "create": {
-                                    "edge": "attacks",
-                                    "source": "attacker",
-                                    "target": "internalHost"
-                                }
-                            },
-                            {
-                                "create": {
-                                    "edge": "alerts",
-                                    "source": "alert",
-                                    "target": "victimEmail"
-                                }
+                                "type": "uses",
+                                "op": "new",
+                                "source": "attacker",
+                                "target": "maliciousScript"
                             }
-                        ],
-                        "cost": 5000
+                        ]
                     },
                     {
-                        "response": "RDP login attempt failed without detection",
-                        "probability": 0.6,
-                        "effect": [],
+                        "name": "Script execution failed silently",
+                        "probability": 0.1,
                         "cost": 0
                     }
                 ]
             },
             {
                 "id": "RISK005",
-                "title": "Lateral Movement via Pass-the-Hash",
-                "description": "Attacker reuses stolen NTLM hashes to authenticate and move laterally across hosts in the organization.\n",
-                "mitre_attack_id": "T1550.002",
+                "title": "Remote Service Exploitation via RDP",
+                "description": "An attacker attempts to exploit remote desktop services to gain unauthorized access",
+                "mitre_attack_id": "T1021.001",
                 "tags": [
-                    "lateral-movement"
+                    "lateral-movement",
+                    "remote-services"
                 ],
                 "preconditions": [
-                    "Hashes harvested from compromised host",
-                    "Target host accepts NTLM authentication"
+                    "RDP service is exposed",
+                    "Credentials are available or weak"
                 ],
                 "postconditions": [
-                    "Attacker gains unauthorized access to other systems or generates alerts"
+                    "Attacker may gain remote access or trigger alerts"
                 ],
                 "risk_pattern": {
-                    "lhs": [
-                        {
-                            "node": "EmailAccount",
-                            "bind": "victimEmail"
-                        },
-                        {
-                            "node": "Host",
-                            "attributes": {
-                                "compromised": true
+                    "lhs": {
+                        "nodes": [
+                            {
+                                "type": "Host",
+                                "op": "type",
+                                "bind": "targetHost",
+                                "role": "input",
+                                "attributes": {
+                                    "test:compromised": false
+                                }
                             },
-                            "bind": "sourceHost"
-                        },
-                        {
-                            "node": "Host",
-                            "attributes": {
-                                "accepts_ntlm": true,
-                                "compromised": false
+                            {
+                                "type": "EmailAccount",
+                                "op": "type",
+                                "bind": "userAccount"
                             },
-                            "bind": "targetHost"
-                        },
-                        {
-                            "edge": "can_access",
-                            "source": "sourceHost",
-                            "target": "targetHost"
-                        },
-                        {
-                            "edge": "credentials_stored_on",
-                            "source": "victimEmail",
-                            "target": "sourceHost"
-                        }
-                    ]
+                            {
+                                "type": "Server",
+                                "op": "type",
+                                "bind": "server"
+                            },
+                            {
+                                "type": "User",
+                                "op": "type",
+                                "bind": "user"
+                            },
+                            {
+                                "type": "Service",
+                                "op": "type",
+                                "bind": "rdpService",
+                                "attributes": {
+                                    "test:type": "RDP",
+                                    "test:exposed": true
+                                }
+                            }
+                        ],
+                        "edges": [
+                            {
+                                "type": "owns",
+                                "op": "type",
+                                "source": "user",
+                                "target": "userAccount"
+                            },
+                            {
+                                "type": "credentials_stored_on",
+                                "op": "type",
+                                "source": "userAccount",
+                                "target": "targetHost"
+                            },
+                            {
+                                "type": "deployed_on",
+                                "op": "type",
+                                "source": "server",
+                                "target": "targetHost"
+                            },
+                            {
+                                "type": "hosted_on",
+                                "op": "type",
+                                "source": "rdpService",
+                                "target": "server"
+                            }
+                        ]
+                    }
                 },
                 "attack_rate": {
                     "rate_per_year": 4,
-                    "scope": "per valid NTLM hash"
+                    "scope": "per host with RDP enabled"
                 },
                 "outcomes": [
                     {
-                        "response": "Attacker successfully authenticated using NTLM hash and compromised host",
-                        "probability": 0.3,
-                        "effect": [
+                        "name": "Attacker logged in via RDP and gained control",
+                        "probability": 0.15,
+                        "cost": 90000,
+                        "nodes": [
                             {
-                                "update": {
-                                    "node": "Host",
-                                    "bind": "targetHost",
-                                    "attributes": {
-                                        "compromised": true
-                                    }
+                                "type": "Host",
+                                "op": "type",
+                                "bind": "targetHost",
+                                "attributes": {
+                                    "let:compromised": true
                                 }
                             }
-                        ],
-                        "cost": 45000
+                        ]
                     },
                     {
-                        "response": "Suspicious login attempt detected and flagged",
-                        "probability": 0.2,
-                        "effect": [
+                        "name": "Multiple failed RDP login attempts - security alert triggered and RDP port closed",
+                        "probability": 0.6,
+                        "cost": 8000,
+                        "nodes": [
                             {
-                                "create": {
-                                    "node": "SecurityAlert",
-                                    "attributes": {
-                                        "type": "pass_the_hash_detected"
-                                    },
-                                    "bind": "alert"
+                                "type": "SecurityAlert",
+                                "op": "new",
+                                "bind": "alert",
+                                "attributes": {
+                                    "let:type": "rdp_authentication"
                                 }
                             },
                             {
-                                "create": {
-                                    "edge": "alerts",
-                                    "source": "alert",
-                                    "target": "victimEmail"
+                                "type": "Service",
+                                "op": "type",
+                                "bind": "rdpService",
+                                "attributes": {
+                                    "let:exposed": false
                                 }
                             },
                             {
-                                "create": {
-                                    "node": "Attacker",
-                                    "bind": "attacker"
-                                }
-                            },
-                            {
-                                "create": {
-                                    "edge": "attacks",
-                                    "source": "attacker",
-                                    "target": "targetHost"
-                                }
+                                "type": "Attacker",
+                                "op": "new",
+                                "bind": "attacker"
                             }
                         ],
-                        "cost": 7000
+                        "edges": [
+                            {
+                                "type": "alerts",
+                                "op": "new",
+                                "source": "alert",
+                                "target": "userAccount"
+                            },
+                            {
+                                "type": "targets",
+                                "op": "new",
+                                "source": "attacker",
+                                "target": "rdpService"
+                            }
+                        ]
                     },
                     {
-                        "response": "Authentication attempt failed and remained undetected",
-                        "probability": 0.5,
-                        "effect": [],
+                        "name": "RDP login attempt failed without detection",
+                        "probability": 0.25,
                         "cost": 0
                     }
                 ]
             },
             {
                 "id": "RISK006",
-                "title": "Unauthorized Script Execution on Server",
-                "description": "A malicious script (e.g., shell or PowerShell) is deployed and executed on a server due to misconfigured permissions.\n",
-                "mitre_attack_id": "T1059",
+                "title": "Lateral Movement via Pass-the-Hash",
+                "description": "An attacker uses compromised NTLM hashes to authenticate to other systems",
+                "mitre_attack_id": "T1550.002",
                 "tags": [
-                    "script-execution"
+                    "lateral-movement",
+                    "credential-access"
                 ],
                 "preconditions": [
-                    "Server allows script execution from a compromised account",
-                    "running a script with an attribute 'scriptExecutionEnabled' set to true"
+                    "NTLM hashes are compromised",
+                    "Target systems accept NTLM authentication"
                 ],
                 "postconditions": [
-                    "An attacker abuses limited or misused access to run unauthorized scripts on a server, leading to backdoors, data leaks, or system tampering."
+                    "Attacker may compromise additional systems"
                 ],
                 "risk_pattern": {
-                    "lhs": [
-                        {
-                            "node": "EmailAccount",
-                            "attributes": {
-                                "compromised": true
+                    "lhs": {
+                        "nodes": [
+                            {
+                                "type": "Host",
+                                "op": "type",
+                                "bind": "sourceHost",
+                                "role": "input",
+                                "attributes": {
+                                    "test:compromised": true
+                                }
                             },
-                            "bind": "victimEmail"
-                        },
-                        {
-                            "node": "Server",
-                            "attributes": {
-                                "scriptExecutionEnabled": true
+                            {
+                                "type": "Host",
+                                "op": "type",
+                                "bind": "targetHost",
+                                "attributes": {
+                                    "test:compromised": false,
+                                    "test:accepts_ntlm": true
+                                }
                             },
-                            "bind": "targetServer"
-                        },
-                        {
-                            "node": "Host",
-                            "bind": "targetHost",
-                            "attributes": {
-                                "compromised": false
+                            {
+                                "type": "EmailAccount",
+                                "op": "type",
+                                "bind": "userAccount"
+                            },
+                            {
+                                "type": "User",
+                                "op": "type",
+                                "bind": "user"
                             }
-                        },
-                        {
-                            "edge": "monitors",
-                            "source": "victimEmail",
-                            "target": "targetServer"
-                        },
-                        {
-                            "edge": "deployed_on",
-                            "source": "targetServer",
-                            "target": "targetHost"
-                        }
-                    ]
+                        ],
+                        "edges": [
+                            {
+                                "type": "credentials_stored_on",
+                                "op": "type",
+                                "source": "userAccount",
+                                "target": "sourceHost"
+                            },
+                            {
+                                "type": "can_access",
+                                "op": "type",
+                                "source": "sourceHost",
+                                "target": "targetHost"
+                            },
+                            {
+                                "type": "owns",
+                                "op": "type",
+                                "source": "user",
+                                "target": "userAccount"
+                            }
+                        ]
+                    }
                 },
                 "attack_rate": {
-                    "rate_per_year": 5,
-                    "scope": "per exposed server with deployable script"
+                    "rate_per_year": 2,
+                    "scope": "per compromised host with stored hashes"
                 },
                 "outcomes": [
                     {
-                        "response": "Script is executed, attacker installs backdoor and host is compromised",
-                        "probability": 0.20,
-                        "effect": [
+                        "name": "Attacker successfully authenticated using NTLM hash and compromised host",
+                        "probability": 0.35,
+                        "cost": 120000,
+                        "nodes": [
                             {
-                                "update": {
-                                    "node": "targetHost",
-                                    "attributes": {
-                                        "compromised": true
-                                    }
+                                "type": "Host",
+                                "op": "type",
+                                "bind": "targetHost",
+                                "attributes": {
+                                    "let:compromised": true
                                 }
                             }
-                        ],
-                        "cost": 15000
+                        ]
                     },
                     {
-                        "response": "Script detected during execution by antivirus/EDR",
-                        "probability": 0.3,
-                        "effect": [
+                        "name": "Suspicious login attempt detected and flagged",
+                        "probability": 0.45,
+                        "cost": 15000,
+                        "nodes": [
                             {
-                                "create": {
-                                    "node": "Script",
-                                    "bind": "script",
-                                    "attributes": {
-                                        "name": "backdoor_init.py"
-                                    }
+                                "type": "SecurityAlert",
+                                "op": "new",
+                                "bind": "alert",
+                                "attributes": {
+                                    "let:type": "suspicious_authentication"
                                 }
                             },
                             {
-                                "create": {
-                                    "edge": "executed_on",
-                                    "source": "script",
-                                    "target": "targetServer"
-                                }
-                            },
-                            {
-                                "create": {
-                                    "node": "Attacker",
-                                    "bind": "attacker"
-                                }
-                            },
-                            {
-                                "create": {
-                                    "edge": "uses",
-                                    "source": "attacker",
-                                    "target": "script"
-                                }
+                                "type": "Attacker",
+                                "op": "new",
+                                "bind": "attacker"
                             }
                         ],
-                        "cost": 7000
-                    },
-                    {
-                        "response": "Attack attempt triggers security alert (e.g., file integrity monitoring)",
-                        "probability": 0.1,
-                        "effect": [
+                        "edges": [
                             {
-                                "create": {
-                                    "node": "Script",
-                                    "bind": "script",
-                                    "attributes": {
-                                        "name": "backdoor_init.py"
-                                    }
-                                }
+                                "type": "alerts",
+                                "op": "new",
+                                "source": "alert",
+                                "target": "userAccount"
                             },
                             {
-                                "create": {
-                                    "edge": "executed_on",
-                                    "source": "script",
-                                    "target": "targetServer"
-                                }
-                            },
-                            {
-                                "create": {
-                                    "node": "Attacker",
-                                    "bind": "attacker"
-                                }
-                            },
-                            {
-                                "create": {
-                                    "edge": "uses",
-                                    "source": "attacker",
-                                    "target": "script"
-                                }
-                            },
-                            {
-                                "create": {
-                                    "node": "SecurityAlert",
-                                    "attributes": {
-                                        "type": "malicious_script_found_and_blocked"
-                                    }
-                                }
-                            },
-                            {
-                                "create": {
-                                    "edge": "alerts",
-                                    "source": "alert",
-                                    "target": "victimEmail"
-                                }
+                                "type": "attacks",
+                                "op": "new",
+                                "source": "attacker",
+                                "target": "targetHost"
                             }
-                        ],
-                        "cost": 5000
+                        ]
                     },
                     {
-                        "response": "Script Execution failed silently",
-                        "probability": 0.40,
-                        "effect": [],
+                        "name": "Authentication attempt failed and remained undetected",
+                        "probability": 0.2,
                         "cost": 0
                     }
                 ]
@@ -854,299 +995,500 @@
                 "mitre_attack_id": "T1200",
                 "tags": [
                     "initial-access",
-                    "execution"
+                    "usb",
+                    "persistence"
                 ],
                 "preconditions": [
-                    "Physical access to device"
+                    "Host has USB ports enabled",
+                    "User has physical access to device"
                 ],
                 "postconditions": [
-                    "Host becomes compromised or malware is neutralized"
+                    "System may be compromised with persistent backdoor or attack may be contained"
                 ],
                 "risk_pattern": {
-                    "lhs": [
-                        {
-                            "node": "User",
-                            "bind": "user"
-                        },
-                        {
-                            "node": "EmailAccount",
-                            "attributes": {
-                                "compromised": false
+                    "lhs": {
+                        "nodes": [
+                            {
+                                "type": "Device",
+                                "op": "type",
+                                "bind": "userDevice"
                             },
-                            "bind": "victimEmail"
-                        },
-                        {
-                            "node": "Device",
-                            "bind": "victimDevice"
-                        },
-                        {
-                            "edge": "owns",
-                            "source": "user",
-                            "target": "victimEmail"
-                        },
-                        {
-                            "edge": "uses",
-                            "source": "victimEmail",
-                            "target": "victimDevice"
-                        }
-                    ]
+                            {
+                                "type": "User",
+                                "op": "type",
+                                "bind": "user"
+                            },
+                            {
+                                "type": "EmailAccount",
+                                "op": "type",
+                                "bind": "userAccount",
+                                "attributes": {
+                                    "test:compromised": false,
+                                    "test:status": "active"
+                                }
+                            }
+                        ],
+                        "edges": [
+                            {
+                                "type": "owns",
+                                "op": "type",
+                                "source": "user",
+                                "target": "userAccount"
+                            },
+                            {
+                                "type": "uses",
+                                "op": "type",
+                                "source": "userAccount",
+                                "target": "userDevice"
+                            }
+                        ]
+                    }
                 },
                 "attack_rate": {
                     "rate_per_year": 2,
                     "scope": "per inserted USB"
                 },
                 "outcomes": [
-                    {
-                        "response": "Payload executed and user was compromised",
-                        "probability": 0.2,
-                        "effect": [
-                            {
-                                "update": {
-                                    "node": "victimEmail",
+                        {
+                            "name": "USB device successfully executes payload and establishes persistence",
+                            "probability": 0.5,
+                            "cost": 15000,
+                            "nodes": [
+                                {
+                                    "type": "USBDevice",
+                                    "op": "new",
+                                    "bind": "maliciousUSB",
                                     "attributes": {
-                                        "compromised": true
+                                        "let:malicious": true
+                                    }
+                                },
+                                {
+                                    "type": "EmailAccount",
+                                    "op": "type",
+                                    "bind": "userAccount",
+                                    "attributes": {
+                                        "let:compromised": true,
+                                        "let:status": "active"
                                     }
                                 }
-                            }
-                        ],
-                        "cost": 45000
-                    },
-                    {
-                        "response": "Payload executed, but failed to escalate privileges",
-                        "probability": 0.1,
-                        "effect": [
-                            {
-                                "update": {
-                                    "node": "victimEmail",
+                            ],
+                            "edges": [
+                                {
+                                    "type": "inserted_into",
+                                    "op": "new",
+                                    "source": "maliciousUSB",
+                                    "target": "userDevice"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "USB Device was removed before execution",
+                            "probability": 0.1,
+                            "cost": 0,
+                            "nodes": [
+                                {
+                                    "type": "USBDevice",
+                                    "op": "del",
+                                    "bind": "maliciousUSB",
                                     "attributes": {
-                                        "compromised": false
+                                        "let:malicious": true
                                     }
                                 }
-                            }
-                        ],
-                        "cost": 5000
-                    },
-                    {
-                        "response": "Antivirus detected and blocked payload execution",
-                        "probability": 0.4,
-                        "effect": [
-                            {
-                                "create": {
-                                    "node": "SecurityAlert",
+                            ],
+                            "edges": [
+                                {
+                                    "type": "inserted_into",
+                                    "op": "del",
+                                    "source": "maliciousUSB",
+                                    "target": "userDevice"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Payload executed but user account is not compromised",
+                            "probability": 0.2,
+                            "cost": 5000,
+                            "nodes": [
+                                {
+                                    "type": "USBDevice",
+                                    "op": "new",
+                                    "bind": "maliciousUSB",
+                                    "attributes": {
+                                        "let:malicious": true
+                                    }
+                                }
+                            ],
+                            "edges": [
+                                {
+                                    "type": "inserted_into",
+                                    "op": "new",
+                                    "source": "maliciousUSB",
+                                    "target": "userDevice"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Antivirus detected and blocked the payload execution",
+                            "probability": 0.2,
+                            "cost": 0,
+                            "nodes": [
+                                {
+                                    "type": "USBDevice",
+                                    "op": "new",
+                                    "bind": "maliciousUSB",
+                                    "attributes": {
+                                        "let:malicious": true
+                                    }
+                                },
+                                {
+                                    "type": "Attacker",
+                                    "op": "new",
+                                    "bind": "attacker"
+                                },
+                                {
+                                    "type": "SecurityAlert",
+                                    "op": "new",
                                     "bind": "alert",
                                     "attributes": {
-                                        "type": "usb_payload_blocked"
+                                        "let:type": "malicious_software_detected"
                                     }
                                 }
-                            },
-                            {
-                                "create": {
-                                    "node": "Attacker",
-                                    "bind": "attacker"
-                                }
-                            },
-                            {
-                                "create": {
-                                    "edge": "alerts",
-                                    "source": "alert",
-                                    "target": "victimEmail"
-                                }
-                            },
-                            {
-                                "create": {
-                                    "edge": "attacks",
+                            ],
+                            "edges": [
+                                {
+                                    "type": "inserted_into",
+                                    "op": "new",
+                                    "source": "maliciousUSB",
+                                    "target": "userDevice"
+                                },
+                                {
+                                    "type": "attacks",
+                                    "op": "new",
                                     "source": "attacker",
-                                    "target": "victimEmail"
+                                    "target": "userAccount"
+                                },
+                                {
+                                    "type": "alerts",
+                                    "op": "new",
+                                    "source": "alert",
+                                    "target": "userAccount"
                                 }
-                            }
-                        ],
-                        "cost": 800
-                    },
-                    {
-                        "response": "Device was removed before execution",
-                        "probability": 0.2,
-                        "effect": [
-                            {
-                                "delete": {
-                                    "node": "USBDevice",
-                                    "attributes": {
-                                        "malicious": false
-                                    }
-                                }
-                            }
-                        ],
-                        "cost": 0
-                    },
-                    {
-                        "response": "USB device not recognized by the system",
-                        "probability": 0.1,
-                        "effect": [],
-                        "cost": 0
-                    }
-                ]
+                            ]
+                        }
+                    ]
+                
             },
             {
                 "id": "RISK008",
                 "title": "Ransomware Deployment",
-                "description": "An attacker deploys ransomware to encrypt files on a compromised host, demanding payment for decryption.",
+                "description": "An attacker deploys ransomware to encrypt files and demand ransom",
                 "mitre_attack_id": "T1486",
                 "tags": [
                     "impact",
-                    "ransomware",
-                    "encryption"
+                    "ransomware"
                 ],
                 "preconditions": [
                     "Host is compromised",
-                    "Attacker has write access to critical files"
+                    "Files are accessible for encryption"
                 ],
                 "postconditions": [
-                    "Files are encrypted, ransom demanded, or attack detected and mitigated"
+                    "Files may be encrypted or attack may be mitigated"
                 ],
                 "risk_pattern": {
-                    "lhs": [
-                        {
-                            "node": "User",
-                            "bind": "user"
-                        },
-                        {
-                            "node": "Attacker",
-                            "bind": "attacker"
-                        },
-                        {
-                            "node": "EmailAccount",
-                            "attributes": {
-                                "compromised": true,
-                                "status": "active"
+                    "lhs": {
+                        "nodes": [
+                            {
+                                "type": "Attacker",
+                                "op": "type",
+                                "bind": "attacker",
+                                "role": "input"
                             },
-                            "bind": "victimEmail"
-                        },
-                        {
-                            "node": "File",
-                            "attributes": {
-                                "isSensitive": true,
-                                "encrypted": false,
-                                "tampered": false
+                            {
+                                "type": "File",
+                                "op": "type",
+                                "bind": "targetFile",
+                                "attributes": {
+                                    "test:isSensitive": true,
+                                    "test:encrypted": false,
+                                    "test:tampered": false
+                                }
                             },
-                            "bind": "targetFile"
-                        },
-                        {
-                            "edge": "owns",
-                            "source": "user",
-                            "target": "victimEmail"
-                        },
-                        {
-                            "edge": "can_read",
-                            "source": "victimEmail",
-                            "target": "targetFile"
-                        },
-                        {
-                            "edge": "can_write",
-                            "source": "attacker",
-                            "target": "targetFile"
-                        }
-                    ]
+                            {
+                                "type": "EmailAccount",
+                                "op": "type",
+                                "bind": "userAccount",
+                                "attributes": {
+                                    "test:compromised": true,
+                                    "test:status": "active"
+                                }
+                            },
+                            {
+                                "type": "User",
+                                "op": "type",
+                                "bind": "user"
+                            }
+                        ],
+                        "edges": [
+                            {
+                                "type": "owns",
+                                "op": "type",
+                                "source": "user",
+                                "target": "userAccount"
+                            },
+                            {
+                                "type": "can_read",
+                                "op": "type",
+                                "source": "userAccount",
+                                "target": "targetFile"
+                            },
+                            {
+                                "type": "can_write",
+                                "op": "type",
+                                "source": "attacker",
+                                "target": "targetFile"
+                            }
+                        ]
+                    }
                 },
                 "attack_rate": {
-                    "rate_per_year": 2,
-                    "scope": "per compromised host with critical files"
+                    "rate_per_year": 0.5,
+                    "scope": "per compromised host with accessible files"
                 },
                 "outcomes": [
                     {
-                        "response": "Attacker encrypted the file and demanded ransom for decryption",
+                        "name": "Attacker encrypted the file and demanded ransom for decryption",
                         "probability": 0.4,
-                        "effect": [
+                        "cost": 200000,
+                        "nodes": [
                             {
-                                "update": {
-                                    "node": "targetFile",
-                                    "attributes": {
-                                        "encrypted": true,
-                                        "tampered": true
-                                    }
-                                }
-                            },
-                            {
-                                "create": {
-                                    "edge": "demands",
-                                    "source": "attacker",
-                                    "target": "victimEmail"
+                                "type": "File",
+                                "op": "type",
+                                "bind": "targetFile",
+                                "attributes": {
+                                    "let:isSensitive": true,
+                                    "test:encrypted": true,
+                                    "test:tampered": true
                                 }
                             }
                         ],
-                        "cost": 80000
+                        "edges": [
+                            {
+                                "type": "targets",
+                                "op": "new",
+                                "source": "attacker",
+                                "target": "userAccount"
+                            }
+                        ]
                     },
                     {
-                        "response": "Ransom paid to attacker and files decrypted",
-                        "probability": 0.1,
-                        "effect": [
+                        "name": "Security alert triggered and file permission revoked before encryption",
+                        "probability": 0.3,
+                        "cost": 10000,
+                        "nodes": [
                             {
-                                "update": {
-                                    "node": "targetFile",
-                                    "attributes": {
-                                        "encrypted": false
-                                    }
+                                "type": "SecurityAlert",
+                                "op": "new",
+                                "bind": "alert",
+                                "attributes": {
+                                    "let:type": "ransomware_attempt"
                                 }
                             }
                         ],
-                        "cost": 50000
+                        "edges": [
+                            {
+                                "type": "alerts",
+                                "op": "new",
+                                "source": "alert",
+                                "target": "userAccount"
+                            }
+                        ]
                     },
                     {
-                        "response": "Files restored from backup and user account was recovered attack mitigated",
+                        "name": "Files restored from backup, permission revoked and user account recovered",
                         "probability": 0.2,
-                        "effect": [
+                        "cost": 25000,
+                        "nodes": [
                             {
-                                "update": {
-                                    "node": "targetFile",
-                                    "attributes": {
-                                        "encrypted": false
-                                    }
+                                "type": "EmailAccount",
+                                "op": "type",
+                                "bind": "userAccount",
+                                "attributes": {
+                                    "let:compromised": false
                                 }
                             },
                             {
-                                "update": {
-                                    "node": "victimEmail",
-                                    "attributes": {
-                                        "compromised": false
-                                    }
+                                "type": "File",
+                                "op": "type",
+                                "bind": "targetFile",
+                                "attributes": {
+                                    "let:isSensitive": true,
+                                    "test:encrypted": false,
+                                    "test:tampered": true
                                 }
                             }
-                        ],
-                        "cost": 1000
+                        ]
                     },
                     {
-                        "response": "Security alert triggered and encryption failed",
-                        "probability": 0.2,
-                        "effect": [
-                            {
-                                "create": {
-                                    "node": "SecurityAlert",
-                                    "attributes": {
-                                        "type": "unauthorized_access"
-                                    },
-                                    "bind": "alert"
-                                }
-                            },
-                            {
-                                "create": {
-                                    "edge": "alerts",
-                                    "source": "alert",
-                                    "target": "victimEmail"
-                                }
-                            }
-                        ],
-                        "cost": 5000
-                    },
-                    {
-                        "response": "Attack failed silently",
+                        "name": "Attack failed silently",
                         "probability": 0.1,
-                        "effect": [],
                         "cost": 0
                     }
                 ]
             },
             {
                 "id": "RISK009",
+                "title": "Trusted Relationship Abuse",
+                "description": "An attacker abuses trusted relationships to gain unauthorized access to sensitive resources",
+                "mitre_attack_id": "T1550",
+                "tags": [
+                    "initial-access",
+                    "trusted-relationship"
+                ],
+                "preconditions": [
+                    "Trust relationship exists between entities",
+                    "User has elevated access"
+                ],
+                "postconditions": [
+                    "Sensitive data may be accessed or alerts triggered"
+                ],
+                "risk_pattern": {
+                    "lhs": {
+                        "nodes": [
+                            {
+                                "type": "User",
+                                "op": "type",
+                                "bind": "trustedUser",
+                                "role": "input"
+                            },
+                            {
+                                "type": "EmailAccount",
+                                "op": "type",
+                                "bind": "targetedUserAccount",
+                                "attributes": {
+                                    "test:role": "user",
+                                    "test:status": "active"
+                                }
+                            },
+                            {
+                                "type": "EmailAccount",
+                                "op": "type",
+                                "bind": "trustedUserAccount",
+                                "attributes": {
+                                    "test:role": "user",
+                                    "test:status": "active"
+                                }
+                            },
+                            {
+                                "type": "File",
+                                "op": "type",
+                                "bind": "sensitiveFile",
+                                "attributes": {
+                                    "test:isSensitive": true,
+                                    "test:tampered": false
+                                }
+                            },
+                            {
+                                "type": "User",
+                                "op": "type",
+                                "bind": "targetUser"
+                            }
+                        ],
+                        "edges": [
+                            {
+                                "type": "owns",
+                                "op": "type",
+                                "source": "trustedUser",
+                                "target": "trustedUserAccount"
+                            },
+                            {
+                                "type": "owns",
+                                "op": "type",
+                                "source": "targetUser",
+                                "target": "targetedUserAccount"
+                            },
+                            {
+                                "type": "trusts",
+                                "op": "type",
+                                "source": "targetUser",
+                                "target": "trustedUser"
+                            },
+                            {
+                                "type": "can_write",
+                                "op": "type",
+                                "source": "targetedUserAccount",
+                                "target": "sensitiveFile"
+                            }
+                        ]
+                    }
+                },
+                "attack_rate": {
+                    "rate_per_year": 1,
+                    "scope": "per trusted relationship with sensitive access"
+                },
+                "outcomes": [
+                    {
+                        "name": "Attacker user abuses trust and gains access to sensitive file to extract data",
+                        "probability": 0.3,
+                        "cost": 150000,
+                        "nodes": [
+                            {
+                                "type": "File",
+                                "op": "type",
+                                "bind": "sensitiveFile",
+                                "attributes": {
+                                    "let:tampered": true
+                                }
+                            }
+                        ],
+                        "edges": [
+                            {
+                                "type": "authorized",
+                                "op": "not",
+                                "source": "trustedUserAccount",
+                                "target": "targetedUserAccount"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Suspicious activity detected and alert triggered",
+                        "probability": 0.5,
+                        "cost": 8000,
+                        "nodes": [
+                            {
+                                "type": "SecurityAlert",
+                                "op": "new",
+                                "bind": "alert",
+                                "attributes": {
+                                    "let:type": "suspicious_file_access"
+                                }
+                            }
+                        ],
+                        "edges": [
+                            {
+                                "type": "alerts",
+                                "op": "new",
+                                "source": "alert",
+                                "target": "targetedUserAccount"
+                            },
+                            {
+                                "type": "authorized",
+                                "op": "new",
+                                "source": "trustedUserAccount",
+                                "target": "targetedUserAccount"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Attack failed silently",
+                        "probability": 0.2,
+                        "cost": 0
+                    }
+                ]
+            },
+            {
+                "id": "RISK010",
                 "title": "Denial of Service Attack",
-                "description": "Attackers flood a service, causing disruption or downtime.",
+                "description": "An attacker attempts to make a service unavailable to legitimate users",
                 "mitre_attack_id": "T1499",
                 "tags": [
                     "dos",
@@ -1166,43 +1508,56 @@
                     "Security alerts may be triggered"
                 ],
                 "risk_pattern": {
-                    "lhs": [
-                        {
-                            "node": "EmailAccount",
-                            "bind": "victimEmail"
-                        },
-                        {
-                            "node": "Service",
-                            "attributes": {
-                                "status": "active",
-                                "exposed": true
+                    "lhs": {
+                        "nodes": [
+                            {
+                                "type": "Service",
+                                "op": "type",
+                                "bind": "targetService",
+                                "role": "input",
+                                "attributes": {
+                                    "test:status": "active",
+                                    "test:exposed": true
+                                }
                             },
-                            "bind": "targetService"
-                        },
-                        {
-                            "node": "Server",
-                            "bind": "targetServer"
-                        },
-                        {
-                            "node": "Host",
-                            "bind": "targetHost"
-                        },
-                        {
-                            "edge": "monitors",
-                            "source": "victimEmail",
-                            "target": "targetServer"
-                        },
-                        {
-                            "edge": "hosted_on",
-                            "source": "targetService",
-                            "target": "targetServer"
-                        },
-                        {
-                            "edge": "deployed_on",
-                            "source": "targetServer",
-                            "target": "targetHost"
-                        }
-                    ]
+                            {
+                                "type": "Host",
+                                "op": "type",
+                                "bind": "serviceHost"
+                            },
+                            {
+                                "type": "Server",
+                                "op": "type",
+                                "bind": "server"
+                            },
+                            {
+                                "type": "EmailAccount",
+                                "op": "type",
+                                "bind": "userAccount",
+                                "role": "output"
+                            }
+                        ],
+                        "edges": [
+                            {
+                                "type": "hosted_on",
+                                "op": "type",
+                                "source": "targetService",
+                                "target": "server"
+                            },
+                            {
+                                "type": "deployed_on",
+                                "op": "type",
+                                "source": "server",
+                                "target": "serviceHost"
+                            },
+                            {
+                                "type": "monitors",
+                                "op": "type",
+                                "source": "userAccount",
+                                "target": "server"
+                            }
+                        ]
+                    }
                 },
                 "attack_rate": {
                     "rate_per_year": 3,
@@ -1210,233 +1565,73 @@
                 },
                 "outcomes": [
                     {
-                        "response": "Service Unavailable",
+                        "name": "Service unavailable",
                         "probability": 0.25,
-                        "effect": [
+                        "cost": 100000,
+                        "nodes": [
                             {
-                                "update": {
-                                    "node": "Service",
-                                    "bind": "targetService",
-                                    "attributes": {
-                                        "exposed": true,
-                                        "status": "inactive"
-                                    }
+                                "type": "Service",
+                                "op": "type",
+                                "bind": "targetService",
+                                "attributes": {
+                                    "let:status": "inactive",
+                                    "let:exposed": true
                                 }
                             }
-                        ],
-                        "cost": 30000
+                        ]
                     },
                     {
-                        "response": "Attack Detected and Mitigated",
-                        "probability": 0.35,
-                        "effect": [
-                            {
-                                "update": {
-                                    "node": "Service",
-                                    "bind": "targetService",
-                                    "attributes": {
-                                        "exposed": false,
-                                        "status": "active"
-                                    }
-                                }
-                            },
-                            {
-                                "create": {
-                                    "node": "Attacker",
-                                    "bind": "attacker"
-                                }
-                            },
-                            {
-                                "create": {
-                                    "node": "SecurityAlert",
-                                    "attributes": {
-                                        "type": "heavy_traffic"
-                                    },
-                                    "bind": "alert"
-                                }
-                            },
-                            {
-                                "create": {
-                                    "edge": "alerts",
-                                    "source": "alert",
-                                    "target": "victimEmail"
-                                }
-                            },
-                            {
-                                "create": {
-                                    "edge": "attacks",
-                                    "source": "attacker",
-                                    "target": "targetService"
-                                }
-                            }
-                        ],
-                        "cost": 5000
-                    },
-                    {
-                        "response": "Attacker degrades the service partially",
-                        "probability": 0.20,
-                        "effect": [
-                            {
-                                "update": {
-                                    "node": "Service",
-                                    "bind": "targetService",
-                                    "attributes": {
-                                        "expos#": true,
-                                        "status": "degraded"
-                                    }
-                                }
-                            }
-                        ],
-                        "cost": 10000
-                    },
-                    {
-                        "response": "Attack Failed Silently",
-                        "probability": 0.20,
-                        "effect": [],
-                        "cost": 0
-                    }
-                ]
-            },
-            {
-                "id": "RISK010",
-                "title": "Use of Trusted Relationship",
-                "description": "An insider or attacker abuses a trusted relationship to gain unauthorized access.",
-                "mitre_attack_id": "T1550",
-                "tags": [
-                    "trusted-relationship",
-                    "insider-threat",
-                    "privilege-escalation"
-                ],
-                "preconditions": [
-                    "Trusted relationship exists between users",
-                    "Target user has access to sensitive resources"
-                ],
-                "postconditions": [
-                    "Attacker may gain unauthorized access or trigger alerts"
-                ],
-                "risk_pattern": {
-                    "lhs": [
-                        {
-                            "node": "User",
-                            "attributes": {
-                            },
-                            "bind": "attackerUser"
-                        },
-                        {
-                            "node": "User",
-                            "attributes": {
-                              
-                            },
-                            "bind": "victimUser"
-                        },
-                        {
-                            "node": "EmailAccount",
-                            "attributes": {
-                                "status": "active",
-                                "role": "user"
-                            },
-                            "bind": "victimEmail"
-                        },
-                        {
-                            "node": "EmailAccount",
-                            "attributes": {
-                                "status": "active",
-                                "role": "user"
-                            },
-                            "bind": "attackerUserEmail"
-                        },
-                        {
-                            "node": "File",
-                            "attributes": {
-                                "isSensitive": true,
-                                "tampered": false
-                            },
-                            "bind": "sensitiveFile"
-                        },
-                        {
-                            "edge": "trusts",
-                            "source": "victimUser",
-                            "target": "attackerUser"
-                        },
-                        {
-                            "edge": "owns",
-                            "source": "victimUser",
-                            "target": "victimEmail"
-                        },
-                        {
-                            "edge": "owns",
-                            "source": "attackerUser",
-                            "target": "attackerUserEmail"
-                        },
-                        {
-                            "edge": "can_write",
-                            "source": "victimEmail",
-                            "target": "sensitiveFile"
-                        }
-                    ]
-                },
-                "attack_rate": {
-                    "rate_per_year": 1,
-                    "scope": "per trusted relationship"
-                },
-                "outcomes": [
-                    {
-                        "response": "Attacker User abuses trust and gains access to sensitive file to extract data",
-                        "probability": 0.3,
-                        "effect": [
-                            {
-                                "update": {
-                                    "node": "sensitiveFile",
-                                    "attributes": {
-                                        "tampered": true
-                                    }
-                                }
-                            },
-                            {
-                                "create": {
-                                    "edge": "authorized",
-                                    "source": "attackerUser",
-                                    "target": "victimEmail"
-                                }
-                            }
-                        ],
-                        "cost": 40000
-                    },
-                    {
-                        "response": "Suspicious activity detected and alert triggered",
+                        "name": "Attack detected and mitigated",
                         "probability": 0.5,
-                        "effect": [
+                        "cost": 15000,
+                        "nodes": [
                             {
-                                "create": {
-                                    "node": "SecurityAlert",
-                                    "attributes": {
-                                        "type": "login_attempt"
-                                    },
-                                    "bind": "alert"
+                                "type": "SecurityAlert",
+                                "op": "new",
+                                "bind": "alert",
+                                "attributes": {
+                                    "let:type": "heavy_traffic"
                                 }
                             },
                             {
-                                "create": {
-                                    "edge": "alerts",
-                                    "source": "alert",
-                                    "target": "victimEmail"
-                                }
-                            },
-                            {
-                                "create": {
-                                    "edge": "authorized",
-                                    "source": "attackerUser",
-                                    "target": "victimEmail"
-                                }
+                                "type": "Attacker",
+                                "op": "new",
+                                "bind": "attacker"
                             }
-
                         ],
-                        "cost": 5000
+                        "edges": [
+                            {
+                                "type": "alerts",
+                                "op": "new",
+                                "source": "alert",
+                                "target": "userAccount"
+                            },
+                            {
+                                "type": "attacks",
+                                "op": "new",
+                                "source": "attacker",
+                                "target": "targetService"
+                            }
+                        ]
                     },
                     {
-                        "response": "Attempt failed due to access controls",
-                        "probability": 0.2,
-                        "effect": [],
+                        "name": "Attacker degrades the service partially",
+                        "probability": 0.15,
+                        "cost": 30000,
+                        "nodes": [
+                            {
+                                "type": "Service",
+                                "op": "type",
+                                "bind": "targetService",
+                                "attributes": {
+                                    "let:status": "degraded"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Attack failed silently",
+                        "probability": 0.1,
                         "cost": 0
                     }
                 ]

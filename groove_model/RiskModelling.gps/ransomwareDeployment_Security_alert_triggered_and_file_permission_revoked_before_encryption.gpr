@@ -7,11 +7,6 @@
         <attr name="priority">
             <string>1</string>
         </attr>
-        <node id="n0">
-            <attr name="layout">
-                <string>141 177 19 19</string>
-            </attr>
-        </node>
         <node id="n1">
             <attr name="layout">
                 <string>357 435 19 19</string>
@@ -24,7 +19,7 @@
         </node>
         <node id="n3">
             <attr name="layout">
-                <string>354 321 19 19</string>
+                <string>353 320 19 19</string>
             </attr>
         </node>
         <node id="n4">
@@ -32,16 +27,6 @@
                 <string>601 219 19 19</string>
             </attr>
         </node>
-        <edge from="n0" to="n2">
-            <attr name="label">
-                <string>can_write</string>
-            </attr>
-        </edge>
-        <edge from="n0" to="n0">
-            <attr name="label">
-                <string>type:Attacker</string>
-            </attr>
-        </edge>
         <edge from="n1" to="n1">
             <attr name="label">
                 <string>type:User</string>
@@ -57,12 +42,12 @@
         </edge>
         <edge from="n2" to="n2">
             <attr name="label">
-                <string>let:encrypted=false</string>
+                <string>type:File</string>
             </attr>
         </edge>
         <edge from="n2" to="n2">
             <attr name="label">
-                <string>type:File</string>
+                <string>let:encrypted=false</string>
             </attr>
         </edge>
         <edge from="n2" to="n2">
@@ -82,17 +67,7 @@
         </edge>
         <edge from="n3" to="n3">
             <attr name="label">
-                <string>test:status="active"</string>
-            </attr>
-        </edge>
-        <edge from="n3" to="n3">
-            <attr name="label">
                 <string>type:EmailAccount</string>
-            </attr>
-        </edge>
-        <edge from="n3" to="n2">
-            <attr name="label">
-                <string>can_read</string>
             </attr>
         </edge>
         <edge from="n3" to="n3">
@@ -100,14 +75,24 @@
                 <string>let:compromised=true</string>
             </attr>
         </edge>
+        <edge from="n3" to="n3">
+            <attr name="label">
+                <string>test:status="active"</string>
+            </attr>
+        </edge>
+        <edge from="n3" to="n2">
+            <attr name="label">
+                <string>can_read</string>
+            </attr>
+        </edge>
         <edge from="n4" to="n4">
             <attr name="label">
                 <string>new:</string>
             </attr>
         </edge>
-        <edge from="n4" to="n3">
+        <edge from="n4" to="n4">
             <attr name="label">
-                <string>alerts</string>
+                <string>type:SecurityAlert</string>
             </attr>
         </edge>
         <edge from="n4" to="n4">
@@ -115,9 +100,9 @@
                 <string>let:type="unauthorized_access"</string>
             </attr>
         </edge>
-        <edge from="n4" to="n4">
+        <edge from="n4" to="n3">
             <attr name="label">
-                <string>type:SecurityAlert</string>
+                <string>alerts</string>
             </attr>
         </edge>
     </graph>

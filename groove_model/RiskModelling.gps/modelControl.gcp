@@ -1,10 +1,10 @@
 function phishingAttack_Rule(out node victimEmail)
 {
     phishingAttack(out victimEmail); // risk pattern
-    phishingAttack_User_clicked_link_and_entered_credentials(victimEmail) | // outcome 1: enter password
-    phishingAttack_User_clicked_link_but_did_not_enter_credentials(victimEmail) | // outcome 2: did not enter the password
-    phishingAttack_User_ignored_the_email(victimEmail)|  // outcome 3: ignored the email
-    phishingAttack_User_reported_the_phishing_attempt(victimEmail); // outcome : reported phisihing attempt
+    phishingAttack_User_clicked_link_and_entered_credentials(victimEmail) | 
+    phishingAttack_User_clicked_link_but_did_not_enter_credentials(victimEmail) | 
+    phishingAttack_User_ignored_the_email(victimEmail)| 
+    phishingAttack_User_reported_the_phishing_attempt(victimEmail); 
 }
 
 function privilegeEscalation_Rule(out node compromisedEmail)
@@ -28,8 +28,7 @@ function credentialDumping_Rule(out node compromisedHost){
 	credentialDumping(out compromisedHost);
 	credentialDumping_attacker_dumps_admin_credentials(compromisedHost)|
 	credentialDumping_endpoint_security_detected_the_attempt(compromisedHost)|
-	credentialDumping_attempt_failed_silently(compromisedHost)|
-	credentialDumping_endpoint_security_detected_the_attempt(compromisedHost);
+	credentialDumping_attempt_failed_silently(compromisedHost);
 
 }
 
@@ -87,15 +86,46 @@ function trustedRelationship_Rule(out node compromisedEmail5){
 	trustedRelationship_attack_failed_silently(compromisedEmail5);
 }
 
-node victimEmail;
-node compromisedEmail1,compromisedEmail2,compromisedEmail3,compromisedEmail4,compromisedEmail5;
-node userEmail;
-node compromisedHost;
-node compromisedService;
+
+
+function attack_pipeline(){
+
+	node victimEmail,compromisedAccount,compromisedEmail1,userEmail,compromisedHost1,compromisedHost2,compromisedEmail2,compromisedEmail3,compromisedEmail4,compromisedService,compromisedEmail5;
+
+	// independent attacks
+	phishingAttack_Rule(out victimEmail) |
+    remoteServiceExploitation_Rule(out userEmail) |
+    maliciousUSBDevice_Rule(out compromisedEmail3) |
+    trustedRelationship_Rule(out compromisedEmail5) |
+    dosAttack_Rule(out compromisedService) |
+    
+    // Follow-up attacks
+    privilegeEscalation_Rule(out compromisedEmail1) |
+    credentialDumping_Rule(out compromisedHost1) |
+    unauthorized_script_execution_Rule(out compromisedAccount) |
+    passTheHash_lateralMovement_Rule(out compromisedHost2) |
+    ransomwareDeployment_Rule(out compromisedEmail4);
+}
+
+alap attack_pipeline();
+
+
+
+
+//function phishing_pipeline(){
+//	
+//}
 //
-phishingAttack_Rule(out victimEmail);
-privilegeEscalation_Rule(out compromisedEmail1);
-remoteServiceExploitation_Rule(out userEmail) ;
+//function attack_pipeline(){
+//
+//}
+
+//
+//node victimEmail,compromisedEmail1,userEmail,compromisedHost,compromisedHost1,compromisedHost2,compromisedEmail2,compromisedEmail3,compromisedEmail4,compromisedService,compromisedEmail5;
+//
+//phishingAttack_Rule(out victimEmail);
+//privilegeEscalation_Rule(out compromisedEmail1);
+//remoteServiceExploitation_Rule(out userEmail);
 //credentialDumping_Rule(out compromisedHost) ;
 //passTheHash_lateralMovement_Rule(out compromisedHost);
 //unauthorized_script_execution_Rule(out compromisedEmail2);
@@ -103,3 +133,4 @@ remoteServiceExploitation_Rule(out userEmail) ;
 //ransomwareDeployment_Rule(out compromisedEmail4);
 //dosAttack_Rule(out compromisedService);
 //trustedRelationship_Rule(out compromisedEmail5);
+

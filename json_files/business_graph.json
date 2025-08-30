@@ -447,12 +447,6 @@
                 "target": "host1"
             },
             {
-                "id": "e30",
-                "source": "",
-                "type": "credentials_stored_on",
-                "target": "host1"
-            },
-            {
                 "id": "e31",
                 "source": "dept_IT",
                 "type": "employs",

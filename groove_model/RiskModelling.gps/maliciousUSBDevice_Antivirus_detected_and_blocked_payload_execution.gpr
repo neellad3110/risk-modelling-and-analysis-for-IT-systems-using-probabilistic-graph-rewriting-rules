@@ -44,12 +44,12 @@
         </edge>
         <edge from="n0" to="n0">
             <attr name="label">
-                <string>let:malicious=true</string>
+                <string>type:USBDevice</string>
             </attr>
         </edge>
         <edge from="n0" to="n0">
             <attr name="label">
-                <string>type:USBDevice</string>
+                <string>let:malicious=true</string>
             </attr>
         </edge>
         <edge from="n0" to="n5">
@@ -62,11 +62,6 @@
                 <string>new:</string>
             </attr>
         </edge>
-        <edge from="n1" to="n4">
-            <attr name="label">
-                <string>alerts</string>
-            </attr>
-        </edge>
         <edge from="n1" to="n1">
             <attr name="label">
                 <string>type:SecurityAlert</string>
@@ -77,19 +72,29 @@
                 <string>let:type="malicious_software_detected"</string>
             </attr>
         </edge>
+        <edge from="n1" to="n4">
+            <attr name="label">
+                <string>alerts</string>
+            </attr>
+        </edge>
         <edge from="n2" to="n2">
             <attr name="label">
                 <string>new:</string>
             </attr>
         </edge>
-        <edge from="n2" to="n4">
-            <attr name="label">
-                <string>attacks</string>
-            </attr>
-        </edge>
         <edge from="n2" to="n2">
             <attr name="label">
                 <string>type:Attacker</string>
+            </attr>
+        </edge>
+        <edge from="n2" to="n4">
+            <attr name="label">
+                <string>targets</string>
+            </attr>
+        </edge>
+        <edge from="n3" to="n3">
+            <attr name="label">
+                <string>type:User</string>
             </attr>
         </edge>
         <edge from="n3" to="n4">
@@ -100,24 +105,9 @@
                 <string>490 -5 469 490 471 361 11</string>
             </attr>
         </edge>
-        <edge from="n3" to="n3">
-            <attr name="label">
-                <string>type:User</string>
-            </attr>
-        </edge>
         <edge from="n4" to="n4">
             <attr name="label">
                 <string>parin:0</string>
-            </attr>
-        </edge>
-        <edge from="n4" to="n4">
-            <attr name="label">
-                <string>test:status="active"</string>
-            </attr>
-        </edge>
-        <edge from="n4" to="n5">
-            <attr name="label">
-                <string>uses</string>
             </attr>
         </edge>
         <edge from="n4" to="n4">
@@ -128,6 +118,16 @@
         <edge from="n4" to="n4">
             <attr name="label">
                 <string>let:compromised=false</string>
+            </attr>
+        </edge>
+        <edge from="n4" to="n4">
+            <attr name="label">
+                <string>test:status="active"</string>
+            </attr>
+        </edge>
+        <edge from="n4" to="n5">
+            <attr name="label">
+                <string>uses</string>
             </attr>
         </edge>
         <edge from="n5" to="n5">

@@ -1,0 +1,21 @@
+Online CTMDP Monte Carlo Summary
+Runs: 200, Horizon (years): 1.0
+Estimated cost (mean): 401455.00
+Cost quantiles: p05=75000.00, p50=371000.00, p95=816000.00
+Mean time in system (years): 1.048
+Probability of any event within horizon: 1.000
+Mean events per run: 17.77
+
+Top attack chains by frequency (prefix length="3"):
+- RISK001>RISK001>RISK001  | count=23  | mean_loss=338260.87
+- RISK001>RISK007>RISK001  | count=9  | mean_loss=314222.22
+- RISK007>RISK001>RISK004  | count=8  | mean_loss=604625.00
+- RISK001>RISK001>RISK004  | count=7  | mean_loss=533285.71
+- RISK004>RISK004>RISK001  | count=6  | mean_loss=409166.67
+
+Top attack chains by mean loss:
+- RISK009>RISK004>RISK006  | mean_loss=891000.00  | count=1
+- RISK004>RISK004>RISK003  | mean_loss=809000.00  | count=1
+- RISK004>RISK008>RISK004  | mean_loss=804000.00  | count=1
+- RISK004>RISK003>RISK010  | mean_loss=755000.00  | count=1
+- RISK004>RISK006>RISK007  | mean_loss=704000.00  | count=2

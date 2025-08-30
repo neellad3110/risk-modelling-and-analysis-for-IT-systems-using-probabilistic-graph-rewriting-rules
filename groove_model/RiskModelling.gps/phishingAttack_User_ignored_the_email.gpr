@@ -9,7 +9,7 @@
         </attr>
         <node id="n0">
             <attr name="layout">
-                <string>318 275 138 54</string>
+                <string>377 292 19 19</string>
             </attr>
         </node>
         <node id="n1">
@@ -17,14 +17,14 @@
                 <string>376 427 19 19</string>
             </attr>
         </node>
+        <node id="n2">
+            <attr name="layout">
+                <string>35 281 156 36</string>
+            </attr>
+        </node>
         <edge from="n0" to="n0">
             <attr name="label">
                 <string>parin:0</string>
-            </attr>
-        </edge>
-        <edge from="n0" to="n0">
-            <attr name="label">
-                <string>test:status="active"</string>
             </attr>
         </edge>
         <edge from="n0" to="n0">
@@ -37,14 +37,39 @@
                 <string>let:compromised=false</string>
             </attr>
         </edge>
-        <edge from="n1" to="n0">
+        <edge from="n0" to="n0">
             <attr name="label">
-                <string>owns</string>
+                <string>test:status="active"</string>
             </attr>
         </edge>
         <edge from="n1" to="n1">
             <attr name="label">
                 <string>type:User</string>
+            </attr>
+        </edge>
+        <edge from="n1" to="n0">
+            <attr name="label">
+                <string>owns</string>
+            </attr>
+        </edge>
+        <edge from="n2" to="n2">
+            <attr name="label">
+                <string>new:</string>
+            </attr>
+        </edge>
+        <edge from="n2" to="n2">
+            <attr name="label">
+                <string>type:Message</string>
+            </attr>
+        </edge>
+        <edge from="n2" to="n2">
+            <attr name="label">
+                <string>let:type="phishing_message"</string>
+            </attr>
+        </edge>
+        <edge from="n2" to="n0">
+            <attr name="label">
+                <string>sent</string>
             </attr>
         </edge>
     </graph>

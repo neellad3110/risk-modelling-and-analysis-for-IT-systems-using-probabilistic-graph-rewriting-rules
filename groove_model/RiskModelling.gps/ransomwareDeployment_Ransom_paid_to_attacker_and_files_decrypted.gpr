@@ -7,11 +7,6 @@
         <attr name="priority">
             <string>1</string>
         </attr>
-        <node id="n0">
-            <attr name="layout">
-                <string>232 164 19 19</string>
-            </attr>
-        </node>
         <node id="n1">
             <attr name="layout">
                 <string>436 422 19 19</string>
@@ -19,22 +14,22 @@
         </node>
         <node id="n2">
             <attr name="layout">
-                <string>379 139 115 72</string>
+                <string>427 165 19 19</string>
             </attr>
         </node>
         <node id="n3">
             <attr name="layout">
-                <string>445 307 19 19</string>
+                <string>445 306 19 19</string>
             </attr>
         </node>
-        <edge from="n0" to="n0">
-            <attr name="label">
-                <string>type:Attacker</string>
+        <node id="n0">
+            <attr name="layout">
+                <string>216 164 51 18</string>
             </attr>
-        </edge>
-        <edge from="n0" to="n2">
+        </node>
+        <edge from="n1" to="n1">
             <attr name="label">
-                <string>can_write</string>
+                <string>type:User</string>
             </attr>
         </edge>
         <edge from="n1" to="n3">
@@ -43,16 +38,6 @@
             </attr>
             <attr name="layout">
                 <string>490 -5 446 431 455 317 11</string>
-            </attr>
-        </edge>
-        <edge from="n1" to="n1">
-            <attr name="label">
-                <string>type:User</string>
-            </attr>
-        </edge>
-        <edge from="n2" to="n2">
-            <attr name="label">
-                <string>let:tampered=true</string>
             </attr>
         </edge>
         <edge from="n2" to="n2">
@@ -70,6 +55,11 @@
                 <string>let:isSensitive=true</string>
             </attr>
         </edge>
+        <edge from="n2" to="n2">
+            <attr name="label">
+                <string>let:tampered=true</string>
+            </attr>
+        </edge>
         <edge from="n3" to="n3">
             <attr name="label">
                 <string>parin:0</string>
@@ -80,9 +70,9 @@
                 <string>type:EmailAccount</string>
             </attr>
         </edge>
-        <edge from="n3" to="n2">
+        <edge from="n3" to="n3">
             <attr name="label">
-                <string>can_read</string>
+                <string>let:compromised=true</string>
             </attr>
         </edge>
         <edge from="n3" to="n3">
@@ -90,9 +80,24 @@
                 <string>test:status="active"</string>
             </attr>
         </edge>
-        <edge from="n3" to="n3">
+        <edge from="n3" to="n2">
             <attr name="label">
-                <string>let:compromised=true</string>
+                <string>can_read</string>
+            </attr>
+        </edge>
+        <edge from="n0" to="n0">
+            <attr name="label">
+                <string>new:</string>
+            </attr>
+        </edge>
+        <edge from="n0" to="n0">
+            <attr name="label">
+                <string>type:Attacker</string>
+            </attr>
+        </edge>
+        <edge from="n0" to="n2">
+            <attr name="label">
+                <string>can_write</string>
             </attr>
         </edge>
     </graph>

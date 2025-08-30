@@ -12,6 +12,16 @@
                 <string>698 338 19 19</string>
             </attr>
         </node>
+        <node id="n1">
+            <attr name="layout">
+                <string>147 466 19 19</string>
+            </attr>
+        </node>
+        <node id="n2">
+            <attr name="layout">
+                <string>436 468 19 19</string>
+            </attr>
+        </node>
         <node id="n3">
             <attr name="layout">
                 <string>149 260 19 19</string>
@@ -20,16 +30,6 @@
         <node id="n4">
             <attr name="layout">
                 <string>436 250 19 19</string>
-            </attr>
-        </node>
-        <node id="n2">
-            <attr name="layout">
-                <string>436 468 19 19</string>
-            </attr>
-        </node>
-        <node id="n1">
-            <attr name="layout">
-                <string>143 458 27 36</string>
             </attr>
         </node>
         <edge from="n0" to="n0">
@@ -45,6 +45,36 @@
         <edge from="n0" to="n0">
             <attr name="label">
                 <string>let:tampered=true</string>
+            </attr>
+        </edge>
+        <edge from="n1" to="n1">
+            <attr name="label">
+                <string>type:User</string>
+            </attr>
+        </edge>
+        <edge from="n1" to="n2">
+            <attr name="label">
+                <string>owns</string>
+            </attr>
+        </edge>
+        <edge from="n2" to="n2">
+            <attr name="label">
+                <string>type:EmailAccount</string>
+            </attr>
+        </edge>
+        <edge from="n2" to="n2">
+            <attr name="label">
+                <string>test:role="user"</string>
+            </attr>
+        </edge>
+        <edge from="n2" to="n2">
+            <attr name="label">
+                <string>test:status="active"</string>
+            </attr>
+        </edge>
+        <edge from="n2" to="n4">
+            <attr name="label">
+                <string>not:authorized</string>
             </attr>
         </edge>
         <edge from="n3" to="n3">
@@ -88,36 +118,6 @@
         <edge from="n4" to="n0">
             <attr name="label">
                 <string>can_write</string>
-            </attr>
-        </edge>
-        <edge from="n2" to="n2">
-            <attr name="label">
-                <string>type:EmailAccount</string>
-            </attr>
-        </edge>
-        <edge from="n2" to="n2">
-            <attr name="label">
-                <string>test:role="user"</string>
-            </attr>
-        </edge>
-        <edge from="n2" to="n2">
-            <attr name="label">
-                <string>test:status="active"</string>
-            </attr>
-        </edge>
-        <edge from="n2" to="n4">
-            <attr name="label">
-                <string>new:authorized</string>
-            </attr>
-        </edge>
-        <edge from="n1" to="n1">
-            <attr name="label">
-                <string>type:User</string>
-            </attr>
-        </edge>
-        <edge from="n1" to="n2">
-            <attr name="label">
-                <string>owns</string>
             </attr>
         </edge>
     </graph>

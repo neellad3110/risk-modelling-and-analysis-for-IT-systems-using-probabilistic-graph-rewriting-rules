@@ -7,11 +7,6 @@
         <attr name="priority">
             <string>1</string>
         </attr>
-        <node id="n0">
-            <attr name="layout">
-                <string>215 164 52 18</string>
-            </attr>
-        </node>
         <node id="n1">
             <attr name="layout">
                 <string>447 420 19 19</string>
@@ -27,14 +22,9 @@
                 <string>445 307 19 19</string>
             </attr>
         </node>
-        <edge from="n0" to="n0">
+        <edge from="n1" to="n1">
             <attr name="label">
-                <string>type:Attacker</string>
-            </attr>
-        </edge>
-        <edge from="n0" to="n2">
-            <attr name="label">
-                <string>can_write</string>
+                <string>type:User</string>
             </attr>
         </edge>
         <edge from="n1" to="n3">
@@ -43,11 +33,6 @@
             </attr>
             <attr name="layout">
                 <string>490 -5 456 429 455 317 11</string>
-            </attr>
-        </edge>
-        <edge from="n1" to="n1">
-            <attr name="label">
-                <string>type:User</string>
             </attr>
         </edge>
         <edge from="n2" to="n2">
@@ -82,12 +67,12 @@
         </edge>
         <edge from="n3" to="n3">
             <attr name="label">
-                <string>test:status="active"</string>
+                <string>let:compromised=false</string>
             </attr>
         </edge>
         <edge from="n3" to="n3">
             <attr name="label">
-                <string>let:compromised=false</string>
+                <string>test:status="active"</string>
             </attr>
         </edge>
         <edge from="n3" to="n2">

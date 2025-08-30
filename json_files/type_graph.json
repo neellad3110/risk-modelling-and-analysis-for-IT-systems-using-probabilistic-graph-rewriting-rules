@@ -59,7 +59,7 @@
         "name": "string",
         "os": "string",
         "accepts_ntlm": "boolean",
-        "scriptExecutionEnabled ": "boolean"
+        "scriptExecutionEnabled": "boolean"
       }
     },
     {
@@ -102,8 +102,35 @@
         "owner": "string",
         "stolen": "boolean"
       }
+    },
+    {
+      "type": "Message",
+      "attributes": {
+        "type": "string"
+      }
+    },
+    {
+      "type": "SecurityAlert",
+      "attributes": {
+        "type": "string"
+      }
+    },
+    {
+      "type": "Script",
+      "attributes": {
+        "name": "string",
+        "deployed": "boolean"
+      }
+    },
+    {
+      "type": "Attacker"
+    },
+    {
+      "type": "USBDevice",
+      "attributes": {
+        "malicious": "boolean"
+      }
     }
-    
   ],
   "edges": [
     {
@@ -197,15 +224,6 @@
       }
     },
     {
-      "type": "",
-      "source": "EmailAccount",
-      "target": "File",
-      "multiplicity": {
-        "lower": 0,
-        "upper": "*"
-      }
-    },
-    {
       "type": "has_credentials",
       "source": "User",
       "target": "Credentials",
@@ -249,7 +267,57 @@
         "lower": 0,
         "upper": "*"
       }
+    },{
+      "type": "sent",
+      "source": "Message",
+      "target": "EmailAccount"
+    },
+    {
+      "type": "alerts",
+      "source": "SecurityAlert",
+      "target": "EmailAccount"
+    },
+    {
+      "type": "reports",
+      "source": "EmailAccount",
+      "target": "SecurityAlert"
+    },
+    {
+      "type": "targets",
+      "source": "Attacker",
+      "target": "EmailAccount"
+    },
+    {
+      "type": "attacks",
+      "source": "Attacker",
+      "target": "Service"
+    },
+    {
+      "type": "attacks",
+      "source": "Attacker",
+      "target": "Host"
+    },
+    {
+      "type": "executed_on",
+      "source": "Script",
+      "target": "Server"
+    },{
+      "type": "inserted_into",
+      "source": "USBDevice",
+      "target": "Device"
+    },{
+      "type": "can_write",
+      "source": "Attacker",
+      "target": "File"
+    },
+    {
+      "type": "authorized",
+      "source": "EmailAccount",
+      "target": "EmailAccount"
+    },{
+      "type": "uses",
+      "source": "Attacker",
+      "target": "Script"
     }
-  
   ]
 }

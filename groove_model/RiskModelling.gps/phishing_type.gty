@@ -6,12 +6,7 @@
         </attr>
         <node id="n0">
             <attr name="layout">
-                <string>312 358 82 32</string>
-            </attr>
-        </node>
-        <node id="n1">
-            <attr name="layout">
-                <string>341 198 19 19</string>
+                <string>343 364 19 19</string>
             </attr>
         </node>
         <node id="n2">
@@ -22,6 +17,16 @@
         <node id="n3">
             <attr name="layout">
                 <string>336 73 19 19</string>
+            </attr>
+        </node>
+        <node id="n1">
+            <attr name="layout">
+                <string>341 198 19 19</string>
+            </attr>
+        </node>
+        <node id="n4">
+            <attr name="layout">
+                <string>35 193 149 36</string>
             </attr>
         </node>
         <edge from="n0" to="n0">
@@ -37,17 +42,37 @@
                 <string>490 -5 353 374 350 207 11</string>
             </attr>
         </edge>
+        <edge from="n2" to="n2">
+            <attr name="label">
+                <string>type:Attacker</string>
+            </attr>
+        </edge>
+        <edge from="n2" to="n1">
+            <attr name="label">
+                <string>targets</string>
+            </attr>
+        </edge>
+        <edge from="n3" to="n3">
+            <attr name="label">
+                <string>type:SecurityAlert</string>
+            </attr>
+        </edge>
+        <edge from="n3" to="n3">
+            <attr name="label">
+                <string>string:type</string>
+            </attr>
+        </edge>
+        <edge from="n3" to="n1">
+            <attr name="label">
+                <string>alerts</string>
+            </attr>
+            <attr name="layout">
+                <string>513 -26 345 82 350 207 11</string>
+            </attr>
+        </edge>
         <edge from="n1" to="n1">
             <attr name="label">
                 <string>type:EmailAccount</string>
-            </attr>
-        </edge>
-        <edge from="n1" to="n3">
-            <attr name="label">
-                <string>reports</string>
-            </attr>
-            <attr name="layout">
-                <string>530 -33 350 207 345 82 11</string>
             </attr>
         </edge>
         <edge from="n1" to="n1">
@@ -60,32 +85,27 @@
                 <string>string:status</string>
             </attr>
         </edge>
-        <edge from="n2" to="n1">
+        <edge from="n1" to="n3">
             <attr name="label">
-                <string>targets</string>
-            </attr>
-        </edge>
-        <edge from="n2" to="n2">
-            <attr name="label">
-                <string>type:Attacker</string>
-            </attr>
-        </edge>
-        <edge from="n3" to="n1">
-            <attr name="label">
-                <string>alerts</string>
+                <string>reports</string>
             </attr>
             <attr name="layout">
-                <string>513 -26 345 82 350 207 11</string>
+                <string>530 -33 350 207 345 82 11</string>
             </attr>
         </edge>
-        <edge from="n3" to="n3">
+        <edge from="n4" to="n4">
             <attr name="label">
-                <string>type:SecurityAlert</string>
+                <string>type:Message</string>
             </attr>
         </edge>
-        <edge from="n3" to="n3">
+        <edge from="n4" to="n4">
             <attr name="label">
                 <string>string:type</string>
+            </attr>
+        </edge>
+        <edge from="n4" to="n1">
+            <attr name="label">
+                <string>sent</string>
             </attr>
         </edge>
     </graph>

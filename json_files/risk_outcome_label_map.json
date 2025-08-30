@@ -1,0 +1,58 @@
+{
+  "RISK001": {
+    "User clicked link and entered credentials": "phishingAttack_User_clicked_link_and_entered_credentials",
+    "User clicked link but did not enter credentials": "pishingAttack_User_clicked_link_but_did_not_enter_credentials",
+    "User ignored the email": "pishingAttack_User_ignored_the_email",
+    "User reported the phishing attempt": "pishingAttack_User_reported_the_phishing_attempt"
+  },
+  "RISK002": {
+    "Attacker successfully modifies file to escalate privileges": "attacker_successfully_modifies_file_to_escalate_priviledges",
+    "Attack attempt triggers security alert by file integrity monitoring": "Attack_attempt_triggers_security_alert_by_file_integrity_monitoring",
+    "Sysadmin detects and revokes file permissions before attack succeeds": "Sysadmin_detects_and_revokes_file_permissions_before_attack_succeeds"
+  },
+  "RISK003": {
+    "Attacker dumps admin credentials": "credentialDumping_Attacker_dumps_admin_credentials",
+    "Endpoint security detected the attempt": "credentialDumping_Endpoint_security_detected_the_attempt",
+    "Partial credentials are obtained": "credentialDumping_Partial_credentials_are_obtained",
+    "Attempt failed silently": "credentialDumping_Attempt_failed_silently"
+  },
+  "RISK004": {
+    "Script is executed successfully": "UnauthorizedScriptExecution_Script_is_executed_successfully",
+    "Script detected during execution by antivirus": "UnauthorizedScriptExecution_Script_detected_during_execution_by_antivirus",
+    "Attack attempt triggers security alert": "UnauthorizedScriptExecution_Attack_attempt_triggers_security_alert",
+    "Script execution failed silently": "UnauthorizedScriptExecution_Script_execution_failed_silently"
+  },
+  "RISK005": {
+    "Attacker logged in via RDP and gained control": "remoteServiceExploitation_Attacker_logged_in_via_RDP_and_gained_control",
+    "Multiple failed RDP login attempts - security alert triggered and RDP port closed": "remoteServiceExploitation_Multiple_failed_RDP_login_attempts_security_alert_triggered_and_RDP_port_closed",
+    "RDP login attempt failed without detection": "remoteServiceExploitation_RDP_login_attempt_failed_without_detection"
+  },
+  "RISK006": {
+    "Attacker successfully authenticated using NTLM hash and compromised host": "passTheHash_lateralMovement_Attacker_successfully_authenticated_using_NTLM_hash_and_compromised_host",
+    "Suspicious login attempt detected and flagged": "passTheHash_lateralMovement_Suspicious_login_attempt_detected_and_flagged",
+    "Authentication attempt failed and remained undetected": "passTheHash_lateralMovement_Authentication_attempt_failed_and_remained_undetected"
+  },
+  "RISK007": {
+    "USB device successfully executes payload and establishes persistence": "maliciousUSBDevice_USB_device_successfully_executes_payload_and_establishes_persistence",
+    "USB Device was removed before execution": "maliciousUSBDevice_USB_Device_was_removed_before_execution",
+    "Payload executed but user account is not compromised": "maliciousUSBDevice_Payload_executed_but_user_account_is_not_compromised",
+    "Antivirus detected and blocked the payload execution": "maliciousUSBDevice_Antivirus_detected_and_blocked_the_payload_execution"
+  },
+  "RISK008": {
+    "Attacker encrypted the file and demanded ransom for decryption": "ransomwareDeployment_Attacker_encrypted_the_file_and_demanded_ransom_for_decryption",
+    "Security alert triggered and file permission revoked before encryption": "ransomwareDeployment_Security_alert_triggered_and_file_permission_revoked_before_encryption",
+    "Files restored from backup, permission revoked and user account recovered": "ransomwareDeployment_Files_restored_from_backup_permission_revoked_and_user_account_recovered",
+    "Attack failed silently": "ransomwareDeployment_Attack_failed_silently"
+  },
+  "RISK009": {
+    "Attacker user abuses trust and gains access to sensitive file to extract data": "trustedRelationship_Attacker_user_abuses_trust_and_gains_access_to_sensitive_file_to_extract_data",
+    "Suspicious activity detected and alert triggered": "trustedRelationship_Suspicious_activity_detected_and_alert_triggered",
+    "Attack failed silently": "trustedRelationship_Attack_failed_silently"
+  },
+  "RISK010": {
+    "Service unavailable": "DOSAttack_Service_unavailable",
+    "Attack detected and mitigated": "DOSAttack_Attack_detected_and_mitigated",
+    "Attacker degrades the service partially": "DOSAttack_Attacker_degrades_the_service_partially",
+    "Attack failed silently": "DOSAttack_Attack_failed_silently"
+  }
+}
