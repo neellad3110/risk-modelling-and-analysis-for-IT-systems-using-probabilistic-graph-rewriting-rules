@@ -7,11 +7,6 @@
         <attr name="priority">
             <string>1</string>
         </attr>
-        <node id="n0">
-            <attr name="layout">
-                <string>403 280 121 54</string>
-            </attr>
-        </node>
         <node id="n1">
             <attr name="layout">
                 <string>187 296 19 19</string>
@@ -27,36 +22,16 @@
                 <string>453 153 19 19</string>
             </attr>
         </node>
-        <edge from="n0" to="n0">
-            <attr name="label">
-                <string>parin:0</string>
+        <node id="n4">
+            <attr name="layout">
+                <string>661 291 19 19</string>
             </attr>
-        </edge>
-        <edge from="n0" to="n1">
-            <attr name="label">
-                <string>can_write</string>
+        </node>
+        <node id="n0">
+            <attr name="layout">
+                <string>454 297 19 19</string>
             </attr>
-        </edge>
-        <edge from="n0" to="n0">
-            <attr name="label">
-                <string>test:compromised=true</string>
-            </attr>
-        </edge>
-        <edge from="n0" to="n0">
-            <attr name="label">
-                <string>test:status="active"</string>
-            </attr>
-        </edge>
-        <edge from="n0" to="n0">
-            <attr name="label">
-                <string>type:EmailAccount</string>
-            </attr>
-        </edge>
-        <edge from="n1" to="n1">
-            <attr name="label">
-                <string>test:isSensitive=true</string>
-            </attr>
-        </edge>
+        </node>
         <edge from="n1" to="n1">
             <attr name="label">
                 <string>type:File</string>
@@ -65,6 +40,11 @@
         <edge from="n1" to="n1">
             <attr name="label">
                 <string>let:tampered=false</string>
+            </attr>
+        </edge>
+        <edge from="n1" to="n1">
+            <attr name="label">
+                <string>test:isSensitive=true</string>
             </attr>
         </edge>
         <edge from="n2" to="n2">
@@ -90,14 +70,54 @@
                 <string>type:SecurityAlert</string>
             </attr>
         </edge>
+        <edge from="n3" to="n3">
+            <attr name="label">
+                <string>let:type="file_modfication_attempt"</string>
+            </attr>
+        </edge>
         <edge from="n3" to="n0">
             <attr name="label">
                 <string>new:alerts</string>
             </attr>
         </edge>
-        <edge from="n3" to="n3">
+        <edge from="n4" to="n4">
             <attr name="label">
-                <string>let:type="file_modfication_attempt"</string>
+                <string>new:</string>
+            </attr>
+        </edge>
+        <edge from="n4" to="n4">
+            <attr name="label">
+                <string>type:Attacker</string>
+            </attr>
+        </edge>
+        <edge from="n4" to="n0">
+            <attr name="label">
+                <string>targets</string>
+            </attr>
+        </edge>
+        <edge from="n0" to="n0">
+            <attr name="label">
+                <string>parin:0</string>
+            </attr>
+        </edge>
+        <edge from="n0" to="n0">
+            <attr name="label">
+                <string>type:EmailAccount</string>
+            </attr>
+        </edge>
+        <edge from="n0" to="n0">
+            <attr name="label">
+                <string>test:compromised=true</string>
+            </attr>
+        </edge>
+        <edge from="n0" to="n0">
+            <attr name="label">
+                <string>test:status="active"</string>
+            </attr>
+        </edge>
+        <edge from="n0" to="n1">
+            <attr name="label">
+                <string>can_write</string>
             </attr>
         </edge>
     </graph>

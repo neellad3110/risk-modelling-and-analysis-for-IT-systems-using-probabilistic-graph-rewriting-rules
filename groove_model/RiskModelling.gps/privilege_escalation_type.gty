@@ -4,11 +4,6 @@
         <attr name="$version">
             <string>curly</string>
         </attr>
-        <node id="n0">
-            <attr name="layout">
-                <string>400 167 19 19</string>
-            </attr>
-        </node>
         <node id="n1">
             <attr name="layout">
                 <string>639 294 19 19</string>
@@ -16,12 +11,7 @@
         </node>
         <node id="n2">
             <attr name="layout">
-                <string>461 460 27 18</string>
-            </attr>
-        </node>
-        <node id="n4">
-            <attr name="layout">
-                <string>222 427 93 54</string>
+                <string>465 459 19 19</string>
             </attr>
         </node>
         <node id="n3">
@@ -29,24 +19,16 @@
                 <string>397 293 19 19</string>
             </attr>
         </node>
-        <edge from="n0" to="n0">
-            <attr name="label">
-                <string>type:SecurityAlert</string>
-            </attr>
-        </edge>
-        <edge from="n0" to="n0">
-            <attr name="label">
-                <string>string:type</string>
-            </attr>
-        </edge>
-        <edge from="n0" to="n3">
-            <attr name="label">
-                <string>alerts</string>
-            </attr>
+        <node id="n4">
             <attr name="layout">
-                <string>513 -26 401 177 406 302 11</string>
+                <string>259 444 19 19</string>
             </attr>
-        </edge>
+        </node>
+        <node id="n0">
+            <attr name="layout">
+                <string>394 167 19 19</string>
+            </attr>
+        </node>
         <edge from="n1" to="n1">
             <attr name="label">
                 <string>type:Attacker</string>
@@ -54,7 +36,7 @@
         </edge>
         <edge from="n1" to="n3">
             <attr name="label">
-                <string>owns</string>
+                <string>attacks</string>
             </attr>
         </edge>
         <edge from="n2" to="n2">
@@ -67,22 +49,7 @@
                 <string>owns</string>
             </attr>
             <attr name="layout">
-                <string>490 -5 409 469 406 302 11</string>
-            </attr>
-        </edge>
-        <edge from="n4" to="n4">
-            <attr name="label">
-                <string>type:File</string>
-            </attr>
-        </edge>
-        <edge from="n4" to="n4">
-            <attr name="label">
-                <string>bool:isSensitive</string>
-            </attr>
-        </edge>
-        <edge from="n4" to="n4">
-            <attr name="label">
-                <string>bool:tampered</string>
+                <string>490 -5 474 469 406 302 11</string>
             </attr>
         </edge>
         <edge from="n3" to="n3">
@@ -123,7 +90,40 @@
                 <string>manages</string>
             </attr>
             <attr name="layout">
-                <string>500 0 343 304 283 304 343 304 11</string>
+                <string>500 0 406 302 283 304 406 302 11</string>
+            </attr>
+        </edge>
+        <edge from="n4" to="n4">
+            <attr name="label">
+                <string>type:File</string>
+            </attr>
+        </edge>
+        <edge from="n4" to="n4">
+            <attr name="label">
+                <string>bool:isSensitive</string>
+            </attr>
+        </edge>
+        <edge from="n4" to="n4">
+            <attr name="label">
+                <string>bool:tampered</string>
+            </attr>
+        </edge>
+        <edge from="n0" to="n0">
+            <attr name="label">
+                <string>type:SecurityAlert</string>
+            </attr>
+        </edge>
+        <edge from="n0" to="n0">
+            <attr name="label">
+                <string>string:type</string>
+            </attr>
+        </edge>
+        <edge from="n0" to="n3">
+            <attr name="label">
+                <string>alerts</string>
+            </attr>
+            <attr name="layout">
+                <string>513 -26 401 177 406 302 11</string>
             </attr>
         </edge>
     </graph>

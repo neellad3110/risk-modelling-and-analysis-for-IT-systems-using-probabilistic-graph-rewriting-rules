@@ -1,0 +1,77 @@
+@startuml lateralMovementviaPassTheHash
+title "Lateral Movement via Pass-the-Hash"
+
+top to bottom direction
+
+rectangle "LHS : Hashes harvested from  compromised host and target host accepts NTLM authentication " as LHS_BOX #line:gray {
+
+  object "host" as source_host_lhs <<Host>> #dddddd{
+    compromised = true,
+  }
+  object "host" as target_host_lhs <<Host>> {
+    compromised = false,
+    accepts_ntlm = true
+  }
+  object "EmailAccount" as victimEmail_lhs <<EmailAccount>> {
+  }
+  victimEmail_lhs -left-> source_host_lhs : credentials_stored_on
+  source_host_lhs -up-> target_host_lhs : can_access
+}
+
+rectangle "Outcome 1 : Attacker successfully authenticated \n using NTLM hash and compromised host" as OUTCOME_BOX_1 #line:gray {
+
+  object "host" as source_host1 <<Host>> #dddddd{
+    compromised = true,
+  }
+  object "host" as target_host1 <<Host>> {
+    compromised = true,
+    accepts_ntlm = true
+  }
+  object "EmailAccount" as victimEmail_1 <<EmailAccount>> {
+  }
+  victimEmail_1 -left-> source_host1 : credentials_stored_on
+  source_host1 -up-> target_host1 : can_access
+}
+
+rectangle "Outcome 2 : Suspicious login attempt detected and flagged" as OUTCOME_BOX_2 #line:gray {
+  
+   object "host" as source_host2 <<Host>> #dddddd{
+    compromised = true,
+  }
+  object "host" as target_host2 <<Host>> {
+    compromised = false,
+    accepts_ntlm = true
+  }
+
+  object "securityAlert" as securityAlert2 <<SecurityAlert>> #ccffcc {
+    type = "login_attempt"
+  }
+  
+  object "attacker" as attacker2 <<Attacker>> #ccffcc
+  object "EmailAccount" as victimEmail_2 <<EmailAccount>> {
+  }
+  victimEmail_2 -left-> source_host2 : credentials_stored_on
+  source_host2 -up-> target_host2 : can_access
+  securityAlert2 -.[#green]left.-> victimEmail_2 : alerts
+  attacker2 .[#green]right.> target_host2 : targets
+  
+
+}
+
+rectangle "Outcome 3 : Authentication attempt failed and remained undetected" as OUTCOME_BOX_4 #line:gray {
+
+  object "host" as source_host3 <<Host>> #dddddd{
+      compromised = true,
+  }
+  object "host" as target_host3 <<Host>> {
+      compromised = false,
+      accepts_ntlm = true
+  }
+  object "EmailAccount" as victimEmail_3 <<EmailAccount>> {
+  }
+  victimEmail_3 -left-> source_host3 : credentials_stored_on
+  source_host3 -up-> target_host3 : can_access
+
+}
+
+@enduml

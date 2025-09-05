@@ -1,0 +1,125 @@
+@startuml unauthorizedScriptExecution
+title "Unauthorized Script Execution Risk Rule"
+
+
+rectangle "LHS : Server allows script execution from a compromised account and script is executable" as LHS_BOX #line:gray {
+ 
+  object "victimEmail" as victimEmail_lhs  <<EmailAccount>> {
+    compromised = true
+  }
+
+  object "Server" as server_lhs {
+    scriptExecutionEnable = true
+  }
+
+  object "host" as host_lhs {
+    compromised = false
+  }
+
+  victimEmail_lhs -up-> server_lhs : monitors
+  server_lhs -right-> host_lhs : deployed_on
+  
+}
+
+rectangle "Outcome 1 : Script is executed successfully" as OUTCOME_BOX_1 #line:gray {
+
+    object "victimEmail" as victimEmail_1 <<EmailAccount>> {
+        compromised = true
+    }
+
+    object "Server" as server_1 {
+        scriptExecutionEnable = true
+    }
+
+    object "host" as host_1 {
+        compromised = true
+    }
+
+    victimEmail_1 -up-> server_1 : monitors
+    server_1 -right-> host_1 : deployed_on
+
+}
+
+rectangle "Outcome 2 : Script execution was detected  by antivirus" as OUTCOME_BOX_2 #line:gray {
+
+
+    object  "script" as script_2 <<Script>> #ccffcc {
+        name = backdoor_init.py
+    }
+
+    object "attacker" as attacker_2 <<Attacker>> #ccffcc {
+    }
+
+    object "victimEmail" as victimEmail_2 <<EmailAccount>> {
+        compromised = true
+    }
+
+    object "Server" as server_2 {
+        scriptExecutionEnable = true
+    }
+
+    object "host" as host_2 {
+        compromised = false
+    }
+
+    victimEmail_2 -up-> server_2 : monitors
+    server_2 -right-> host_2 : deployed_on
+
+    attacker_2 .[#Green]right.> script_2 : uses
+    script_2 .[#Green]down.> host_2 : executed_on
+
+}
+
+rectangle "Outcome 3 : Script execution triggers security alert" as OUTCOME_BOX_3 #line:gray {
+
+  object  "script" as script_3 <<Script>> #ccffcc {
+        name = backdoor_init.py
+    }
+
+    object "attacker" as attacker_3 <<Attacker>> #ccffcc {
+    }
+
+    object "victimEmail" as victimEmail_3 <<EmailAccount>> {
+        compromised = true
+    }
+
+    object "Server" as server_3 {
+        scriptExecutionEnable = true
+    }
+
+    object "host" as host_3 {
+        compromised = false
+    }
+
+    object "securityAlert" as securityAlert_3 <<SecurityAlert>> #ccffcc {
+        type = "unauthorized_script_execution"
+    }
+    securityAlert_3 .[#Green]left.> victimEmail_3 : alerts
+
+    victimEmail_3 -up-> server_3 : monitors
+    server_3 -right-> host_3 : deployed_on
+
+    attacker_3 .[#Green]right.> script_3 : uses
+    script_3 .[#Green]down.> host_3 : executed_on
+
+}
+
+rectangle "Outcome 4 : Script execution failed silently" as OUTCOME_BOX_4 #line:gray {
+
+  object "victimEmail" as victimEmail_4  <<EmailAccount>> {
+    compromised = true
+  }
+
+  object "Server" as server_4 {
+    scriptExecutionEnable = true
+  }
+
+  object "host" as host_4 {
+    compromised = false
+  }
+
+  victimEmail_4 -up-> server_4 : monitors
+  server_4 -right-> host_4 : deployed_on
+
+}
+@enduml

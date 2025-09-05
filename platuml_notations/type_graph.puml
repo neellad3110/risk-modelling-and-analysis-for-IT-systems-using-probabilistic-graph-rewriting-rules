@@ -1,0 +1,168 @@
+@startuml
+title "Type Graph"
+
+skinparam object {
+  BackgroundColor<<Organization>>    #E3E3E3
+  BackgroundColor<<Department>>      #EAD1DC
+  BackgroundColor<<Sales>>           #F5D0E5
+  BackgroundColor<<Engineering>>     #F5D0E5
+  BackgroundColor<<IT>>              #F5D0E5
+  BackgroundColor<<HR>>              #F5D0E5
+
+  BackgroundColor<<User>>            #D1E8FF
+  BackgroundColor<<Device>>          #FFF2CC
+  BackgroundColor<<EmailAccount>>    #FFE6CC
+  BackgroundColor<<Server>>          #F4CCCC
+  BackgroundColor<<Host>>            #D5E8D4
+  BackgroundColor<<Service>>         #A2C4C9
+  BackgroundColor<<File>>            #F9CB9C
+  BackgroundColor<<Credentials>>     #D0CECE
+  BackgroundColor<<CredentialHash>>  #F3E2A9
+  BackgroundColor<<Message>>         #E6E6FA
+  BackgroundColor<<SecurityAlert>>   #FFD6A5
+  BackgroundColor<<Script>>          #CFE2F3
+  BackgroundColor<<Attacker>>        #FFECB3
+  BackgroundColor<<USBDevice>>       #FCE5CD
+}
+
+
+object Organization <<Organization>> {
+  name: string
+}
+
+abstract class Department <<Department>> {
+  
+  name: string
+}
+
+object Sales <<Sales>> {
+  
+}
+object Engineering <<Engineering>> {
+ 
+}
+object IT <<IT>> {
+
+}
+object HR <<HR>> {
+
+}
+
+object User <<User>> {
+  name: string
+}
+
+object Device <<Device>> {
+  deviceType: string
+  os: string
+  accepts_ntlm: boolean
+}
+
+object EmailAccount <<EmailAccount>> {
+  role: string
+  domain: string
+  status: string
+  compromised: boolean
+}
+
+object Server <<Server>> {
+  name: string
+  os: string
+  accepts_ntlm: boolean
+  scriptExecutionEnabled: boolean
+}
+
+object Host <<Host>> {
+  os: string
+  compromised: boolean
+  accepts_ntlm: boolean
+}
+
+object Service <<Service>> {
+  type: string
+  exposed: boolean
+  status: string
+}
+
+object File <<File>> {
+  name: string
+  isSensitive: boolean
+  writable: boolean
+  tampered: boolean
+  encrypted: boolean
+}
+
+object Credentials <<Credentials>> {
+  owner: string
+  reused: boolean
+  compromised: boolean
+}
+
+object CredentialHash <<CredentialHash>> {
+  owner: string
+  stolen: boolean
+}
+
+object Message <<Message>> {
+  type: string
+}
+
+object SecurityAlert <<SecurityAlert>> {
+  type: string
+}
+
+object Script <<Script>> {
+  name: string
+  deployed: boolean
+}
+
+object Attacker <<Attacker>> {
+}
+
+object USBDevice <<USBDevice>> {
+  malicious: boolean
+}
+
+
+Sales -up-|> Department
+Engineering -up-|> Department
+IT -up-|> Department
+HR -up-|> Department
+
+
+Organization "1" --> "1..*" Department : has_department
+Department  "0..*" --> "0..*" User      : employs
+
+EmailAccount "0..*" --> "0..*" Device       : uses
+User        "1..*" --> "0..*" EmailAccount  : owns
+EmailAccount "0..*" --> "0..*" EmailAccount : manages
+User        "0..*" --> "0..*" User          : trusts
+
+Server  "1" --> "1"   Host   : deployed_on
+Service "0..*" --> "0..*" Server : hosted_on
+
+EmailAccount "0..*" --> "0..*" File : can_write
+EmailAccount "0..*" --> "0..*" File : can_read
+
+User "1..*" --> "0..*" Credentials    : has_credentials
+User "0..*" --> "0..*" CredentialHash : has_hash
+
+Host "0..*" --> "0..*" Host : can_access
+
+EmailAccount "0..*" --> "0..*" Host   : credentials_stored_on
+EmailAccount "0..*" --> "0..*" Server : monitors
+
+Message       --> EmailAccount  : sent
+SecurityAlert --> EmailAccount  : alerts
+EmailAccount  --> SecurityAlert : reports
+
+Attacker --> EmailAccount : targets
+Attacker --> Service      : attacks
+Attacker --> Host         : attacks
+
+Script    --> Server : executed_on
+USBDevice --> Device : inserted_into
+Attacker  --> File   : can_write
+EmailAccount --> EmailAccount : authorized
+Attacker  --> Script : uses
+@enduml

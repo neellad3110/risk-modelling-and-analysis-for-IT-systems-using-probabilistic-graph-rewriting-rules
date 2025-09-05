@@ -14,26 +14,6 @@
                 <string>463 118 19 19</string>
             </attr>
         </node>
-        <node id="n2">
-            <attr name="layout">
-                <string>231 16 19 19</string>
-            </attr>
-        </node>
-        <node id="n3">
-            <attr name="layout">
-                <string>392 16 19 19</string>
-            </attr>
-        </node>
-        <node id="n4">
-            <attr name="layout">
-                <string>485 16 19 19</string>
-            </attr>
-        </node>
-        <node id="n5">
-            <attr name="layout">
-                <string>550 16 19 19</string>
-            </attr>
-        </node>
         <node id="n6">
             <attr name="layout">
                 <string>350 220 19 19</string>
@@ -42,6 +22,11 @@
         <node id="n7">
             <attr name="layout">
                 <string>375 670 19 19</string>
+            </attr>
+        </node>
+        <node id="n8">
+            <attr name="layout">
+                <string>498 349 19 19</string>
             </attr>
         </node>
         <node id="n9">
@@ -99,14 +84,24 @@
                 <string>333 514 19 19</string>
             </attr>
         </node>
-        <node id="n8">
+        <node id="n5">
             <attr name="layout">
-                <string>498 349 19 19</string>
+                <string>612 79 19 19</string>
             </attr>
         </node>
-        <node id="n20">
+        <node id="n4">
             <attr name="layout">
-                <string>352 459 66 36</string>
+                <string>550 28 19 19</string>
+            </attr>
+        </node>
+        <node id="n2">
+            <attr name="layout">
+                <string>221 86 19 19</string>
+            </attr>
+        </node>
+        <node id="n3">
+            <attr name="layout">
+                <string>287 37 19 19</string>
             </attr>
         </node>
         <edge from="n0" to="n0">
@@ -139,46 +134,6 @@
                 <string>employs</string>
             </attr>
         </edge>
-        <edge from="n2" to="n2">
-            <attr name="label">
-                <string>type:Sales</string>
-            </attr>
-        </edge>
-        <edge from="n2" to="n1">
-            <attr name="label">
-                <string>sub:</string>
-            </attr>
-        </edge>
-        <edge from="n3" to="n3">
-            <attr name="label">
-                <string>type:Engineering</string>
-            </attr>
-        </edge>
-        <edge from="n3" to="n1">
-            <attr name="label">
-                <string>sub:</string>
-            </attr>
-        </edge>
-        <edge from="n4" to="n4">
-            <attr name="label">
-                <string>type:IT</string>
-            </attr>
-        </edge>
-        <edge from="n4" to="n1">
-            <attr name="label">
-                <string>sub:</string>
-            </attr>
-        </edge>
-        <edge from="n5" to="n5">
-            <attr name="label">
-                <string>type:HR</string>
-            </attr>
-        </edge>
-        <edge from="n5" to="n1">
-            <attr name="label">
-                <string>sub:</string>
-            </attr>
-        </edge>
         <edge from="n6" to="n6">
             <attr name="label">
                 <string>type:User</string>
@@ -189,9 +144,9 @@
                 <string>string:name</string>
             </attr>
         </edge>
-        <edge from="n6" to="n13">
+        <edge from="n6" to="n14">
             <attr name="label">
-                <string>has_credentials</string>
+                <string>has_hash</string>
             </attr>
         </edge>
         <edge from="n6" to="n6">
@@ -207,9 +162,9 @@
                 <string>owns</string>
             </attr>
         </edge>
-        <edge from="n6" to="n14">
+        <edge from="n6" to="n13">
             <attr name="label">
-                <string>has_hash</string>
+                <string>has_credentials</string>
             </attr>
         </edge>
         <edge from="n7" to="n7">
@@ -230,6 +185,83 @@
         <edge from="n7" to="n7">
             <attr name="label">
                 <string>string:os</string>
+            </attr>
+        </edge>
+        <edge from="n8" to="n8">
+            <attr name="label">
+                <string>type:EmailAccount</string>
+            </attr>
+        </edge>
+        <edge from="n8" to="n8">
+            <attr name="label">
+                <string>bool:compromised</string>
+            </attr>
+        </edge>
+        <edge from="n8" to="n8">
+            <attr name="label">
+                <string>string:domain</string>
+            </attr>
+        </edge>
+        <edge from="n8" to="n8">
+            <attr name="label">
+                <string>string:role</string>
+            </attr>
+        </edge>
+        <edge from="n8" to="n8">
+            <attr name="label">
+                <string>string:status</string>
+            </attr>
+        </edge>
+        <edge from="n8" to="n8">
+            <attr name="label">
+                <string>authorized</string>
+            </attr>
+            <attr name="layout">
+                <string>1 1 507 358 609 359 507 358 11</string>
+            </attr>
+        </edge>
+        <edge from="n8" to="n8">
+            <attr name="label">
+                <string>manages</string>
+            </attr>
+            <attr name="layout">
+                <string>1 1 507 358 609 359 507 358 11</string>
+            </attr>
+        </edge>
+        <edge from="n8" to="n12">
+            <attr name="label">
+                <string>can_read</string>
+            </attr>
+        </edge>
+        <edge from="n8" to="n12">
+            <attr name="label">
+                <string>can_write</string>
+            </attr>
+        </edge>
+        <edge from="n8" to="n7">
+            <attr name="label">
+                <string>uses</string>
+            </attr>
+            <attr name="layout">
+                <string>665 0 507 358 384 679 11</string>
+            </attr>
+        </edge>
+        <edge from="n8" to="n10">
+            <attr name="label">
+                <string>credentials_stored_on</string>
+            </attr>
+            <attr name="layout">
+                <string>500 0 508 359 588 524 623 680 11</string>
+            </attr>
+        </edge>
+        <edge from="n8" to="n9">
+            <attr name="label">
+                <string>monitors</string>
+            </attr>
+        </edge>
+        <edge from="n8" to="n16">
+            <attr name="label">
+                <string>reports</string>
             </attr>
         </edge>
         <edge from="n9" to="n9">
@@ -440,14 +472,6 @@
                 <string>uses</string>
             </attr>
         </edge>
-        <edge from="n18" to="n12">
-            <attr name="label">
-                <string>can_write</string>
-            </attr>
-            <attr name="layout">
-                <string>500 0 618 230 410 359 179 524 11</string>
-            </attr>
-        </edge>
         <edge from="n18" to="n11">
             <attr name="label">
                 <string>attacks</string>
@@ -459,6 +483,14 @@
             </attr>
             <attr name="layout">
                 <string>500 0 618 230 606 359 623 524 623 680 11</string>
+            </attr>
+        </edge>
+        <edge from="n18" to="n12">
+            <attr name="label">
+                <string>can_write</string>
+            </attr>
+            <attr name="layout">
+                <string>500 0 618 230 410 359 179 524 11</string>
             </attr>
         </edge>
         <edge from="n18" to="n8">
@@ -481,96 +513,44 @@
                 <string>inserted_into</string>
             </attr>
         </edge>
-        <edge from="n8" to="n8">
+        <edge from="n5" to="n5">
             <attr name="label">
-                <string>type:EmailAccount</string>
+                <string>type:HR</string>
             </attr>
         </edge>
-        <edge from="n8" to="n8">
+        <edge from="n5" to="n1">
             <attr name="label">
-                <string>bool:compromised</string>
+                <string>sub:</string>
             </attr>
         </edge>
-        <edge from="n8" to="n8">
+        <edge from="n4" to="n4">
             <attr name="label">
-                <string>string:domain</string>
+                <string>type:IT</string>
             </attr>
         </edge>
-        <edge from="n8" to="n8">
+        <edge from="n4" to="n1">
             <attr name="label">
-                <string>string:role</string>
+                <string>sub:</string>
             </attr>
         </edge>
-        <edge from="n8" to="n8">
+        <edge from="n2" to="n2">
             <attr name="label">
-                <string>string:status</string>
+                <string>type:Sales</string>
             </attr>
         </edge>
-        <edge from="n8" to="n16">
+        <edge from="n2" to="n1">
             <attr name="label">
-                <string>reports</string>
+                <string>sub:</string>
             </attr>
         </edge>
-        <edge from="n8" to="n8">
+        <edge from="n3" to="n3">
             <attr name="label">
-                <string>authorized</string>
-            </attr>
-            <attr name="layout">
-                <string>1 1 507 358 609 359 507 358 11</string>
+                <string>type:Engineering</string>
             </attr>
         </edge>
-        <edge from="n8" to="n8">
+        <edge from="n3" to="n1">
             <attr name="label">
-                <string>manages</string>
-            </attr>
-            <attr name="layout">
-                <string>1 1 507 358 609 359 507 358 11</string>
-            </attr>
-        </edge>
-        <edge from="n8" to="n9">
-            <attr name="label">
-                <string>monitors</string>
-            </attr>
-        </edge>
-        <edge from="n8" to="n12">
-            <attr name="label">
-                <string>can_read</string>
-            </attr>
-        </edge>
-        <edge from="n8" to="n12">
-            <attr name="label">
-                <string>can_write</string>
-            </attr>
-        </edge>
-        <edge from="n8" to="n10">
-            <attr name="label">
-                <string>credentials_stored_on</string>
-            </attr>
-            <attr name="layout">
-                <string>500 0 508 359 588 524 623 680 11</string>
-            </attr>
-        </edge>
-        <edge from="n8" to="n7">
-            <attr name="label">
-                <string>uses</string>
-            </attr>
-            <attr name="layout">
-                <string>500 0 508 359 428 524 384 680 11</string>
-            </attr>
-        </edge>
-        <edge from="n8" to="n20">
-            <attr name="label">
-                <string>happens</string>
-            </attr>
-        </edge>
-        <edge from="n20" to="n20">
-            <attr name="label">
-                <string>type:AttackRate</string>
-            </attr>
-        </edge>
-        <edge from="n20" to="n20">
-            <attr name="label">
-                <string>int:rate</string>
+                <string>sub:</string>
             </attr>
         </edge>
     </graph>

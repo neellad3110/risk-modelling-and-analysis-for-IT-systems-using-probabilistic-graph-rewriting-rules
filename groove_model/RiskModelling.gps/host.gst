@@ -49,6 +49,11 @@
                 <string>2237 712 19 19</string>
             </attr>
         </node>
+        <node id="n9">
+            <attr name="layout">
+                <string>528 1310 19 19</string>
+            </attr>
+        </node>
         <node id="n10">
             <attr name="layout">
                 <string>1141 1072 19 19</string>
@@ -62,6 +67,11 @@
         <node id="n12">
             <attr name="layout">
                 <string>2479 1035 19 19</string>
+            </attr>
+        </node>
+        <node id="n13">
+            <attr name="layout">
+                <string>770 1222 19 19</string>
             </attr>
         </node>
         <node id="n14">
@@ -154,16 +164,6 @@
                 <string>972 970 19 19</string>
             </attr>
         </node>
-        <node id="n13">
-            <attr name="layout">
-                <string>770 1222 19 19</string>
-            </attr>
-        </node>
-        <node id="n9">
-            <attr name="layout">
-                <string>528 1310 19 19</string>
-            </attr>
-        </node>
         <edge from="n0" to="n0">
             <attr name="label">
                 <string>type:Organization</string>
@@ -174,9 +174,12 @@
                 <string>let:name="ABC Software Inc."</string>
             </attr>
         </edge>
-        <edge from="n0" to="n3">
+        <edge from="n0" to="n1">
             <attr name="label">
                 <string>has_department</string>
+            </attr>
+            <attr name="layout">
+                <string>465 9 1572 340 1300 443 1026 545 944 669 11</string>
             </attr>
         </edge>
         <edge from="n0" to="n2">
@@ -187,20 +190,17 @@
                 <string>500 0 1572 340 1425 443 1275 545 1208 602 11</string>
             </attr>
         </edge>
+        <edge from="n0" to="n3">
+            <attr name="label">
+                <string>has_department</string>
+            </attr>
+        </edge>
         <edge from="n0" to="n4">
             <attr name="label">
                 <string>has_department</string>
             </attr>
             <attr name="layout">
                 <string>500 0 1572 340 1851 443 2127 545 2165 587 11</string>
-            </attr>
-        </edge>
-        <edge from="n0" to="n1">
-            <attr name="label">
-                <string>has_department</string>
-            </attr>
-            <attr name="layout">
-                <string>465 9 1572 340 1300 443 1026 545 944 669 11</string>
             </attr>
         </edge>
         <edge from="n1" to="n1">
@@ -306,14 +306,14 @@
                 <string>let:name="Bob"</string>
             </attr>
         </edge>
-        <edge from="n6" to="n25">
-            <attr name="label">
-                <string>has_credentials</string>
-            </attr>
-        </edge>
         <edge from="n6" to="n14">
             <attr name="label">
                 <string>owns</string>
+            </attr>
+        </edge>
+        <edge from="n6" to="n25">
+            <attr name="label">
+                <string>has_credentials</string>
             </attr>
         </edge>
         <edge from="n7" to="n7">
@@ -349,6 +349,26 @@
         <edge from="n8" to="n16">
             <attr name="label">
                 <string>owns</string>
+            </attr>
+        </edge>
+        <edge from="n9" to="n9">
+            <attr name="label">
+                <string>type:Device</string>
+            </attr>
+        </edge>
+        <edge from="n9" to="n9">
+            <attr name="label">
+                <string>let:accepts_ntlm=true</string>
+            </attr>
+        </edge>
+        <edge from="n9" to="n9">
+            <attr name="label">
+                <string>let:deviceType="laptop"</string>
+            </attr>
+        </edge>
+        <edge from="n9" to="n9">
+            <attr name="label">
+                <string>let:os="Windows 10"</string>
             </attr>
         </edge>
         <edge from="n10" to="n10">
@@ -411,6 +431,41 @@
                 <string>let:os="Windows 10"</string>
             </attr>
         </edge>
+        <edge from="n13" to="n13">
+            <attr name="label">
+                <string>type:EmailAccount</string>
+            </attr>
+        </edge>
+        <edge from="n13" to="n13">
+            <attr name="label">
+                <string>let:compromised=false</string>
+            </attr>
+        </edge>
+        <edge from="n13" to="n13">
+            <attr name="label">
+                <string>let:domain="example.com"</string>
+            </attr>
+        </edge>
+        <edge from="n13" to="n13">
+            <attr name="label">
+                <string>let:role="user"</string>
+            </attr>
+        </edge>
+        <edge from="n13" to="n13">
+            <attr name="label">
+                <string>let:status="active"</string>
+            </attr>
+        </edge>
+        <edge from="n13" to="n9">
+            <attr name="label">
+                <string>uses</string>
+            </attr>
+        </edge>
+        <edge from="n13" to="n31">
+            <attr name="label">
+                <string>can_write</string>
+            </attr>
+        </edge>
         <edge from="n14" to="n14">
             <attr name="label">
                 <string>type:EmailAccount</string>
@@ -471,19 +526,9 @@
                 <string>let:status="active"</string>
             </attr>
         </edge>
-        <edge from="n15" to="n19">
+        <edge from="n15" to="n23">
             <attr name="label">
-                <string>credentials_stored_on</string>
-            </attr>
-        </edge>
-        <edge from="n15" to="n11">
-            <attr name="label">
-                <string>uses</string>
-            </attr>
-        </edge>
-        <edge from="n15" to="n28">
-            <attr name="label">
-                <string>manages</string>
+                <string>can_read</string>
             </attr>
         </edge>
         <edge from="n15" to="n13">
@@ -491,7 +536,7 @@
                 <string>manages</string>
             </attr>
         </edge>
-        <edge from="n15" to="n14">
+        <edge from="n15" to="n28">
             <attr name="label">
                 <string>manages</string>
             </attr>
@@ -501,9 +546,19 @@
                 <string>manages</string>
             </attr>
         </edge>
-        <edge from="n15" to="n23">
+        <edge from="n15" to="n11">
             <attr name="label">
-                <string>can_read</string>
+                <string>uses</string>
+            </attr>
+        </edge>
+        <edge from="n15" to="n19">
+            <attr name="label">
+                <string>credentials_stored_on</string>
+            </attr>
+        </edge>
+        <edge from="n15" to="n14">
+            <attr name="label">
+                <string>manages</string>
             </attr>
         </edge>
         <edge from="n16" to="n16">
@@ -882,61 +937,6 @@
         <edge from="n31" to="n31">
             <attr name="label">
                 <string>let:tampered=false</string>
-            </attr>
-        </edge>
-        <edge from="n13" to="n13">
-            <attr name="label">
-                <string>type:EmailAccount</string>
-            </attr>
-        </edge>
-        <edge from="n13" to="n13">
-            <attr name="label">
-                <string>let:compromised=false</string>
-            </attr>
-        </edge>
-        <edge from="n13" to="n13">
-            <attr name="label">
-                <string>let:domain="example.com"</string>
-            </attr>
-        </edge>
-        <edge from="n13" to="n13">
-            <attr name="label">
-                <string>let:role="user"</string>
-            </attr>
-        </edge>
-        <edge from="n13" to="n13">
-            <attr name="label">
-                <string>let:status="active"</string>
-            </attr>
-        </edge>
-        <edge from="n13" to="n31">
-            <attr name="label">
-                <string>can_write</string>
-            </attr>
-        </edge>
-        <edge from="n13" to="n9">
-            <attr name="label">
-                <string>uses</string>
-            </attr>
-        </edge>
-        <edge from="n9" to="n9">
-            <attr name="label">
-                <string>type:Device</string>
-            </attr>
-        </edge>
-        <edge from="n9" to="n9">
-            <attr name="label">
-                <string>let:accepts_ntlm=true</string>
-            </attr>
-        </edge>
-        <edge from="n9" to="n9">
-            <attr name="label">
-                <string>let:deviceType="laptop"</string>
-            </attr>
-        </edge>
-        <edge from="n9" to="n9">
-            <attr name="label">
-                <string>let:os="Windows 10"</string>
             </attr>
         </edge>
     </graph>

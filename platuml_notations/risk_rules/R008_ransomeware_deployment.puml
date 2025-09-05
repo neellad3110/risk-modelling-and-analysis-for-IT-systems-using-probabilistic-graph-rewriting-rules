@@ -1,0 +1,122 @@
+@startuml ransomware_deployment
+title "Ransomware Deployment Attack"
+
+top to bottom direction
+
+rectangle "LHS : A malicious USB device is inserted into an internal host, \n executing payloads automatically An attacker deploys ransomware to encrypt files \n and demand ransom" as LHS_BOX #line:gray {
+
+  object "user" as user_lhs <<User>> #dddddd{
+  }
+  object "EmailAccount" as victimEmail_lhs <<EmailAccount>> #dddddd{
+    compromised = true,
+    status = active
+  }
+  object "File" as file_lhs <<File>> {
+    isSensitive = true,
+    encrypted = false,
+    tampered = false
+  }
+  user_lhs -up-> victimEmail_lhs : owns
+  victimEmail_lhs -up-> file_lhs : can_read
+}
+
+rectangle "Outcome 1 : Attacker encrypted the file and demanded ransom for decryption" as OUTCOME_BOX_1 #line:gray {
+
+object "user" as user_1 <<User>> #dddddd{
+}
+object "EmailAccount" as victimEmail_1 <<EmailAccount>> #dddddd{
+    compromised = true,
+    status = active
+}
+object "File" as file_1 <<File>> {
+    isSensitive = true,
+    encrypted = true,
+    tampered = true
+}
+object "attacker" as attacker_1 <<Attacker>> #ccffcc {
+  }
+
+attacker_1 .[#green]left.> victimEmail_1 : targets
+attacker_1 .[#green]up.> file_1 : can_write
+user_1 -up-> victimEmail_1 : owns
+victimEmail_1 -up-> file_1 : can_read
+
+}
+
+rectangle "Outcome 2 : Security alert triggered and file permission revoked before encryption" as OUTCOME_BOX_2 #line:gray {
+  
+object "user" as user_2 <<User>> #dddddd{
+}
+object "EmailAccount" as victimEmail_2 <<EmailAccount>> #dddddd{
+    compromised = true,
+    status = active
+}
+object "File" as file_2 <<File>> {
+    isSensitive = true,
+    encrypted = false,
+    tampered = false
+}
+object "securityAlert" as securityAlert_2 <<SecurityAlert>> #ccffcc {
+    type = "unauthorized_access"
+}
+
+securityAlert_2 .[#green]down.> victimEmail_2 : alerts
+user_2 -up-> victimEmail_2 : owns
+victimEmail_2 -up-> file_2 : can_read
+
+}
+
+rectangle "Outcome 3 : Payload executed but user account is not compromised" as OUTCOME_BOX_3 #line:gray {
+
+
+ object "user" as user_3 <<User>> #dddddd{
+  }
+  object "EmailAccount" as victimEmail_3 <<EmailAccount>> #dddddd{
+    compromised = false,
+    status = active
+  }
+  object "device" as device_3 <<Device>>  {
+  }
+
+  object "USBdevice" as usbDevice_3 <<USBDevice>> #ccffcc {
+    malicious = true,
+  }
+
+  usbDevice_3 .[#green]up.> device_3 : inserted_into
+  user_3 -up-> victimEmail_3 : owns
+  victimEmail_3 -up-> device_3 : uses
+}
+rectangle "Outcome 4 : Files restored from backup, permission revoked and user account recovered" as OUTCOME_BOX_4 #line:gray {
+
+  object "user" as user_4 <<User>> #dddddd{
+  }
+  object "EmailAccount" as victimEmail_4 <<EmailAccount>> #dddddd{
+    compromised = false,
+    status = active
+  }
+  object "File" as file_4 <<File>> {
+    isSensitive = true,
+    encrypted = false,
+    tampered = true
+  }
+  user_4 -up-> victimEmail_4 : owns
+  victimEmail_4 -up-> file_4 : can_read
+}
+
+rectangle "Outcome 5 : Attack failed silently" as OUTCOME_BOX_5 #line:gray {
+
+  object "user" as user_5 <<User>> #dddddd{
+  }
+  object "EmailAccount" as victimEmail_5 <<EmailAccount>> #dddddd{
+    compromised = true,
+    status = active
+  }
+  object "File" as file_5   <<File>> {
+    isSensitive = true,
+    encrypted = false,
+    tampered = false
+  }
+  user_5 -up-> victimEmail_5 : owns
+  victimEmail_5 -up-> file_5 : can_read
+}
+@enduml

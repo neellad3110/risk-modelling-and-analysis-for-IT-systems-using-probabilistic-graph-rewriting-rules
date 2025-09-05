@@ -1,0 +1,107 @@
+@startuml dosAttack
+title "Dos Attack"
+
+top to bottom direction
+
+rectangle "LHS : Target service is exposed to the network \n Attacker has sufficient resources to generate high traffic \nNo effective rate-limiting or DoS protection in place" as LHS_BOX #line:gray {
+
+  object "service" as service_lhs <<Service>> #dddddd{
+    status = active
+    exposed = true 
+  }
+  object "host" as host_lhs  <<Host>> {
+  }
+  object "server" as server_lhs <<Server>> {
+  }
+  object "EmailAccount" as victimEmail_lhs <<EmailAccount>> {
+  }
+  victimEmail_lhs -left-> server_lhs : monitors
+  server_lhs -up-> host_lhs  : deployed_on
+  service_lhs -up-> server_lhs : hosted_on
+}
+
+rectangle "Outcome 1 : Service unavailable" as OUTCOME_BOX_1 #line:gray {
+
+    object "service" as service_1 <<Service>> #dddddd{
+    status = inactive
+    exposed = true 
+  }
+  object "host" as host_1  <<Host>> {
+  }
+  object "server" as server_1 <<Server>> {
+  }
+  object "EmailAccount" as victimEmail_1 <<EmailAccount>> {
+  }
+  victimEmail_1 -left-> server_1 : monitors
+  server_1 -up-> host_1  : deployed_on
+  service_1 -up-> server_1  : hosted_on
+
+}
+
+rectangle "Outcome 2 : Attack detected and mitigated" as OUTCOME_BOX_2 #line:gray {
+  
+
+   object "service" as service_2 <<Service>> #dddddd{
+    status = active
+    exposed = false
+  }
+  object "host" as host_2  <<Host>> {
+  }
+  object "server" as server_2 <<Server>> {
+  }
+  object "EmailAccount" as victimEmail_2 <<EmailAccount>> {
+  }
+
+  object "attacker" as attacker2 <<Attacker>> #ccffcc
+
+  object "securityAlert" as securityAlert2 <<SecurityAlert>> #ccffcc {
+    type = "heavy traffic"
+  }
+
+  securityAlert2 .[#green]up.> victimEmail_2 : alerts
+  attacker2 .[#green]right.> service_2 : attacks
+
+  victimEmail_2 -left-> server_2 : monitors
+  server_2 -up-> host_2  : deployed_on
+  service_2 -up-> server_2  : hosted_on
+}
+
+rectangle "Outcome 3 : Attacker degrades the service partially" as OUTCOME_BOX_3 #line:gray {
+
+
+    object "service" as service_3 <<Service>> #dddddd{
+    status = degraded
+    exposed = true 
+  }
+  object "host" as host_3  <<Host>> {
+  }
+  object "server" as server_3 <<Server>> {
+  }
+  object "EmailAccount" as victimEmail_3 <<EmailAccount>> {
+  }
+  victimEmail_3 -left-> server_3 : monitors
+  server_3 -up-> host_3  : deployed_on
+  service_3 -up-> server_3  : hosted_on
+
+}
+rectangle "Outcome 4 : Attack failed silently" as OUTCOME_BOX_4 #line:gray {
+
+    object "service" as service_4 <<Service>> #dddddd{
+    status = active
+    exposed = true 
+  }
+  object "host" as host_4  <<Host>> {
+  }
+  object "server" as server_4 <<Server>> {
+  }
+  object "EmailAccount" as victimEmail_4 <<EmailAccount>> {
+  }
+  victimEmail_4 -left-> server_4 : monitors
+  server_4 -up-> host_4  : deployed_on
+  service_4 -up-> server_4  : hosted_on
+
+}
+
+
+
+@enduml

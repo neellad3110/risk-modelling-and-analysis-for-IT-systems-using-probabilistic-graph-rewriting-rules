@@ -1,0 +1,11 @@
+// Per-rule expected cost by T
+R{"cost_RISK001"}=? [ C<=1 ]
+R{"cost_RISK002"}=? [ C<=1 ]
+R{"cost_RISK003"}=? [ C<=1 ]
+R{"cost_RISK004"}=? [ C<=1 ]
+R{"cost_RISK005"}=? [ C<=1 ]
+R{"cost_RISK006"}=? [ C<=1 ]
+R{"cost_RISK007"}=? [ C<=1 ]
+R{"cost_RISK008"}=? [ C<=1 ]
+R{"cost_RISK009"}=? [ C<=1 ]
+R{"cost_RISK010"}=? [ C<=1 ]

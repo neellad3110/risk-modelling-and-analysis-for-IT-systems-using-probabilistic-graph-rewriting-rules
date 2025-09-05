@@ -1,5 +1,5 @@
 @startuml BUSINESS_GRAPH_TYPED
-title "Business Graph with Organizational Hierarchy"
+title "Business Graph"
 
 skinparam object {
   BackgroundColor<<Organization>> #E3E3E3
@@ -18,169 +18,192 @@ skinparam object {
   BackgroundColor<<Service>> #A2C4C9
 }
 
-
-object "org_1 : Organization" as org_1 <<Organization>>  {
+' Nodes
+object "org_1 : Organization" as org_1 <<Organization>> {
   name = "ABC Software Inc."
 }
 
-
-object "dept_Sales : Sales" as dept_Sales <<Sales>>  {
+object "dept_Sales : Sales" as dept_Sales <<Sales>> {
   name = "Sales"
 }
-object "dept_Eng : Engineering" as dept_Eng <<Engineering>>  {
+object "dept_Eng : Engineering" as dept_Eng <<Engineering>> {
   name = "Engineering"
 }
-object "dept_IT : IT" as dept_IT <<IT>>  {
+object "dept_IT : IT" as dept_IT <<IT>> {
   name = "IT"
 }
-object "dept_HR : HR" as dept_HR <<HR>>  {
+object "dept_HR : HR" as dept_HR <<HR>> {
   name = "HR"
 }
-object "user_EMP001 : User" as user_EMP001 <<User>>  {
+
+object "user_EMP001 : User" as user_EMP001 <<User>> {
   name = "Alice"
 }
-object "user_EMP002 : User" as user_EMP002 <<User>>  {
+object "user_EMP002 : User" as user_EMP002 <<User>> {
   name = "Bob"
 }
-object "user_EMP003 : User" as user_EMP003 <<User>>  {
+object "user_EMP003 : User" as user_EMP003 <<User>> {
   name = "Charlie"
 }
-object "user_EMP004 : User" as user_EMP004 <<User>>  {
+object "user_EMP004 : User" as user_EMP004 <<User>> {
   name = "Diana"
 }
+object "user_EMP005 : User" as user_EMP005 <<User>> {
+  name = "Peter"
+}
 
-object "device_EMP001 : Device" as device_EMP001 <<Device>>  {
+object "device_EMP001 : Device" as device_EMP001 <<Device>> {
   deviceType = "laptop"
   os = "Windows 10"
   accepts_ntlm = true
 }
-object "device_EMP002 : Device" as device_EMP002 <<Device>>  {
+object "device_EMP002 : Device" as device_EMP002 <<Device>> {
   deviceType = "laptop"
   os = "Ubuntu"
   accepts_ntlm = false
 }
-object "device_EMP003 : Device" as device_EMP003 <<Device>>  {
+object "device_EMP003 : Device" as device_EMP003 <<Device>> {
   deviceType = "desktop"
   os = "Windows 10"
   accepts_ntlm = false
 }
-object "device_EMP004 : Device" as device_EMP004 <<Device>>  {
+object "device_EMP004 : Device" as device_EMP004 <<Device>> {
   deviceType = "desktop"
   os = "Windows 10"
   accepts_ntlm = false
 }
+object "device_EMP005 : Device" as device_EMP005 <<Device>> {
+  deviceType = "desktop"
+  os = "Windows 11"
+  accepts_ntlm = false
+}
 
-
-object "email_EMP001 : EmailAccount" as email_EMP001 <<EmailAccount>>  {
+object "email_EMP001 : EmailAccount" as email_EMP001 <<EmailAccount>> {
   role = "user"
   domain = "example.com"
   status = "active"
   compromised = false
 }
-object "email_EMP002 : EmailAccount" as email_EMP002 <<EmailAccount>>  {
+object "email_EMP002 : EmailAccount" as email_EMP002 <<EmailAccount>> {
   role = "user"
   domain = "example.com"
   status = "active"
   compromised = false
 }
-object "email_EMP003 : EmailAccount" as email_EMP003 <<EmailAccount>>  {
+object "email_EMP003 : EmailAccount" as email_EMP003 <<EmailAccount>> {
   role = "admin"
   domain = "example.com"
   status = "active"
   compromised = false
 }
-object "email_EMP004 : EmailAccount" as email_EMP004 <<EmailAccount>>  {
+object "email_EMP004 : EmailAccount" as email_EMP004 <<EmailAccount>> {
+  role = "user"
+  domain = "example.com"
+  status = "active"
+  compromised = false
+}
+object "email_EMP005 : EmailAccount" as email_EMP005 <<EmailAccount>> {
   role = "user"
   domain = "example.com"
   status = "active"
   compromised = false
 }
 
-object "server1 : Server" as server1 <<Server>>  {
+object "server1 : Server" as server1 <<Server>> {
   name = "RDP-Server"
   os = "Windows Server 2019"
   accepts_ntlm = true
+  scriptExecutionEnabled = true
 }
-object "server2 : Server" as server2 <<Server>>  {
+object "server2 : Server" as server2 <<Server>> {
   name = "DB-Server"
   os = "Ubuntu 20.04"
   accepts_ntlm = false
+  scriptExecutionEnabled = true
 }
 
-
-object "host1 : Host" as host1 <<Host>>  {
+object "host1 : Host" as host1 <<Host>> {
   os = "Windows"
   compromised = false
   accepts_ntlm = true
 }
-object "host2 : Host" as host2 <<Host>>  {
+object "host2 : Host" as host2 <<Host>> {
   os = "Ubuntu"
   compromised = false
-  accepts_ntlm = false
+  accepts_ntlm = true
 }
 
-
-object "rdp_service1 : Service" as rdp_service1 <<Service>>  {
+object "rdp_service1 : Service" as rdp_service1 <<Service>> {
   type = "RDP"
   exposed = true
 }
-object "file1 : File" as file1 <<File>>  {
+object "web_service1 : Service" as web_service1 <<Service>> {
+  type = "Web Application"
+  status = "active"
+  exposed = true
+}
+
+object "file1 : File" as file1 <<File>> {
   name = "config.sh"
   isSensitive = true
   tampered = false
 }
-object "file2 : File" as file2 <<File>>  {
-  name = "secrets.txt"
+object "file2 : File" as file2 <<File>> {
+  name = "accounts.db"
   isSensitive = true
   tampered = false
+  encrypted = true
 }
 
-
-object "cred_EMP001 : Credentials" as cred_EMP001 <<Credentials>>  {
+object "cred_EMP001 : Credentials" as cred_EMP001 <<Credentials>> {
   owner = "user_EMP001"
   reused = false
   compromised = false
 }
-object "cred_EMP002 : Credentials" as cred_EMP002 <<Credentials>>  {
+object "cred_EMP002 : Credentials" as cred_EMP002 <<Credentials>> {
   owner = "user_EMP002"
   reused = true
   compromised = false
 }
-
-
-object "hash_EMP003 : CredentialHash" as hash_EMP003 <<CredentialHash>>  {
+object "hash_EMP003 : CredentialHash" as hash_EMP003 <<CredentialHash>> {
   owner = "user_EMP003"
   stolen = false
 }
 
+' Edges
 org_1 -- dept_Sales : has_department
-org_1 -- dept_Eng : has_department
-org_1 -- dept_IT : has_department
-org_1 -- dept_HR : has_department
+org_1 -- dept_Eng   : has_department
+org_1 -- dept_IT    : has_department
+org_1 -- dept_HR    : has_department
 
 dept_Sales -- user_EMP001 : employs
-dept_Eng -- user_EMP002 : employs
-dept_IT -- user_EMP003 : employs
-dept_HR -- user_EMP004 : employs
+dept_Eng   -- user_EMP002 : employs
+dept_IT    -- user_EMP003 : employs
+dept_HR    -- user_EMP004 : employs
+dept_IT    -- user_EMP005 : employs
 
 email_EMP001 -- device_EMP001 : uses
 email_EMP002 -- device_EMP002 : uses
 email_EMP003 -- device_EMP003 : uses
 email_EMP004 -- device_EMP004 : uses
+email_EMP005 -- device_EMP005 : uses
 
 email_EMP003 -- email_EMP001 : manages
 email_EMP003 -- email_EMP002 : manages
 email_EMP003 -- email_EMP004 : manages
+email_EMP003 -- email_EMP005 : manages
 
 user_EMP001 -- email_EMP001 : owns
 user_EMP002 -- email_EMP002 : owns
 user_EMP003 -- email_EMP003 : owns
 user_EMP004 -- email_EMP004 : owns
+user_EMP005 -- email_EMP005 : owns
 
-server1 -- host1 : runs_on
-server2 -- host2 : runs_on
+server1 -- host1 : deployed_on
+server2 -- host2 : deployed_on
 
-host1 -- rdp_service1 : runs
+rdp_service1  -- server1 : hosted_on
+web_service1  -- server2 : hosted_on
 
 email_EMP002 -- file1 : can_write
 email_EMP003 -- file2 : can_read
@@ -190,6 +213,11 @@ user_EMP002 -- cred_EMP002 : has_credentials
 user_EMP003 -- hash_EMP003 : has_hash
 
 host1 -- host2 : can_access
+
 email_EMP003 -- host1 : credentials_stored_on
+
+email_EMP005 -- server2 : monitors
+
+user_EMP001 -- user_EMP002 : trusts
 
 @enduml

@@ -44,7 +44,7 @@ support for administrators seeking to prioritize vulnerabilities and mitigate ri
     - There must be a machine-readable format (e.g., YAML, JSON) for defining graph rewriting rules with vulnerability patterns, attack rates, and probabilistic outcomes.
 
 - **JSON to Groove Automation:**<br>
-    - An automated script which will generate Groove based notations for type graph, host graph and risk rules. The script should take consider all nodes, edges, relations, LHS pattern and RHS (outcomes) of risk rule will support Groove graph modeling syntax. 
+    - An automated script which will generate Groove based notations for type graph and host graph. The script should take consider all nodes, edges, relations, attributes  of the graphs  supported Groove graph modeling syntax. 
 	
 - **Probabilistic Risk Analytics:**
   - For each pattern match, the system must estimate risk using attack rates per year, outcome probabilities of attack, and costs to company.
@@ -64,21 +64,15 @@ support for administrators seeking to prioritize vulnerabilities and mitigate ri
   - Rules should be organized by tactics/techniques or attack phases for easier management and extensibility.
 
 - **Export/ Derive to Model Checker:**
-  - Ability to export/derive the system model to tools like PRISM or STORM for formal CTMDP analysis should be implemented.
+  - Ability to export/derive the system model to tools like PRISM or STORM for formal CTMC analysis should be implemented.
 
-- **Continuous-Time Markov Decision Process (CTMDP) Integration:**
-  - Formal semantics and simulation using CTMDP tools (e.g., PRISM, STORM) for advanced risk propagation analysis is desirable.
+- **Continuous-Time Markov Chain (CTMC) Integration:**
+  - Formal semantics and simulation using CTMC tools (e.g., PRISM, STORM) for advanced risk propagation analysis is desirable.
 
 ### Optional:
 
-- **Use of NLP or LLMs for suggesting recovery or precautions:**
-  - After analysing attack patterns its outcomes LLMs can be used to generate some suggestions for recovery and necessary precautions. 
-
-- **Interactive Dashboard:**
+- **Interactive UI:**
   - GUI dashboard could provide an interactive exploration of the business graph and risk analytics.
-
-- **OCL-like Constraints:**
-  - Support for expressing and enforcing may provide advanced constraints on pattern matching.
 
 ## Information about this repository
 This is the repository that you are going to use **individually** for developing your project. Please use the resources provided in the module to learn about **plagiarism** and how plagiarism awareness can foster your learning.

@@ -1,0 +1,107 @@
+// Time-Annotated Risk Analysis Control Program
+import groove.io.Console;
+
+// Global tracking variables
+int totalIncidents;
+int phishingIncidents;
+int privEscIncidents;
+int rdpIncidents;
+real simulationTime;
+
+// Attack rate parameters (per year)
+final double PHISHING_RATE = 4.0;
+final double PRIV_ESC_RATE = 2.0;
+final double RDP_RATE = 4.0;
+final double DAYS_PER_YEAR = 365.0;
+
+// Time parameters
+final double MAX_SIMULATION_DAYS = 365.0;
+
+// Individual attack rule functions
+function phishingAttackRule(out node victimEmail) {
+    // Match phishing attack pattern with timing data
+    alap phishingAttack(out victimEmail);
+    
+    // Apply probabilistic outcomes with proper syntax
+    try phishingAttack_UserClickedLinkAndEnteredCredentials(victimEmail)
+    | phishingAttack_UserReportedPhishingAttempt(victimEmail)
+    | phishingAttack_EmailFiltered(victimEmail);
+}
+
+function privilegeEscalationRule(out node targetFile) {
+    // Match privilege escalation pattern
+    alap privilegeEscalation(out targetFile);
+    
+    // Apply probabilistic outcomes
+    try privilegeEscalation_AttackerGainedElevatedAccess(targetFile)
+    | privilegeEscalation_AttemptDetectedAndBlocked(targetFile)
+    | privilegeEscalation_AttemptFailedSilently(targetFile);
+}
+
+function rdpExploitationRule(out node targetHost) {
+    // Match RDP exploitation pattern
+    alap rdpExploitation(out targetHost);
+    
+    // Apply probabilistic outcomes
+    try rdpExploitation_AttackerGainedRemoteAccess(targetHost)
+    | rdpExploitation_BruteForceAttemptDetected(targetHost)
+    | rdpExploitation_ConnectionBlocked(targetHost);
+}
+
+// Simple simulation without complex time calculations
+function simulateAttacks() {
+    Console.println("Starting simplified time-annotated simulation");
+    
+    // Initialize simulation
+    totalIncidents = 0;
+    phishingIncidents = 0;
+    privEscIncidents = 0;
+    rdpIncidents = 0;
+    simulationTime = 0.0;
+    
+    // Run a sequence of attacks in a realistic order
+    // Phishing occurs most frequently (every 91.25 days)
+    node email1;
+    phishingAttackRule(out email1);
+    phishingIncidents++;
+    totalIncidents++;
+    simulationTime += 91.25;
+    Console.println("Day " + simulationTime + ": Phishing attack occurred");
+    
+    // RDP exploitation occurs next (every 91.25 days)
+    node host1;
+    rdpExploitationRule(out host1);
+    rdpIncidents++;
+    totalIncidents++;
+    simulationTime += 91.25;
+    Console.println("Day " + simulationTime + ": RDP exploitation occurred");
+    
+    // Another phishing attack
+    node email2;
+    phishingAttackRule(out email2);
+    phishingIncidents++;
+    totalIncidents++;
+    simulationTime + = 91.25;
+    Console.println("Day " + simulationTime + ": Phishing attack occurred");
+    
+    // Privilege escalation occurs least frequently (every 182.5 days)
+    node file1;
+    privilegeEscalationRule(out file1);
+    privEscIncidents++;
+    totalIncidents++;
+    simulationTime += 91.25;
+    Console.println("Day " + simulationTime + ": Privilege escalation occurred");
+    
+    // Print simulation results
+    Console.println("=== Simulation Results ===");
+    Console.println("Simulation period: " + simulationTime + " days");
+    Console.println("Total security incidents: " + totalIncidents);
+    Console.println("Phishing incidents: " + phishingIncidents);
+    Console.println("Privilege escalation incidents: " + privEscIncidents);
+    Console.println("RDP exploitation incidents: " + rdpIncidents);
+}
+
+// Main entry point
+function main() {
+    simulateAttacks();
+}

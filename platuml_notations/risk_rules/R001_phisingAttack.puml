@@ -1,4 +1,4 @@
-@startuml
+@startuml phishing
 title "Phishing Attack Risk Rule"
 
 
@@ -16,35 +16,11 @@ rectangle "LHS : User has active email account" as LHS_BOX #line:gray {
 
 }
 
-rectangle "Type graph : Phishing Attack" as START_GRAPH_BOX #line:gray {
-
-  object "<b>User</b>" as user_type 
-  object "<b>EmailAccount</b>" as EmailAccount_type {
-    bool:status
-  }
-  object "<b>Message</b>" as phishingMessage_type  {
-    string:type
-  }
-
-  object "<b>SecurityAlert</b>" as securityAlert_type {
-    string:type
-  }
-
-  object "<b>Attacker</b>" as attacker_type {
-
-  } 
-
-  user_type -up-> EmailAccount_type : owns
-  phishingMessage_type -.left.-> EmailAccount_type : sent
-  attacker_type -.right.-> EmailAccount_type : targets
-  securityAlert_type .down.> EmailAccount_type : alerts
-
-}
-
 rectangle "Outcome 1 : User clicked link and entered credentials" as OUTCOME_BOX_1 #line:gray {
 
     object "<b>User</b>" as user_r1 
   object "<b>EmailAccount</b>" as EmailAccount_r1  {
+    compromised = true
     status=active
   }
   object "<b>Message</b>" as phishingMessage_r1 #ccffcc {
@@ -52,10 +28,6 @@ rectangle "Outcome 1 : User clicked link and entered credentials" as OUTCOME_BOX
   }
   user_r1 -up-> EmailAccount_r1 : owns
   phishingMessage_r1 -.[#Green]left.-> EmailAccount_r1 : sent
-  note right of victimEmail1
-    probability = 0.1
-    cost = 30000 USD
-  end note
 
 }
 
@@ -67,18 +39,16 @@ rectangle "Outcome 2 : User clicked link but did not enter credentials" as OUTCO
     status = active 
   }
 
+ object "<b>Message</b>" as phishingMessage_r2 #ccffcc {
+    type="phishingMessage"
+  }
   object "securityAlert" as securityAlert2 #ccffcc {
     type = phishing_attempt
   }
 
- 
+  phishingMessage_r2 -.[#Green]left.-> victimEmail2 : sent
   user2 -up-> victimEmail2 : owns
   securityAlert2 .[#Green]down.> victimEmail2 : alerts 
-  note left of victimEmail2
-    probability = 0.2
-    cost = 5000 USD
-  end note
-
 }
 
 rectangle "Outcome 3 : User ignored the email" as OUTCOME_BOX_3 #line:gray {
@@ -88,13 +58,12 @@ rectangle "Outcome 3 : User ignored the email" as OUTCOME_BOX_3 #line:gray {
     compromised = false
     status = active
   }
- 
+  
+  object "<b>Message</b>" as phishingMessage_r3 #ccffcc {
+    type="phishingMessage"
+  }
+  phishingMessage_r3 -.[#Green]left.-> victimEmail3 : sent
   user3 -up-> victimEmail3 : owns
-  note left of victimEmail3
-    probability = 0.6
-    cost = 0 USD
-  end note
-
 }
 
 rectangle "Outcome 4 : User reported the phishing attempt to sysadmin" as OUTCOME_BOX_4 #line:gray {
@@ -104,18 +73,17 @@ rectangle "Outcome 4 : User reported the phishing attempt to sysadmin" as OUTCOM
     compromised = false
     status = active
   }
-  object "phishingMessage" as phishingMessage4 #7a9df4
+ 
   object "securityAlert" as securityAlert4 #ccffcc {
    type = phishing_attempt
   }
 
+  object "<b>Message</b>" as phishingMessage_r4 #ccffcc {
+    type="phishingMessage"
+  }
+  phishingMessage_r4 -.[#Green]left.-> victimEmail4 : sent
   user4 -up-> victimEmail4 : owns
-  phishingMessage4 -.[#7a9df4]left.-> victimEmail4 : targets
-  victimEmail4 .[#Green]down.> securityAlert4 : reports
-  note left of victimEmail4
-    probability = 0.6
-    cost = 0 USD
-  end note
+  victimEmail4 .[#Green]up.> securityAlert4 : reports
 
 }
 @enduml

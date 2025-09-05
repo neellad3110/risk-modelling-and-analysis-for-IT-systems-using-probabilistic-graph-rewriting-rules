@@ -1,0 +1,111 @@
+@startuml maliciousUSBDevice
+title "Malicious USB Device Attack"
+
+top to bottom direction
+
+rectangle "LHS : A malicious USB device is inserted into an internal host, executing payloads automatically " as LHS_BOX #line:gray {
+
+  object "user" as user_lhs <<User>> #dddddd{
+  }
+  object "EmailAccount" as victimEmail_lhs <<EmailAccount>> #dddddd{
+    compromised = false,
+    status = active
+  }
+  object "device" as device_lhs <<Device>> {
+  }
+  user_lhs -up-> victimEmail_lhs : owns
+  victimEmail_lhs -up-> device_lhs : uses
+}
+
+rectangle "Outcome 1 : USB device successfully executes payload and establishes persistence" as OUTCOME_BOX_1 #line:gray {
+
+ object "user" as user_1 <<User>> #dddddd{
+  }
+  object "EmailAccount" as victimEmail_1 <<EmailAccount>> #dddddd{
+    compromised = true,
+    status = active
+  }
+  object "device" as device_1 <<Device>>  {
+  }
+
+  object "USBdevice" as usbDevice_1 <<USBDevice>> #ccffcc {
+    malicious = true,
+  }
+
+  usbDevice_1 .[#green]up.> device_1 : inserted_into
+  user_1 -up-> victimEmail_1 : owns
+  victimEmail_1 -up-> device_1 : uses
+
+}
+
+rectangle "Outcome 2 : USB Device was removed before execution" as OUTCOME_BOX_2 #line:gray {
+  
+  object "user" as user_2 <<User>> #dddddd{
+  }
+  object "EmailAccount" as victimEmail_2 <<EmailAccount>> #dddddd{
+    compromised = false,
+    status = active
+  }
+  object "device" as device_2 <<Device>>  {
+  }
+
+  object "USBdevice" as usbDevice_2 <<USBDevice>> #7a9df4 {
+    malicious = true,
+  }
+
+  usbDevice_2 .[#7a9df4]up.> device_2 : inserted_into
+  user_2 -up-> victimEmail_2 : owns
+  victimEmail_2 -up-> device_2 : uses
+
+}
+
+rectangle "Outcome 3 : Payload executed but user account is not compromised" as OUTCOME_BOX_3 #line:gray {
+
+
+ object "user" as user_3 <<User>> #dddddd{
+  }
+  object "EmailAccount" as victimEmail_3 <<EmailAccount>> #dddddd{
+    compromised = false,
+    status = active
+  }
+  object "device" as device_3 <<Device>>  {
+  }
+
+  object "USBdevice" as usbDevice_3 <<USBDevice>> #ccffcc {
+    malicious = true,
+  }
+
+  usbDevice_3 .[#green]up.> device_3 : inserted_into
+  user_3 -up-> victimEmail_3 : owns
+  victimEmail_3 -up-> device_3 : uses
+}
+rectangle "Outcome 4 : Antivirus detected and blocked the payload execution" as OUTCOME_BOX_4 #line:gray {
+
+  object "user" as user_4 <<User>> #dddddd{
+  }
+  object "EmailAccount" as victimEmail_4   <<EmailAccount>> #dddddd{
+    compromised = false,
+    status = active
+  }
+  object "device" as device_4 <<Device>>  {
+  }
+
+  object "USBdevice" as usbDevice_4 <<USBDevice>> #ccffcc {
+    malicious = true,
+  }
+
+  object "attacker" as attacker_4 <<Attacker>> #ccffcc {
+  }
+
+  object "securityAlert" as securityAlert_4 <<SecurityAlert>> #ccffcc {
+    type = "Malicious Software Detected"
+  }
+
+  attacker_4 .[#green]up.> victimEmail_4 : targets
+  securityAlert_4 .[#green]down.> victimEmail_4 : alerts
+  usbDevice_4 .[#green]up.> device_4 : inserted_into
+  user_4 -up-> victimEmail_4 : owns
+  victimEmail_4 -up-> device_4 : uses
+}
+
+@enduml

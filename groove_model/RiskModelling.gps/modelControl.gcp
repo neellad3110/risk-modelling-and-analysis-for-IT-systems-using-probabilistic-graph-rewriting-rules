@@ -55,8 +55,7 @@ function maliciousUSBDevice_Rule(out node compromisedEmail3){
 	maliciousUSBDevice_Payload_executed_but_user_account_is_not_compromised(compromisedEmail3)|
 	maliciousUSBDevice_Payload_executed_and_host_was_compromised(compromisedEmail3)|
 	maliciousUSBDevice_Antivirus_detected_and_blocked_payload_execution(compromisedEmail3)|
-	maliciousUSBDevice_Device_was_removed_before_execution(compromisedEmail3)|
-	maliciousUSBDeviceUSB_device_not_recognized_by_the_system(compromisedEmail3);
+	maliciousUSBDevice_Device_was_removed_before_execution(compromisedEmail3);
 }
 
 function ransomwareDeployment_Rule(out node compromisedEmail4){

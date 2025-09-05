@@ -1,0 +1,123 @@
+@startuml trusted_relationship_abuse
+title "Trusted Relationship Abuse Attack"
+
+top to bottom direction
+
+rectangle "LHS : n attacker abuses trusted relationships to gain unauthorized access to sensitive resources" as LHS_BOX #line:gray {
+
+  object "user" as victimUser_lhs <<User>> #dddddd{
+  }
+  object "user" as trustedUser_lhs <<User>> #dddddd{
+  }
+  object "EmailAccount" as trustedEmail_lhs <<EmailAccount>> #dddddd{
+    status = active
+  }
+  object "EmailAccount" as victimEmail_lhs <<EmailAccount>> #dddddd{
+    status = active
+  }
+
+  object "File" as file_lhs <<File>> {
+    isSensitive = true,
+    tampered = false
+  }
+
+  victimUser_lhs -right-> victimEmail_lhs : owns
+  victimEmail_lhs -right-> file_lhs : can_write
+
+  trustedUser_lhs -right-> trustedEmail_lhs : owns
+
+  victimUser_lhs -down-> trustedUser_lhs : trusts
+
+}
+
+rectangle "Outcome 1 : Attacker user abuses trust and gains access to sensitive file to extract data" as OUTCOME_BOX_1 #line:gray {
+
+  object "user" as victimUser_1 <<User>> #dddddd{
+  }
+  object "user" as trustedUser_1 <<User>> #dddddd{
+  }
+  object "EmailAccount" as trustedEmail_1 <<EmailAccount>> #dddddd{
+    status = active
+  }
+  object "EmailAccount" as victimEmail_1 <<EmailAccount>> #dddddd{
+    status = active
+  }
+
+  object "File" as file_1 <<File>> {
+    isSensitive = true,
+    tampered = true
+  }
+
+  victimUser_1 -right-> victimEmail_1 : owns
+  victimEmail_1 -right-> file_1 : can_write
+
+  trustedUser_1 -right-> trustedEmail_1 : owns
+
+  victimUser_1 -down-> trustedUser_1 : trusts
+
+  trustedEmail_1 .[#red]up.> victimEmail_1 : authorised
+
+}
+
+rectangle "Outcome 2 : Suspicious activity detected and alert triggered" as OUTCOME_BOX_2 #line:gray {
+  
+  object "user" as victimUser_2 <<User>> #dddddd{
+  }
+  object "user" as trustedUser_2 <<User>> #dddddd{
+  }
+  object "EmailAccount" as trustedEmail_2 <<EmailAccount>> #dddddd{
+    status = active
+  }
+  object "EmailAccount" as victimEmail_2 <<EmailAccount>> #dddddd{
+    status = active
+  }
+
+  object "File" as file_2  <<File>> {
+    isSensitive = true,
+    tampered = false
+  }
+
+  object "SecurityAlert" as securityAlert_2 <<SecurityAlert>> #ccffcc {
+    type = "login_attempt"
+  }
+
+  securityAlert_2 .[#green]down.> victimEmail_2 : alerts
+  victimUser_2 -right-> victimEmail_2 : owns
+  victimEmail_2 -right-> file_2 : can_write
+
+  trustedUser_2 -right-> trustedEmail_2 : owns
+
+  victimUser_2 -down-> trustedUser_2 : trusts
+
+  trustedEmail_2 .[#green]up.> victimEmail_2 : authorised
+
+}
+
+rectangle "Outcome 3 : Attack failed silently" as OUTCOME_BOX_3 #line:gray {
+
+
+  object "user" as victimUser_3 <<User>> #dddddd{
+  }
+  object "user" as trustedUser_3 <<User>> #dddddd{
+  }
+  object "EmailAccount" as trustedEmail_3 <<EmailAccount>> #dddddd{
+    status = active
+  }
+  object "EmailAccount" as victimEmail_3 <<EmailAccount>> #dddddd{
+    status = active
+  }
+
+  object "File" as file_3 <<File>> {
+    isSensitive = true,
+    tampered = false
+  }
+
+  victimUser_3 -right-> victimEmail_3 : owns
+  victimEmail_3 -right-> file_3 : can_write
+
+  trustedUser_3 -right-> trustedEmail_3 : owns
+
+  victimUser_3 -down-> trustedUser_3 : trusts
+}
+
+@enduml
