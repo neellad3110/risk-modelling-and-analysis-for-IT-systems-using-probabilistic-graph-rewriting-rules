@@ -1,5 +1,6 @@
 function phishingAttack_Rule(out node victimEmail)
 {
+  	
     phishingAttack(out victimEmail); // risk pattern
     phishingAttack_User_clicked_link_and_entered_credentials(victimEmail) | 
     phishingAttack_User_clicked_link_but_did_not_enter_credentials(victimEmail) | 
@@ -90,19 +91,18 @@ function trustedRelationship_Rule(out node compromisedEmail5){
 function attack_pipeline(){
 
 	node victimEmail,compromisedAccount,compromisedEmail1,userEmail,compromisedHost1,compromisedHost2,compromisedEmail2,compromisedEmail3,compromisedEmail4,compromisedService,compromisedEmail5;
-
 	// independent attacks
 	phishingAttack_Rule(out victimEmail) |
-    remoteServiceExploitation_Rule(out userEmail) |
+    //remoteServiceExploitation_Rule(out userEmail) |
     maliciousUSBDevice_Rule(out compromisedEmail3) |
-    trustedRelationship_Rule(out compromisedEmail5) |
-    dosAttack_Rule(out compromisedService) |
+    //trustedRelationship_Rule(out compromisedEmail5) |
+    //dosAttack_Rule(out compromisedService) |
     
     // Follow-up attacks
     privilegeEscalation_Rule(out compromisedEmail1) |
-    credentialDumping_Rule(out compromisedHost1) |
+    //credentialDumping_Rule(out compromisedHost1) |
     unauthorized_script_execution_Rule(out compromisedAccount) |
-    passTheHash_lateralMovement_Rule(out compromisedHost2) |
+    //passTheHash_lateralMovement_Rule(out compromisedHost2) |
     ransomwareDeployment_Rule(out compromisedEmail4);
 }
 

@@ -12,14 +12,14 @@
                 <string>423 483 19 19</string>
             </attr>
         </node>
-        <node id="n1">
-            <attr name="layout">
-                <string>417 313 19 19</string>
-            </attr>
-        </node>
         <node id="n2">
             <attr name="layout">
                 <string>152 313 19 19</string>
+            </attr>
+        </node>
+        <node id="n1">
+            <attr name="layout">
+                <string>417 313 19 19</string>
             </attr>
         </node>
         <edge from="n0" to="n0">
@@ -33,6 +33,21 @@
             </attr>
             <attr name="layout">
                 <string>490 -5 432 492 428 324 11</string>
+            </attr>
+        </edge>
+        <edge from="n2" to="n2">
+            <attr name="label">
+                <string>type:File</string>
+            </attr>
+        </edge>
+        <edge from="n2" to="n2">
+            <attr name="label">
+                <string>let:tampered=false</string>
+            </attr>
+        </edge>
+        <edge from="n2" to="n2">
+            <attr name="label">
+                <string>test:isSensitive=true</string>
             </attr>
         </edge>
         <edge from="n1" to="n1">
@@ -53,21 +68,6 @@
         <edge from="n1" to="n2">
             <attr name="label">
                 <string>can_write</string>
-            </attr>
-        </edge>
-        <edge from="n2" to="n2">
-            <attr name="label">
-                <string>type:File</string>
-            </attr>
-        </edge>
-        <edge from="n2" to="n2">
-            <attr name="label">
-                <string>let:tampered=false</string>
-            </attr>
-        </edge>
-        <edge from="n2" to="n2">
-            <attr name="label">
-                <string>test:isSensitive=true</string>
             </attr>
         </edge>
     </graph>

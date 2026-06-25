@@ -7,36 +7,21 @@
         <attr name="priority">
             <string>1</string>
         </attr>
-        <node id="n0">
-            <attr name="layout">
-                <string>400 273 19 19</string>
-            </attr>
-        </node>
         <node id="n1">
             <attr name="layout">
-                <string>401 408 19 19</string>
+                <string>396 395 19 19</string>
             </attr>
         </node>
         <node id="n2">
             <attr name="layout">
-                <string>109 263 156 36</string>
+                <string>177 271 19 19</string>
             </attr>
         </node>
-        <edge from="n0" to="n0">
-            <attr name="label">
-                <string>parout:0</string>
+        <node id="n0">
+            <attr name="layout">
+                <string>399 271 19 19</string>
             </attr>
-        </edge>
-        <edge from="n0" to="n0">
-            <attr name="label">
-                <string>type:EmailAccount</string>
-            </attr>
-        </edge>
-        <edge from="n0" to="n0">
-            <attr name="label">
-                <string>test:status="active"</string>
-            </attr>
-        </edge>
+        </node>
         <edge from="n1" to="n1">
             <attr name="label">
                 <string>type:User</string>
@@ -65,6 +50,21 @@
         <edge from="n2" to="n0">
             <attr name="label">
                 <string>sent</string>
+            </attr>
+        </edge>
+        <edge from="n0" to="n0">
+            <attr name="label">
+                <string>parout:0</string>
+            </attr>
+        </edge>
+        <edge from="n0" to="n0">
+            <attr name="label">
+                <string>type:EmailAccount</string>
+            </attr>
+        </edge>
+        <edge from="n0" to="n0">
+            <attr name="label">
+                <string>test:status="active"</string>
             </attr>
         </edge>
     </graph>
